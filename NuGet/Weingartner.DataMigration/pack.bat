@@ -1,0 +1,1 @@
+nuget pack Weingartner.DataMigration.nuspec -Version 0.0.7-alpha -OutputDirectory C:\Users\egger\Workspace\NuGet

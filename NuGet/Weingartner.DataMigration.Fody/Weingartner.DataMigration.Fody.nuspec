@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>Weingartner.DataMigration.Fody</id>
+        <version>0.0.0</version>
+        <title>FodyWeaver for Weingartner.DataMigration</title>
+        <authors>Weingartner Maschinenbau GmbH</authors>
+        <owners>Weingartner Maschinenbau GmbH</owners>
+        <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+        <requireLicenseAcceptance>true</requireLicenseAcceptance>
+        <description>Weaves a read-only version property into all types that have the [Migratable] custom attribute.</description>
+        <summary>Weaves a version property into all migratable types.</summary>
+        <copyright>Weingartner Maschinenbau GmbH 2014</copyright>
+        <dependencies>
+            <dependency id="Fody" version="1.25.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="content\Fody_ToBeDeleted.txt" target="content\Fody_ToBeDeleted.txt" />
+        <file src="tools\install.ps1" target="tools\install.ps1" />
+        <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
+        <file src="..\..\Weingartner.DataMigration.Fody\bin\Release\Weingartner.DataMigration.Fody.dll" target="Weingartner.DataMigration.Fody.dll" />
+    </files>
+</package>

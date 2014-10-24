@@ -4,6 +4,7 @@
 # User-specific files
 *.suo
 *.user
+*.userosscache
 *.sln.docstates
 
 # Build results
@@ -98,6 +99,8 @@ _TeamCity*
 # NCrunch
 _NCrunch_*
 .*crunch*.local.xml
+*.ncrunchsolution
+*.ncrunchproject
 
 # MightyMoose
 *.mm.*
