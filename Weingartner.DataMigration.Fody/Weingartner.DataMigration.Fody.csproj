@@ -53,17 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Weingartner.DataMigration.Common\AbstractMigration.cs">
-      <Link>AbstractMigration.cs</Link>
-    </Compile>
-    <Compile Include="..\Weingartner.DataMigration.Common\IMigrateData.cs">
-      <Link>IMigrateData.cs</Link>
-    </Compile>
-    <Compile Include="..\Weingartner.DataMigration.Common\MigrationException.cs">
-      <Link>MigrationException.cs</Link>
+    <Compile Include="..\Weingartner.DataMigration.Common\Globals.cs">
+      <Link>Globals.cs</Link>
     </Compile>
     <Compile Include="IGenerateTypeHashes.cs" />
-    <Compile Include="MigrationTestRunner.cs" />
+    <Compile Include="MigrationException.cs" />
     <Compile Include="ModuleWeaver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeHashGenerator.cs" />

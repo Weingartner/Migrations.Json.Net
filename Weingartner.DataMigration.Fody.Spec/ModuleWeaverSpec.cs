@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using FluentAssertions;
 using Mono.Cecil;
+using Weingartner.DataMigration.Common;
 using Xunit;
 
 namespace Weingartner.DataMigration.Fody.Spec
@@ -44,7 +45,7 @@ namespace Weingartner.DataMigration.Fody.Spec
             var type = _Assembly.GetType("Weingartner.DataMigration.TestApplication.TestData");
             var instance = Activator.CreateInstance(type);
 
-            var property = instance.GetType().GetProperty("Version", BindingFlags.Instance | BindingFlags.Public);
+            var property = instance.GetType().GetProperty(Globals.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
             property.Should().NotBeNull();
             property.GetValue(instance).Should().NotBeNull();
         }
@@ -54,11 +55,20 @@ namespace Weingartner.DataMigration.Fody.Spec
         {
             var type = _Assembly.GetType("Weingartner.DataMigration.TestApplication.TestDataContract");
 
-            type.GetProperty("Version")
+            type.GetProperty(Globals.VersionPropertyName)
                 .CustomAttributes
                 .Select(attr => attr.AttributeType)
                 .Should()
                 .Contain(t => t == typeof(DataMemberAttribute));
+        }
+
+        [Fact]
+        public void ShouldHaveVersion0WhenNoMigrationMethodExists()
+        {
+            var type = _Assembly.GetType("Weingartner.DataMigration.TestApplication.TestDataWithoutMigration");
+
+            // ReSharper disable once PossibleNullReferenceException
+            ((int)type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
         }
 
         [Fact]

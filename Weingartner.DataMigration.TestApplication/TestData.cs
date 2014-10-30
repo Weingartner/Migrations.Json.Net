@@ -5,22 +5,21 @@ namespace Weingartner.DataMigration.TestApplication
 {
     // ReSharper disable UnusedMember.Local
     // ReSharper disable UnusedParameter.Local
-    [Migratable]
+    [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]
     public class TestData
     {
-        [Migration("", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")]
         private static void Migrate_0(JObject data) { }
-
-        public void Test() { }
     }
 
     [DataContract]
-    [Migratable]
+    [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]
     public class TestDataContract
     {
-        [Migration("", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")]
         private static void Migrate_0(JObject data) { }
     }
+
+    [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]
+    public class TestDataWithoutMigration { }
     // ReSharper restore UnusedParameter.Local
     // ReSharper restore UnusedMember.Local
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Weingartner.DataMigration.Common
+namespace Weingartner.DataMigration.Fody
 {
     [Serializable]
     public class MigrationException : Exception

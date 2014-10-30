@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Weingartner.DataMigration.Common;
 
 namespace Weingartner.DataMigration.Fody
 {
@@ -14,7 +15,7 @@ namespace Weingartner.DataMigration.Fody
     {
         public string GenerateHash(TypeDefinition type)
         {
-            using (var shaManager = new SHA256Managed())
+            using (var shaManager = new SHA1Managed())
             {
                 var hashBase = GenerateHashBase(type);
                 var hashBytes = shaManager.ComputeHash(Encoding.UTF8.GetBytes(hashBase));
@@ -59,7 +60,7 @@ namespace Weingartner.DataMigration.Fody
             var items = type.Resolve()
                 .Properties
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic)
-                .Where(p => p.Name != "Version")
+                .Where(p => p.Name != Globals.VersionPropertyName)
                 // TODO if type has DataContractAttribute property must have DataMemberAttribute
                 //.Where(p => p.CustomAttributes
                 //    .Select(a => a.AttributeType)

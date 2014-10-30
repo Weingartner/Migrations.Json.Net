@@ -1,7 +1,9 @@
 ﻿namespace Weingartner.DataMigration
 {
-    public interface IExtractHashes<in T>
+    public interface IUpdateVersions<in T>
     {
-        string ExtractHash(T data);
+        int GetVersion(T data);
+
+        void SetVersion(T data, int version);
     }
 }

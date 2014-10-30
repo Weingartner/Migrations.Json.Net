@@ -38,20 +38,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Weingartner.DataMigration.Common\AbstractMigration.cs">
-      <Link>AbstractMigration.cs</Link>
-    </Compile>
-    <Compile Include="..\Weingartner.DataMigration.Common\IMigrateData.cs">
-      <Link>IMigrateData.cs</Link>
-    </Compile>
-    <Compile Include="..\Weingartner.DataMigration.Common\MigrationException.cs">
-      <Link>MigrationException.cs</Link>
+    <Compile Include="..\Weingartner.DataMigration.Common\Globals.cs">
+      <Link>Globals.cs</Link>
     </Compile>
     <Compile Include="HashBasedDataMigrator.cs" />
     <Compile Include="IExtractHashes.cs" />
-    <Compile Include="JObjectHashExtractor.cs" />
+    <Compile Include="IMigrateData.cs" />
+    <Compile Include="JObjectVersionUpdater.cs" />
     <Compile Include="MigratableAttribute.cs" />
-    <Compile Include="MigrationAttribute.cs" />
+    <Compile Include="MigrationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -16,9 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.DataMigration.T
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weingartner.DataMigration.Common", "Weingartner.DataMigration.Common", "{7442CC79-6631-4311-A03F-77EC256C0FE7}"
 	ProjectSection(SolutionItems) = preProject
-		Weingartner.DataMigration.Common\AbstractMigration.cs = Weingartner.DataMigration.Common\AbstractMigration.cs
-		Weingartner.DataMigration.Common\IMigrateData.cs = Weingartner.DataMigration.Common\IMigrateData.cs
-		Weingartner.DataMigration.Common\MigrationException.cs = Weingartner.DataMigration.Common\MigrationException.cs
+		Weingartner.DataMigration.Common\Globals.cs = Weingartner.DataMigration.Common\Globals.cs
 	EndProjectSection
 EndProject
 Global

@@ -76,10 +76,6 @@
       <Project>{43c6cb51-3081-4a1e-ac14-742cc073b891}</Project>
       <Name>Weingartner.DataMigration.Fody</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Weingartner.DataMigration\Weingartner.DataMigration.csproj">
-      <Project>{a3c46398-1e1d-4261-97f0-487d7ffac49c}</Project>
-      <Name>Weingartner.DataMigration</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

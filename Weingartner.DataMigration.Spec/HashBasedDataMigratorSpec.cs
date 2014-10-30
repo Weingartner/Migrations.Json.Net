@@ -11,10 +11,10 @@ namespace Weingartner.DataMigration.Spec
     public class HashBasedDataMigratorSpec
     {
         [Theory]
-        [InlineData(null, "Name_0_1_2")]
-        [InlineData("1", "_1_2")]
-        [InlineData("2", "_2")]
-        public void ShouldApplyChangesMadeByTheMigrationMethods(string configVersion, string expectedName)
+        [InlineData(0, "Name_0_1_2")]
+        [InlineData(1, "_1_2")]
+        [InlineData(2, "_2")]
+        public void ShouldApplyChangesMadeByTheMigrationMethods(int configVersion, string expectedName)
         {
             var configData = CreateConfigurationData(configVersion);
 
@@ -27,33 +27,23 @@ namespace Weingartner.DataMigration.Spec
         [Fact]
         public void ShouldHaveCorrectVersionAfterMigration()
         {
-            var configData = CreateConfigurationData("");
+            var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
             sut.Migrate(ref configData, typeof(FixtureData));
 
-            configData["Version"].Value<string>().Should().Be("3");
+            configData[Globals.VersionPropertyName].Value<int>().Should().Be(3);
         }
 
         [Fact]
         public void ShouldWorkWithNonVersionedData()
         {
-            var configData = CreateConfigurationData("");
-            configData.Remove("Version");
+            var configData = CreateConfigurationData(0);
+            configData.Remove(Globals.VersionPropertyName);
 
             var sut = CreateMigrator();
             new Action(() => sut.Migrate(ref configData, typeof(FixtureData)))
                 .ShouldNotThrow();
-        }
-
-        [Fact]
-        public void ShouldThrowIfMigrationIsMissing()
-        {
-            var configData = CreateConfigurationData("InvalidVersion");
-
-            var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof(FixtureData)))
-                .ShouldThrow<MigrationException>();
         }
 
         [Fact]
@@ -69,7 +59,7 @@ namespace Weingartner.DataMigration.Spec
         [Fact]
         public void ShouldThrowIfConfigurationDataTypeIsNull()
         {
-            var configData = CreateConfigurationData("");
+            var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
             new Action(() => sut.Migrate(ref configData, null))
@@ -80,117 +70,64 @@ namespace Weingartner.DataMigration.Spec
         public void ShouldThrowIfMigrationMethodHasTooManyParameters()
         {
             var configData = JObject.FromObject(new InvalidData());
-            configData["Version"] = string.Empty;
+            configData[Globals.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
             new Action(() => sut.Migrate(ref configData, typeof(InvalidData)))
                 .ShouldThrow<MigrationException>();
         }
 
-        [Fact]
-        public void ShouldThrowIfMultipleMigrationMethodsCanMigrateFromSameVersion()
+        private static IMigrateData<JObject> CreateMigrator()
         {
-            var configData = JObject.FromObject(new InvalidData2());
-            configData["Version"] = string.Empty;
-
-            var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof(InvalidData2)))
-                .ShouldThrow<MigrationException>();
+            return new HashBasedDataMigrator<JObject>(new JObjectVersionUpdater());
         }
 
-        [Fact]
-        public void ShouldThrowIfCircularMigrationDetected()
-        {
-            var configData = JObject.FromObject(new InvalidData3());
-            configData["Version"] = string.Empty;
-
-            var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof (InvalidData3)))
-                .ShouldThrow<MigrationException>();
-        }
-
-        private static IMigrateData<JObject, Type> CreateMigrator()
-        {
-            return new HashBasedDataMigrator<JObject>(new JObjectHashExtractor());
-        }
-
-        private static JObject CreateConfigurationData(string version)
+        private static JObject CreateConfigurationData(int version)
         {
             var data = JObject.FromObject(new FixtureData());
-            data["Version"] = version;
+            data[Globals.VersionPropertyName] = version;
             return data;
         }
 
         // ReSharper disable UnusedMember.Local
         // ReSharper disable UnusedParameter.Local
         // ReSharper disable UnusedField.Compiler
+
+        [Migratable("")]
         private class FixtureData
         {
-            private static string VersionStatic = "3";
+            private static int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
 
-            [Migration("", "1")]
             private static void Migrate_0(ref JObject data)
             {
                 data["Name"] = "Name_0";
-                data["Version"] = "1";
             }
 
-            [Migration("1", "2")]
             private static void Migrate_1(ref JObject data)
             {
                 data["Name"] += "_1";
-                data["Version"] = "2";
             }
 
-            [Migration("2", "3")]
             private static void Migrate_2(ref JObject data)
             {
                 data["Name"] += "_2";
-                data["Version"] = "3";
             }
         }
 
+        [Migratable("")]
         private class InvalidData
         {
-            private static string VersionStatic = "3";
+            private static int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
 
-            [Migration("", "1")]
             private static void Migrate_0(ref JObject data, string additionalData) { }
         }
 
-        private class InvalidData2
-        {
-            private static string VersionStatic = "3";
-
-            [DataMember]
-            public string Name { get; private set; }
-
-            [Migration("", "1")]
-            private static void Migrate_0(ref JObject data) { }
-
-            [Migration("", "1")]
-            private static void Migrate_1(ref JObject data) { }
-        }
-
-        private class InvalidData3
-        {
-            private static string VersionStatic = "3";
-
-            [DataMember]
-            public string Name { get; private set; }
-
-            [Migration("", "a")]
-            private static void Migrate_0(ref JObject data) { }
-
-            [Migration("a", "")]
-            private static void Migrate_1(ref JObject data) { }
-        }
         // ReSharper restore UnusedField.Compiler
         // ReSharper restore UnusedParameter.Local
         // ReSharper restore UnusedMember.Local

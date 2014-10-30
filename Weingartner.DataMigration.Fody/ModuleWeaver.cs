@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
 using FieldAttributes = Mono.Cecil.FieldAttributes;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 using PropertyAttributes = Mono.Cecil.PropertyAttributes;
+using Weingartner.DataMigration.Common;
 
 namespace Weingartner.DataMigration.Fody
 {
@@ -18,15 +20,24 @@ namespace Weingartner.DataMigration.Fody
         {
             ModuleDefinition
                 .Types
-                .Where(t => t
-                    .CustomAttributes
-                    .Select(attr => attr.AttributeType)
-                    .Any(attrType => attrType.FullName == "Weingartner.DataMigration.MigratableAttribute")) // TODO implement proper equality method
+                .Where(IsMigratable)
                 .ToList()
                 .ForEach(CheckMigrationAndAddVersion);
         }
 
-        private void CheckMigrationAndAddVersion(TypeDefinition type)
+        private static bool IsMigratable(TypeDefinition type)
+        {
+            return GetMigratableAttribute(type) != null;
+        }
+
+        private static CustomAttribute GetMigratableAttribute(ICustomAttributeProvider customAttributeProvider)
+        {
+            return customAttributeProvider
+                .CustomAttributes
+                .SingleOrDefault(attr => attr.AttributeType.FullName == "Weingartner.DataMigration.MigratableAttribute");
+        }
+
+        private static void CheckMigrationAndAddVersion(TypeDefinition type)
         {
             CheckMigration(type);
             AddVersion(type);
@@ -34,11 +45,25 @@ namespace Weingartner.DataMigration.Fody
 
         private static void CheckMigration(TypeDefinition type)
         {
-            var dummyData = new object();
-            new MigrationTestRunner().Migrate(ref dummyData, type);
+            var oldTypeHash = (string)GetMigratableAttribute(type)
+                .ConstructorArguments.Single().Value;
+
+            var newTypeHash = new TypeHashGenerator().GenerateHash(type);
+
+            if (oldTypeHash != newTypeHash)
+            {
+                throw new MigrationException(
+                    string.Format(
+                        "Type '{0}' has changed. " +
+                        "If you think that a migration is needed, add a private static method named 'Migrate_X', " +
+                        "where 'X' is a consecutive number starting from 0. " +
+                        "To resolve this error, update the hash passed to the `MigratableAttribute` of the type to '{1}'.",
+                        type.FullName,
+                        newTypeHash));
+            }
         }
 
-        private void AddVersion(TypeDefinition type)
+        private static void AddVersion(TypeDefinition type)
         {
             var field = CreateBackingField(type);
             InitializeBackingField(field);
@@ -49,19 +74,19 @@ namespace Weingartner.DataMigration.Fody
             if (TypeIsDataContract(type))
             {
                 var dataMemberCtor = typeof(DataMemberAttribute).GetConstructor(Type.EmptyTypes);
-                var dataMemberAttribute = new CustomAttribute(ModuleDefinition.Import(dataMemberCtor));
+                var dataMemberAttribute = new CustomAttribute(type.Module.Import(dataMemberCtor));
                 property.CustomAttributes.Add(dataMemberAttribute);
             }
         }
 
-        private FieldDefinition CreateBackingField(TypeDefinition type)
+        private static FieldDefinition CreateBackingField(TypeDefinition type)
         {
-            var field = new FieldDefinition("_Version", FieldAttributes.Private | FieldAttributes.Static, ModuleDefinition.TypeSystem.String);
+            var field = new FieldDefinition(Globals.VersionBackingFieldName, FieldAttributes.Private | FieldAttributes.Static, type.Module.TypeSystem.Int32);
             type.Fields.Add(field);
             return field;
         }
 
-        private void InitializeBackingField(FieldDefinition field)
+        private static void InitializeBackingField(FieldDefinition field)
         {
             var type = field.DeclaringType;
             var staticCtor = type.Methods.SingleOrDefault(m => m.IsStatic && m.Name == ".cctor");
@@ -78,25 +103,25 @@ namespace Weingartner.DataMigration.Fody
             var il = staticCtor.Body.GetILProcessor();
             var first = il.Body.Instructions.First();
 
-            var hashCode = GenerateHash(type);
-            il.InsertBefore(first, il.Create(OpCodes.Ldstr, hashCode));
+            var version =
+                type.Methods.Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
+                    .Where(m => m.Success)
+                    .Select(m => int.Parse(m.Value))
+                    .Concat(Enumerable.Repeat(-1, 1))
+                    .Max() + 1;
+            il.InsertBefore(first, il.Create(OpCodes.Ldc_I4, version));
             il.InsertBefore(first, il.Create(OpCodes.Stsfld, field));
-        }
-
-        private static string GenerateHash(TypeDefinition type)
-        {
-            return new TypeHashGenerator().GenerateHash(type);
+            il.Body.OptimizeMacros();
         }
 
         private static PropertyDefinition CreateProperty(TypeDefinition type, FieldReference field)
         {
-            const string propertyName = "Version";
-            var property = new PropertyDefinition(propertyName, PropertyAttributes.None, field.FieldType);
+            var property = new PropertyDefinition(Globals.VersionPropertyName, PropertyAttributes.None, field.FieldType);
             type.Properties.Add(property);
             return property;
         }
 
-        private void CreatePropertyGetter(TypeDefinition type, PropertyDefinition property, FieldDefinition field)
+        private static void CreatePropertyGetter(TypeDefinition type, PropertyDefinition property, FieldDefinition field)
         {
             var getter = new MethodDefinition("get_" + property.Name,
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
@@ -109,25 +134,9 @@ namespace Weingartner.DataMigration.Fody
             il.Emit(OpCodes.Ret);
         }
 
-        private void CreatePropertySetter(TypeDefinition type, PropertyDefinition property, FieldReference field)
+        private static bool TypeIsDataContract(TypeDefinition type)
         {
-            var setter = new MethodDefinition("set_" + property.Name,
-                MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
-                ModuleDefinition.TypeSystem.Void) { IsGetter = true };
-            setter.Parameters.Add(new ParameterDefinition(field.FieldType));
-            property.SetMethod = setter;
-            type.Methods.Add(setter);
-
-            var il = setter.Body.GetILProcessor();
-            il.Emit(OpCodes.Ldarg_0);
-            il.Emit(OpCodes.Ldarg_1);
-            il.Emit(OpCodes.Stfld, field);
-            il.Emit(OpCodes.Ret);
-        }
-
-        private bool TypeIsDataContract(TypeDefinition type)
-        {
-            var dataContractAttribute = ModuleDefinition.Import(typeof(DataContractAttribute)).Resolve();
+            var dataContractAttribute = type.Module.Import(typeof(DataContractAttribute)).Resolve();
             return type.CustomAttributes
                 .Select(attr => attr.AttributeType)
                 .Any(attrType => attrType.IsProbablyEqualTo(dataContractAttribute));

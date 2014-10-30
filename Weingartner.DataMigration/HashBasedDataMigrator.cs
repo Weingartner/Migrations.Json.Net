@@ -1,67 +1,84 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Weingartner.DataMigration.Common;
 
 namespace Weingartner.DataMigration
 {
-    public class HashBasedDataMigrator<TData> : AbstractMigration<TData, Type, MethodInfo>
+    public class HashBasedDataMigrator<TData> : IMigrateData<TData>
         where TData : class
     {
-        private readonly IExtractHashes<TData> _HashExtractor;
+        private readonly IUpdateVersions<TData> _VersionExtractor;
 
-        public HashBasedDataMigrator(IExtractHashes<TData> hashExtractor)
+        public HashBasedDataMigrator(IUpdateVersions<TData> versionExtractor)
         {
-            _HashExtractor = hashExtractor;
+            _VersionExtractor = versionExtractor;
         }
 
-        protected override string ExtractHash(TData data)
+        public void Migrate(ref TData data, Type dataType)
         {
-            return _HashExtractor.ExtractHash(data);
-        }
+            if (data == null) throw new ArgumentNullException("data");
+            if (dataType == null) throw new ArgumentNullException("dataType");
 
-        protected override string GetCurrentVersion(Type type)
-        {
-// ReSharper disable once PossibleNullReferenceException
-            return (string)type.GetField("VersionStatic", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-        }
+            var currentVersion = GetCurrentVersion(dataType);
+            var version = _VersionExtractor.GetVersion(data);
 
-        protected override MethodInfo GetMigrationMethod(Type type, string version)
-        {
-            var methods = type.GetMethods(BindingFlags.Static | BindingFlags.NonPublic)
-                .Where(m => m.GetCustomAttribute<MigrationAttribute>().FromVersion == version)
-                .ToList();
-
-            if (methods.Count > 1)
+            while (version < currentVersion)
             {
-                ThrowMultipleMigrationMethodsException(type, version);
-            }
+                var migrationMethod = GetMigrationMethod(dataType, version);
+                if (migrationMethod == null)
+                {
+                    throw new MigrationException(
+                        string.Format(
+                            "Type '{0}' has changed. " +
+                            "If you think that a migration is needed, add a private static method named 'Migrate_X', " +
+                            "where 'X' is a consecutive number starting from 0.",
+                            dataType.FullName));
+                }
 
-            return methods.FirstOrDefault();
+                CheckParameters(migrationMethod);
+
+                ExecuteMigration(migrationMethod, ref data);
+
+                version++;
+
+                _VersionExtractor.SetVersion(data, version);
+            }
         }
 
-        protected override void CheckParameters(MethodInfo method)
+        protected void ThrowInvalidParametersException(string typeName, string methodName)
+        {
+            throw new MigrationException(
+                string.Format(
+                    "Migration method '{0}.{1}' must have a single parameter of type '{2}'.",
+                    typeName,
+                    methodName,
+                    typeof(TData).FullName));
+        }
+
+        protected int GetCurrentVersion(Type type)
+        {
+            // ReSharper disable once PossibleNullReferenceException
+            return (int)type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+        }
+
+        protected MethodInfo GetMigrationMethod(Type type, int version)
+        {
+            return type.GetMethod("Migrate_" + version, BindingFlags.Static | BindingFlags.NonPublic);
+        }
+
+        protected void CheckParameters(MethodInfo method)
         {
             var parameters = method.GetParameters();
             if (parameters.Length != 1 || parameters[0].ParameterType != typeof(TData).MakeByRefType())
             {
-                ThrowInvalidParametersException(GetTypeName(method.DeclaringType), method.Name);
+                // ReSharper disable once PossibleNullReferenceException
+                ThrowInvalidParametersException(method.DeclaringType.FullName, method.Name);
             }
         }
 
-        protected override void ExecuteMigration(MethodInfo method, ref TData data)
+        protected void ExecuteMigration(MethodInfo method, ref TData data)
         {
             method.Invoke(null, new object[] { data });
-        }
-
-        protected override string GetTargetMigrationVersion(MethodInfo method)
-        {
-            return method.GetCustomAttribute<MigrationAttribute>().ToVersion;
-        }
-
-        protected override string GetTypeName(Type type)
-        {
-            return type.FullName;
         }
     }
 }
