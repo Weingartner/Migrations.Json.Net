@@ -78,7 +78,9 @@ namespace Weingartner.DataMigration
 
         protected void ExecuteMigration(MethodInfo method, ref TData data)
         {
-            method.Invoke(null, new object[] { data });
+            var parameters = new object[] { data };
+            method.Invoke(null, parameters);
+            data = (TData)parameters[0];
         }
     }
 }

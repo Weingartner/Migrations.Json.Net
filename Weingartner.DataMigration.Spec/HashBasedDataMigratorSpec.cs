@@ -25,6 +25,17 @@ namespace Weingartner.DataMigration.Spec
         }
 
         [Fact]
+        public void ShouldBeAbleToReplaceWholeObject()
+        {
+            var configData = JToken.FromObject(new[] { 1, 2, 3 });
+
+            var sut = CreateMigrator();
+            sut.Migrate(ref configData, typeof(FixtureData2));
+
+            configData.Should().BeOfType<JObject>();
+        }
+
+        [Fact]
         public void ShouldHaveCorrectVersionAfterMigration()
         {
             var configData = CreateConfigurationData(0);
@@ -114,6 +125,20 @@ namespace Weingartner.DataMigration.Spec
             private static void Migrate_2(ref JObject data)
             {
                 data["Name"] += "_2";
+            }
+        }
+
+        [Migratable("")]
+        private class FixtureData2
+        {
+            private static int _version = 1;
+
+            [DataMember]
+            public int[] Values { get; private set; }
+
+            private static void Migrate_0(ref JToken data)
+            {
+                data = new JObject { { "Values", data } };
             }
         }
 
