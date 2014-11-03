@@ -88,6 +88,16 @@ namespace Weingartner.DataMigration.Spec
                 .ShouldThrow<MigrationException>();
         }
 
+        [Fact]
+        public void ShouldThrowIfVersionFieldIsMissing()
+        {
+            var configData = JToken.FromObject(new InvalidData2());
+
+            var sut = CreateMigrator();
+            new Action(() => sut.Migrate(ref configData, typeof(InvalidData2)))
+                .ShouldThrow<MigrationException>();
+        }
+
         private static IMigrateData<JToken> CreateMigrator()
         {
             return new HashBasedDataMigrator<JToken>(new JsonVersionUpdater());
@@ -147,6 +157,14 @@ namespace Weingartner.DataMigration.Spec
         {
             private static int _version = 3;
 
+            [DataMember]
+            public string Name { get; private set; }
+
+            private static void Migrate_0(ref JObject data, string additionalData) { }
+        }
+
+        private class InvalidData2
+        {
             [DataMember]
             public string Name { get; private set; }
 

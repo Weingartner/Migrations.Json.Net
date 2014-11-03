@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Weingartner.DataMigration.Common;
 
 namespace Weingartner.DataMigration
@@ -57,8 +58,20 @@ namespace Weingartner.DataMigration
 
         protected int GetCurrentVersion(Type type)
         {
-            // ReSharper disable once PossibleNullReferenceException
-            return (int)type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            var versionField = type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            if (versionField == null)
+            {
+                throw new MigrationException(
+                    string.Format(
+                        "Type '{0}' has no version field. " +
+                        "Ensure that either the type has the custom attribute `[{1}]` and " +
+                        "the NuGet package '{2}' is installed or add a private static field named '{3}'.",
+                        type.FullName,
+                        Regex.Replace(typeof(MigratableAttribute).Name, "Attribute$", string.Empty),
+                        typeof(HashBasedDataMigrator<>).Assembly.GetName().Name,
+                        Globals.VersionBackingFieldName));
+            }
+            return (int)versionField.GetValue(null);
         }
 
         protected MethodInfo GetMigrationMethod(Type type, int version)
