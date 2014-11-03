@@ -39,7 +39,7 @@ namespace Weingartner.DataMigration.Spec
         public void ShouldWorkWithNonVersionedData()
         {
             var configData = CreateConfigurationData(0);
-            configData.Remove(Globals.VersionPropertyName);
+            ((JObject)configData).Remove(Globals.VersionPropertyName);
 
             var sut = CreateMigrator();
             new Action(() => sut.Migrate(ref configData, typeof(FixtureData)))
@@ -49,7 +49,7 @@ namespace Weingartner.DataMigration.Spec
         [Fact]
         public void ShouldThrowIfConfigurationDataIsNull()
         {
-            JObject configData = null;
+            JToken configData = null;
 
             var sut = CreateMigrator();
             new Action(() => sut.Migrate(ref configData, typeof(FixtureData)))
@@ -69,7 +69,7 @@ namespace Weingartner.DataMigration.Spec
         [Fact]
         public void ShouldThrowIfMigrationMethodHasTooManyParameters()
         {
-            var configData = JObject.FromObject(new InvalidData());
+            var configData = JToken.FromObject(new InvalidData());
             configData[Globals.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
@@ -77,14 +77,14 @@ namespace Weingartner.DataMigration.Spec
                 .ShouldThrow<MigrationException>();
         }
 
-        private static IMigrateData<JObject> CreateMigrator()
+        private static IMigrateData<JToken> CreateMigrator()
         {
-            return new HashBasedDataMigrator<JObject>(new JObjectVersionUpdater());
+            return new HashBasedDataMigrator<JToken>(new JsonVersionUpdater());
         }
 
-        private static JObject CreateConfigurationData(int version)
+        private static JToken CreateConfigurationData(int version)
         {
-            var data = JObject.FromObject(new FixtureData());
+            var data = JToken.FromObject(new FixtureData());
             data[Globals.VersionPropertyName] = version;
             return data;
         }

@@ -3,10 +3,12 @@ using Weingartner.DataMigration.Common;
 
 namespace Weingartner.DataMigration
 {
-    public class JObjectVersionUpdater : IUpdateVersions<JObject>
+    public class JsonVersionUpdater : IUpdateVersions<JToken>
     {
-        public int GetVersion(JObject data)
+        public int GetVersion(JToken data)
         {
+            if (!(data is JObject)) return 0;
+
             var versionToken = data[Globals.VersionPropertyName];
             return versionToken != null
                 ? versionToken.Value<int>()
@@ -14,8 +16,9 @@ namespace Weingartner.DataMigration
         }
 
 
-        public void SetVersion(JObject data, int version)
+        public void SetVersion(JToken data, int version)
         {
+            if (!(data is JObject)) return;
             data[Globals.VersionPropertyName] = version;
         }
     }

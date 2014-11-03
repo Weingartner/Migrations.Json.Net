@@ -44,7 +44,7 @@
     <Compile Include="HashBasedDataMigrator.cs" />
     <Compile Include="IExtractHashes.cs" />
     <Compile Include="IMigrateData.cs" />
-    <Compile Include="JObjectVersionUpdater.cs" />
+    <Compile Include="JsonVersionUpdater.cs" />
     <Compile Include="MigratableAttribute.cs" />
     <Compile Include="MigrationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

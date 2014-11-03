@@ -35,7 +35,7 @@ namespace Weingartner.DataMigration
                             dataType.FullName));
                 }
 
-                CheckParameters(migrationMethod);
+                CheckParameters(migrationMethod, data.GetType());
 
                 ExecuteMigration(migrationMethod, ref data);
 
@@ -66,10 +66,10 @@ namespace Weingartner.DataMigration
             return type.GetMethod("Migrate_" + version, BindingFlags.Static | BindingFlags.NonPublic);
         }
 
-        protected void CheckParameters(MethodInfo method)
+        protected void CheckParameters(MethodInfo method, Type dataType)
         {
             var parameters = method.GetParameters();
-            if (parameters.Length != 1 || parameters[0].ParameterType != typeof(TData).MakeByRefType())
+            if (parameters.Length != 1 || !parameters[0].ParameterType.IsAssignableFrom(dataType.MakeByRefType()))
             {
                 // ReSharper disable once PossibleNullReferenceException
                 ThrowInvalidParametersException(method.DeclaringType.FullName, method.Name);
