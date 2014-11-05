@@ -19,7 +19,7 @@ namespace Weingartner.DataMigration.Spec
             var configData = CreateConfigurationData(configVersion);
 
             var sut = CreateMigrator();
-            sut.Migrate(ref configData, typeof(FixtureData));
+            sut.TryMigrate(ref configData, typeof(FixtureData));
 
             configData["Name"].Value<string>().Should().Be(expectedName);
         }
@@ -30,7 +30,7 @@ namespace Weingartner.DataMigration.Spec
             var configData = JToken.FromObject(new[] { 1, 2, 3 });
 
             var sut = CreateMigrator();
-            sut.Migrate(ref configData, typeof(FixtureData2));
+            sut.TryMigrate(ref configData, typeof(FixtureData2));
 
             configData.Should().BeOfType<JObject>();
         }
@@ -41,7 +41,7 @@ namespace Weingartner.DataMigration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            sut.Migrate(ref configData, typeof(FixtureData));
+            sut.TryMigrate(ref configData, typeof(FixtureData));
 
             configData[Globals.VersionPropertyName].Value<int>().Should().Be(3);
         }
@@ -53,7 +53,7 @@ namespace Weingartner.DataMigration.Spec
             ((JObject)configData).Remove(Globals.VersionPropertyName);
 
             var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof(FixtureData)))
+            new Action(() => sut.TryMigrate(ref configData, typeof(FixtureData)))
                 .ShouldNotThrow();
         }
 
@@ -63,7 +63,7 @@ namespace Weingartner.DataMigration.Spec
             JToken configData = null;
 
             var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof(FixtureData)))
+            new Action(() => sut.TryMigrate(ref configData, typeof(FixtureData)))
                 .ShouldThrow<ArgumentNullException>();
         }
 
@@ -73,29 +73,40 @@ namespace Weingartner.DataMigration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, null))
+            new Action(() => sut.TryMigrate(ref configData, null))
                 .ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
         public void ShouldThrowIfMigrationMethodHasTooManyParameters()
         {
-            var configData = JToken.FromObject(new InvalidData());
+            var configData = JToken.FromObject(new DataWithInvalidMigrationMethod());
             configData[Globals.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof(InvalidData)))
+            new Action(() => sut.TryMigrate(ref configData, typeof(DataWithInvalidMigrationMethod)))
                 .ShouldThrow<MigrationException>();
         }
 
         [Fact]
         public void ShouldThrowIfVersionFieldIsMissing()
         {
-            var configData = JToken.FromObject(new InvalidData2());
+            var configData = JToken.FromObject(new DataWithoutVersion());
 
             var sut = CreateMigrator();
-            new Action(() => sut.Migrate(ref configData, typeof(InvalidData2)))
+            new Action(() => sut.TryMigrate(ref configData, typeof(DataWithoutVersion)))
                 .ShouldThrow<MigrationException>();
+        }
+
+        [Fact]
+        public void ShouldNotChangeDataWhenTypeIsNotMigratable()
+        {
+            var configData = JToken.FromObject(new NotMigratableData("Test"));
+            var origConfigData = configData.DeepClone();
+
+            var sut = CreateMigrator();
+            sut.TryMigrate(ref configData, typeof(NotMigratableData));
+            configData.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
         }
 
         private static IMigrateData<JToken> CreateMigrator()
@@ -153,22 +164,39 @@ namespace Weingartner.DataMigration.Spec
         }
 
         [Migratable("")]
-        private class InvalidData
+        private class DataWithInvalidMigrationMethod
         {
             private static int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_0(ref JObject data, string additionalData) { }
+            private static void Migrate_0(ref JToken data, string additionalData) { }
         }
 
-        private class InvalidData2
+        [Migratable("")]
+        private class DataWithoutVersion
         {
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_0(ref JObject data, string additionalData) { }
+            private static void Migrate_0(ref JToken data) { }
+        }
+
+        private class NotMigratableData
+        {
+            [DataMember]
+            public string Name { get; private set; }
+
+            public NotMigratableData(string name)
+            {
+                Name = name;
+            }
+
+            private static void Migrate_0(ref JToken data)
+            {
+                data["Name"] += " - migrated";
+            }
         }
 
         // ReSharper restore UnusedField.Compiler

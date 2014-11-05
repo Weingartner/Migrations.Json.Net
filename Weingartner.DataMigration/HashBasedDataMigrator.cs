@@ -15,10 +15,12 @@ namespace Weingartner.DataMigration
             _VersionExtractor = versionExtractor;
         }
 
-        public void Migrate(ref TData data, Type dataType)
+        public void TryMigrate(ref TData data, Type dataType)
         {
             if (data == null) throw new ArgumentNullException("data");
             if (dataType == null) throw new ArgumentNullException("dataType");
+
+            if (dataType.GetCustomAttribute<MigratableAttribute>() == null) return;
 
             var currentVersion = GetCurrentVersion(dataType);
             var version = _VersionExtractor.GetVersion(data);
