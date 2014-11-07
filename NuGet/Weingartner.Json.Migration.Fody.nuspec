@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
-        <id>Weingartner.DataMigration</id>
+        <id>Weingartner.Json.Migration.Fody</id>
         <version>0.0.0</version>
-        <title>Weingartner.DataMigration</title>
+        <title>Weingartner.Json.Migration.Fody</title>
         <authors>Weingartner Maschinenbau GmbH</authors>
         <owners>Weingartner Maschinenbau GmbH</owners>
         <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -18,6 +18,9 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="..\..\Weingartner.DataMigration\bin\Release\Weingartner.DataMigration.dll" target="lib\net45\Weingartner.DataMigration.dll" />
+        <file src="tools\install.ps1" target="tools\install.ps1" />
+        <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
+        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.dll" target="lib\net45\Weingartner.Json.Migration.dll" />
+        <file src="..\Weingartner.Json.Migration.Fody\bin\Release\Weingartner.Json.Migration.Fody.dll" target="Weingartner.Json.Migration.Fody.dll" />
     </files>
 </package>

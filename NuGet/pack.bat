@@ -1,0 +1,1 @@
+nuget pack Weingartner.Json.Migration.Fody.nuspec -OutputDirectory C:\Users\egger\Workspace\NuGet -Version 0.0.1-alpha 

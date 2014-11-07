@@ -1,1 +1,0 @@
-nuget pack Weingartner.DataMigration.Fody.nuspec -OutputDirectory C:\Users\egger\Workspace\NuGet -Version 0.0.11-alpha 
