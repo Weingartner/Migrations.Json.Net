@@ -46,6 +46,7 @@
     <Compile Include="IMigrateData.cs" />
     <Compile Include="JsonVersionUpdater.cs" />
     <Compile Include="MigratableAttribute.cs" />
+    <Compile Include="MigrationConverter.cs" />
     <Compile Include="MigrationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
