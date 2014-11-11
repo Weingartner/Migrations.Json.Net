@@ -72,10 +72,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj">
-      <Project>{e4b54007-e0ef-4571-acf4-e18dfd08a369}</Project>
-      <Name>Weingartner.Json.Migration.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weingartner.Json.Migration.Fody\Weingartner.Json.Migration.Fody.csproj">
       <Project>{43c6cb51-3081-4a1e-ac14-742cc073b891}</Project>
       <Name>Weingartner.Json.Migration.Fody</Name>

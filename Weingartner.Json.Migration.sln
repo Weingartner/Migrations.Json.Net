@@ -14,7 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.TestApplication", "Weingartner.Json.Migration.TestApplication\Weingartner.Json.Migration.TestApplication.csproj", "{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Common", "Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj", "{E4B54007-E0EF-4571-ACF4-E18DFD08A369}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weingartner.Json.Migration.Common", "Weingartner.Json.Migration.Common", "{6F3D53EF-3F0B-4D93-AECC-00B831C904CE}"
+	ProjectSection(SolutionItems) = preProject
+		Weingartner.Json.Migration.Common\Globals.cs = Weingartner.Json.Migration.Common\Globals.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +45,6 @@ Global
 		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4B54007-E0EF-4571-ACF4-E18DFD08A369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4B54007-E0EF-4571-ACF4-E18DFD08A369}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4B54007-E0EF-4571-ACF4-E18DFD08A369}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4B54007-E0EF-4571-ACF4-E18DFD08A369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
