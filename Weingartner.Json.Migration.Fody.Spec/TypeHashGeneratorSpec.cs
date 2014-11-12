@@ -13,11 +13,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
 {
     public class TypeHashGeneratorSpec
     {
-        public TypeHashGeneratorSpec()
-        {
-            VersionMemberName.TrySetInstance(new ValidCsVersionMemberName());
-        }
-
         [Fact]
         public void ShouldGenerateCorrectHashForSimpleType()
         {
