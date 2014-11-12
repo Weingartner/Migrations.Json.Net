@@ -92,7 +92,7 @@ namespace Weingartner.Json.Migration.Spec
                 : this(color, Enumerable.Empty<House>())
             { }
 
-            private static void Migrate_0(ref JToken data) { }
+            private static void Migrate_1(ref JToken data) { }
         }
 
         [Migratable("")]
@@ -109,7 +109,7 @@ namespace Weingartner.Json.Migration.Spec
                 Address = address;
             }
 
-            private static void Migrate_0(ref JToken data)
+            private static void Migrate_1(ref JToken data)
             {
                 data["Name"] += " Migrated";
             }
@@ -127,7 +127,7 @@ namespace Weingartner.Json.Migration.Spec
                 Street = street;
             }
 
-            private static void Migrate_0(ref JToken data)
+            private static void Migrate_1(ref JToken data)
             {
                 data["Street"] += " Migrated";
             }

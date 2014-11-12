@@ -8,14 +8,14 @@ namespace Weingartner.Json.Migration.TestApplication
     [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]
     public class TestData
     {
-        private static void Migrate_0(JObject data) { }
+        private static void Migrate_1(JObject data) { }
     }
 
     [DataContract]
     [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]
     public class TestDataContract
     {
-        private static void Migrate_0(JObject data) { }
+        private static void Migrate_1(JObject data) { }
     }
 
     [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]

@@ -27,7 +27,7 @@ namespace Weingartner.Json.Migration
 
             while (version < currentVersion)
             {
-                var migrationMethod = GetMigrationMethod(dataType, version);
+                var migrationMethod = GetMigrationMethod(dataType, version + 1);
                 if (migrationMethod == null)
                 {
                     throw new MigrationException(
@@ -35,7 +35,7 @@ namespace Weingartner.Json.Migration
                             "The migration method, which migrates an instance of type '{0}' to version {1} cannot be found. " +
                             "To resolve this, add a method with the following signature: `private static void Migrate_{1}(ref {2} data)",
                             dataType.FullName,
-                            version,
+                            version + 1,
                             typeof(TData).FullName));
                 }
 

@@ -138,17 +138,17 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_0(ref JObject data)
+            private static void Migrate_1(ref JObject data)
             {
                 data["Name"] = "Name_0";
             }
 
-            private static void Migrate_1(ref JObject data)
+            private static void Migrate_2(ref JObject data)
             {
                 data["Name"] += "_1";
             }
 
-            private static void Migrate_2(ref JObject data)
+            private static void Migrate_3(ref JObject data)
             {
                 data["Name"] += "_2";
             }
@@ -162,7 +162,7 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public int[] Values { get; private set; }
 
-            private static void Migrate_0(ref JToken data)
+            private static void Migrate_1(ref JToken data)
             {
                 data = new JObject { { "Values", data } };
             }
@@ -176,7 +176,7 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_0(ref JToken data, string additionalData) { }
+            private static void Migrate_1(ref JToken data, string additionalData) { }
         }
 
         [Migratable("")]
@@ -185,7 +185,7 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_0(ref JToken data) { }
+            private static void Migrate_1(ref JToken data) { }
         }
 
         private class NotMigratableData
@@ -198,7 +198,7 @@ namespace Weingartner.Json.Migration.Spec
                 Name = name;
             }
 
-            private static void Migrate_0(ref JToken data)
+            private static void Migrate_1(ref JToken data)
             {
                 data["Name"] += " - migrated";
             }
