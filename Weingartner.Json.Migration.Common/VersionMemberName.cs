@@ -29,11 +29,6 @@ namespace Weingartner.Json.Migration.Common
             _instance = instance;
             return true;
         }
-
-        public static bool IsInstanceCreated
-        {
-            get { return _instance != null; }
-        }
     }
 
     public class InvalidCsVersionMemberName : IVersionMemberName
