@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weingartner.Json.Migration.Common", "Weingartner.Json.Migration.Common", "{6F3D53EF-3F0B-4D93-AECC-00B831C904CE}"
 	ProjectSection(SolutionItems) = preProject
-		Weingartner.Json.Migration.Common\Globals.cs = Weingartner.Json.Migration.Common\Globals.cs
+		Weingartner.Json.Migration.Common\VersionMemberName.cs = Weingartner.Json.Migration.Common\VersionMemberName.cs
 	EndProjectSection
 EndProject
 Global

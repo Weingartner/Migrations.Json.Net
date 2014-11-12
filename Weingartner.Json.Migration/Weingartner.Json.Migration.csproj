@@ -38,8 +38,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Weingartner.Json.Migration.Common\Globals.cs">
-      <Link>Globals.cs</Link>
+    <Compile Include="..\Weingartner.Json.Migration.Common\VersionMemberName.cs">
+      <Link>VersionMemberName.cs</Link>
     </Compile>
     <Compile Include="HashBasedDataMigrator.cs" />
     <Compile Include="IExtractHashes.cs" />

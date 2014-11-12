@@ -61,7 +61,7 @@ namespace Weingartner.Json.Migration
 
         protected int GetCurrentVersion(Type type)
         {
-            var versionField = type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var versionField = type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
             if (versionField == null)
             {
                 throw new MigrationException(
@@ -72,7 +72,7 @@ namespace Weingartner.Json.Migration
                         type.FullName,
                         Regex.Replace(typeof(MigratableAttribute).Name, "Attribute$", string.Empty),
                         typeof(HashBasedDataMigrator<>).Assembly.GetName().Name,
-                        Globals.VersionBackingFieldName));
+                        VersionMemberName.Instance.VersionBackingFieldName));
             }
             return (int)versionField.GetValue(null);
         }

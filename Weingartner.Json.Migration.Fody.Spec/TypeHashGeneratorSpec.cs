@@ -6,12 +6,18 @@ using System.Runtime.Serialization;
 using FluentAssertions;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
+using Weingartner.Json.Migration.Common;
 using Xunit;
 
 namespace Weingartner.Json.Migration.Fody.Spec
 {
     public class TypeHashGeneratorSpec
     {
+        public TypeHashGeneratorSpec()
+        {
+            VersionMemberName.TrySetInstance(new ValidCsVersionMemberName());
+        }
+
         [Fact]
         public void ShouldGenerateCorrectHashForSimpleType()
         {

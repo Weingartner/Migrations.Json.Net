@@ -45,7 +45,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = _Assembly.GetType("Weingartner.Json.Migration.TestApplication.TestData");
             var instance = Activator.CreateInstance(type);
 
-            var property = instance.GetType().GetProperty(Globals.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
+            var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
             property.Should().NotBeNull();
             property.GetValue(instance).Should().NotBeNull();
         }
@@ -55,7 +55,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         {
             var type = _Assembly.GetType("Weingartner.Json.Migration.TestApplication.TestDataContract");
 
-            type.GetProperty(Globals.VersionPropertyName)
+            type.GetProperty(VersionMemberName.Instance.VersionPropertyName)
                 .CustomAttributes
                 .Select(attr => attr.AttributeType)
                 .Should()
@@ -68,7 +68,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = _Assembly.GetType("Weingartner.Json.Migration.TestApplication.TestDataWithoutMigration");
 
             // ReSharper disable once PossibleNullReferenceException
-            ((int)type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
+            ((int)type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
         }
 
         [Fact]

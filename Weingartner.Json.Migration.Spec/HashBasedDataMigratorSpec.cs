@@ -10,6 +10,11 @@ namespace Weingartner.Json.Migration.Spec
 {
     public class HashBasedDataMigratorSpec
     {
+        public HashBasedDataMigratorSpec()
+        {
+            VersionMemberName.TrySetInstance(new ValidCsVersionMemberName());
+        }
+
         [Theory]
         [InlineData(0, "Name_0_1_2")]
         [InlineData(1, "_1_2")]
@@ -43,14 +48,14 @@ namespace Weingartner.Json.Migration.Spec
             var sut = CreateMigrator();
             sut.TryMigrate(ref configData, typeof(FixtureData));
 
-            configData[Globals.VersionPropertyName].Value<int>().Should().Be(3);
+            configData[VersionMemberName.Instance.VersionPropertyName].Value<int>().Should().Be(3);
         }
 
         [Fact]
         public void ShouldWorkWithNonVersionedData()
         {
             var configData = CreateConfigurationData(0);
-            ((JObject)configData).Remove(Globals.VersionPropertyName);
+            ((JObject)configData).Remove(VersionMemberName.Instance.VersionPropertyName);
 
             var sut = CreateMigrator();
             new Action(() => sut.TryMigrate(ref configData, typeof(FixtureData)))
@@ -81,7 +86,7 @@ namespace Weingartner.Json.Migration.Spec
         public void ShouldThrowIfMigrationMethodHasTooManyParameters()
         {
             var configData = JToken.FromObject(new DataWithInvalidMigrationMethod());
-            configData[Globals.VersionPropertyName] = 0;
+            configData[VersionMemberName.Instance.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
             new Action(() => sut.TryMigrate(ref configData, typeof(DataWithInvalidMigrationMethod)))
@@ -117,7 +122,7 @@ namespace Weingartner.Json.Migration.Spec
         private static JToken CreateConfigurationData(int version)
         {
             var data = JToken.FromObject(new FixtureData());
-            data[Globals.VersionPropertyName] = version;
+            data[VersionMemberName.Instance.VersionPropertyName] = version;
             return data;
         }
 
