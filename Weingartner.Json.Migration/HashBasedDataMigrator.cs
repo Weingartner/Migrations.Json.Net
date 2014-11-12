@@ -32,10 +32,11 @@ namespace Weingartner.Json.Migration
                 {
                     throw new MigrationException(
                         string.Format(
-                            "Type '{0}' has changed. " +
-                            "If you think that a migration is needed, add a private static method named 'Migrate_X', " +
-                            "where 'X' is a consecutive number starting from 0.",
-                            dataType.FullName));
+                            "The migration method, which migrates an instance of type '{0}' to version {1} cannot be found. " +
+                            "To resolve this, add a method with the following signature: `private static void Migrate_{1}(ref {2} data)",
+                            dataType.FullName,
+                            version,
+                            typeof(TData).FullName));
                 }
 
                 CheckParameters(migrationMethod, data.GetType());
