@@ -47,7 +47,26 @@ namespace Weingartner.Json.Migration.Fody.Spec
 
             var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
             property.Should().NotBeNull();
-            property.GetValue(instance).Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ShouldInjectCorrectVersionInTypeThatHasMigrationMethods()
+        {
+            var type = _Assembly.GetType("Weingartner.Json.Migration.TestApplication.TestData");
+            var instance = Activator.CreateInstance(type);
+
+            var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
+            property.GetValue(instance).Should().Be(1);
+        }
+
+        [Fact]
+        public void ShouldInjectCorrectVersionInTypeThatHasNoMigrationMethods()
+        {
+            var type = _Assembly.GetType("Weingartner.Json.Migration.TestApplication.TestDataWithoutMigration");
+            var instance = Activator.CreateInstance(type);
+
+            var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
+            property.GetValue(instance).Should().Be(0);
         }
 
         [Fact]

@@ -107,8 +107,8 @@ namespace Weingartner.Json.Migration.Fody
                 type.Methods.Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
                     .Where(m => m.Success)
                     .Select(m => int.Parse(m.Value))
-                    .Concat(Enumerable.Repeat(-1, 1))
-                    .Max() + 1;
+                    .Concat(Enumerable.Repeat(0, 1))
+                    .Max();
             il.InsertBefore(first, il.Create(OpCodes.Ldc_I4, version));
             il.InsertBefore(first, il.Create(OpCodes.Stsfld, field));
             il.Body.OptimizeMacros();
