@@ -9,7 +9,7 @@ namespace Weingartner.Json.Migration
         {
             if (!(data is JObject)) return 0;
 
-            var versionToken = data[Globals.VersionPropertyName];
+            var versionToken = data[VersionMemberName.Instance.VersionPropertyName];
             return versionToken != null
                 ? versionToken.Value<int>()
                 : 0;
@@ -19,7 +19,7 @@ namespace Weingartner.Json.Migration
         public void SetVersion(JToken data, int version)
         {
             if (!(data is JObject)) return;
-            data[Globals.VersionPropertyName] = version;
+            data[VersionMemberName.Instance.VersionPropertyName] = version;
         }
     }
 }

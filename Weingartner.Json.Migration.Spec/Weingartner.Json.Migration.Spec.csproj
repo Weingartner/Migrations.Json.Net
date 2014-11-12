@@ -53,16 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HashBasedDataMigratorSpec.cs" />
+    <Compile Include="MigrationConverterSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj">
-      <Project>{e4b54007-e0ef-4571-acf4-e18dfd08a369}</Project>
-      <Name>Weingartner.Json.Migration.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Weingartner.Json.Migration\Weingartner.Json.Migration.csproj">
       <Project>{a3c46398-1e1d-4261-97f0-487d7ffac49c}</Project>
       <Name>Weingartner.Json.Migration</Name>

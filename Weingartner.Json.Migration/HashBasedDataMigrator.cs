@@ -27,15 +27,16 @@ namespace Weingartner.Json.Migration
 
             while (version < currentVersion)
             {
-                var migrationMethod = GetMigrationMethod(dataType, version);
+                var migrationMethod = GetMigrationMethod(dataType, version + 1);
                 if (migrationMethod == null)
                 {
                     throw new MigrationException(
                         string.Format(
-                            "Type '{0}' has changed. " +
-                            "If you think that a migration is needed, add a private static method named 'Migrate_X', " +
-                            "where 'X' is a consecutive number starting from 0.",
-                            dataType.FullName));
+                            "The migration method, which migrates an instance of type '{0}' to version {1} cannot be found. " +
+                            "To resolve this, add a method with the following signature: `private static void Migrate_{1}(ref {2} data)",
+                            dataType.FullName,
+                            version + 1,
+                            typeof(TData).FullName));
                 }
 
                 CheckParameters(migrationMethod, data.GetType());
@@ -60,7 +61,7 @@ namespace Weingartner.Json.Migration
 
         protected int GetCurrentVersion(Type type)
         {
-            var versionField = type.GetField(Globals.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var versionField = type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
             if (versionField == null)
             {
                 throw new MigrationException(
@@ -71,7 +72,7 @@ namespace Weingartner.Json.Migration
                         type.FullName,
                         Regex.Replace(typeof(MigratableAttribute).Name, "Attribute$", string.Empty),
                         typeof(HashBasedDataMigrator<>).Assembly.GetName().Name,
-                        Globals.VersionBackingFieldName));
+                        VersionMemberName.Instance.VersionBackingFieldName));
             }
             return (int)versionField.GetValue(null);
         }

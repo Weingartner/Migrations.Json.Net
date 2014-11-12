@@ -59,7 +59,7 @@ namespace Weingartner.Json.Migration.Fody
             var items = type.Resolve()
                 .Properties
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic)
-                .Where(p => p.Name != Globals.VersionPropertyName)
+                .Where(p => p.Name != VersionMemberName.Instance.VersionPropertyName)
                 // TODO if type has DataContractAttribute property must have DataMemberAttribute
                 //.Where(p => p.CustomAttributes
                 //    .Select(a => a.AttributeType)

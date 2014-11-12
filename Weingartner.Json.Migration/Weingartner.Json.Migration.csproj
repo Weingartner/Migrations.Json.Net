@@ -38,6 +38,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Weingartner.Json.Migration.Common\VersionMemberName.cs">
+      <Link>VersionMemberName.cs</Link>
+    </Compile>
     <Compile Include="HashBasedDataMigrator.cs" />
     <Compile Include="IExtractHashes.cs" />
     <Compile Include="IMigrateData.cs" />
@@ -49,12 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj">
-      <Project>{e4b54007-e0ef-4571-acf4-e18dfd08a369}</Project>
-      <Name>Weingartner.Json.Migration.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -35,8 +35,9 @@ namespace Weingartner.Json.Migration
 
         public override bool CanConvert(Type objectType)
         {
-            return !GetOrDefault(_MigratedTypes.Value, objectType, false)
-                && objectType.GetCustomAttribute<MigratableAttribute>() != null;
+            var isMigrated = GetOrDefault(_MigratedTypes.Value, objectType, false);
+            var isMigratable = objectType.GetCustomAttribute<MigratableAttribute>() != null;
+            return !isMigrated && isMigratable;
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

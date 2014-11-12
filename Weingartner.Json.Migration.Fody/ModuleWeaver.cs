@@ -81,7 +81,7 @@ namespace Weingartner.Json.Migration.Fody
 
         private static FieldDefinition CreateBackingField(TypeDefinition type)
         {
-            var field = new FieldDefinition(Globals.VersionBackingFieldName, FieldAttributes.Private | FieldAttributes.Static, type.Module.TypeSystem.Int32);
+            var field = new FieldDefinition(VersionMemberName.Instance.VersionBackingFieldName, FieldAttributes.Private | FieldAttributes.Static, type.Module.TypeSystem.Int32);
             type.Fields.Add(field);
             return field;
         }
@@ -116,7 +116,7 @@ namespace Weingartner.Json.Migration.Fody
 
         private static PropertyDefinition CreateProperty(TypeDefinition type, FieldReference field)
         {
-            var property = new PropertyDefinition(Globals.VersionPropertyName, PropertyAttributes.None, field.FieldType);
+            var property = new PropertyDefinition(VersionMemberName.Instance.VersionPropertyName, PropertyAttributes.None, field.FieldType);
             type.Properties.Add(property);
             return property;
         }
