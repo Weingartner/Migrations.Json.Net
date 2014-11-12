@@ -56,7 +56,7 @@ namespace Weingartner.Json.Migration.Fody
                     string.Format(
                         "Type '{0}' has changed. " +
                         "If you think that a migration is needed, add a private static method named 'Migrate_X', " +
-                        "where 'X' is a consecutive number starting from 0. " +
+                        "where 'X' is a consecutive number starting from 1. " +
                         "To resolve this error, update the hash passed to the `MigratableAttribute` of the type to '{1}'.",
                         type.FullName,
                         newTypeHash));
