@@ -7,6 +7,7 @@ using FluentAssertions;
 using Mono.Cecil;
 using Weingartner.Json.Migration.Common;
 using Xunit;
+using FieldAttributes = System.Reflection.FieldAttributes;
 
 namespace Weingartner.Json.Migration.Fody.Spec
 {
@@ -88,6 +89,18 @@ namespace Weingartner.Json.Migration.Fody.Spec
 
             // ReSharper disable once PossibleNullReferenceException
             ((int)type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
+        }
+
+        [Fact]
+        public void ShouldCreateConstVersionField()
+        {
+            var type = _Assembly.GetType("Weingartner.Json.Migration.TestApplication.TestData");
+            var instance = Activator.CreateInstance(type);
+
+            var field = instance.GetType().GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            const FieldAttributes attributes = (FieldAttributes.Literal | FieldAttributes.Static);
+            // ReSharper disable once PossibleNullReferenceException
+            (field.Attributes & attributes).Should().Be(attributes);
         }
 
         [Fact]

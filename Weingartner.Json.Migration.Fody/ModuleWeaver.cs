@@ -66,10 +66,8 @@ namespace Weingartner.Json.Migration.Fody
         private static void AddVersion(TypeDefinition type)
         {
             var field = CreateBackingField(type);
-            InitializeBackingField(field);
             var property = CreateProperty(type, field);
             CreatePropertyGetter(type, property, field);
-            //CreatePropertySetter(type, property, field);
 
             if (TypeIsDataContract(type))
             {
@@ -81,27 +79,10 @@ namespace Weingartner.Json.Migration.Fody
 
         private static FieldDefinition CreateBackingField(TypeDefinition type)
         {
-            var field = new FieldDefinition(VersionMemberName.Instance.VersionBackingFieldName, FieldAttributes.Private | FieldAttributes.Static, type.Module.TypeSystem.Int32);
-            type.Fields.Add(field);
-            return field;
-        }
-
-        private static void InitializeBackingField(FieldDefinition field)
-        {
-            var type = field.DeclaringType;
-            var staticCtor = type.Methods.SingleOrDefault(m => m.IsStatic && m.Name == ".cctor");
-            if (staticCtor == null)
-            {
-                staticCtor = new MethodDefinition(".cctor",
-                    MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.SpecialName |
-                    MethodAttributes.RTSpecialName | MethodAttributes.Static, type.Module.TypeSystem.Void);
-                type.Methods.Add(staticCtor);
-                var il2 = staticCtor.Body.GetILProcessor();
-                il2.Emit(OpCodes.Ret);
-            }
-
-            var il = staticCtor.Body.GetILProcessor();
-            var first = il.Body.Instructions.First();
+            var field = new FieldDefinition(
+                VersionMemberName.Instance.VersionBackingFieldName
+                , FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.Literal
+                , type.Module.TypeSystem.Int32);
 
             var version =
                 type.Methods.Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
@@ -109,9 +90,11 @@ namespace Weingartner.Json.Migration.Fody
                     .Select(m => int.Parse(m.Value))
                     .Concat(Enumerable.Repeat(0, 1))
                     .Max();
-            il.InsertBefore(first, il.Create(OpCodes.Ldc_I4, version));
-            il.InsertBefore(first, il.Create(OpCodes.Stsfld, field));
-            il.Body.OptimizeMacros();
+            field.Constant = version;
+            field.HasDefault = true;
+
+            type.Fields.Add(field);
+            return field;
         }
 
         private static PropertyDefinition CreateProperty(TypeDefinition type, FieldReference field)
@@ -130,8 +113,10 @@ namespace Weingartner.Json.Migration.Fody
             type.Methods.Add(getter);
 
             var il = getter.Body.GetILProcessor();
-            il.Emit(OpCodes.Ldsfld, field);
+            il.Emit(OpCodes.Ldc_I4, (int)field.Constant);
             il.Emit(OpCodes.Ret);
+
+            il.Body.OptimizeMacros();
         }
 
         private static bool TypeIsDataContract(TypeDefinition type)
