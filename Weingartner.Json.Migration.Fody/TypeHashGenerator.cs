@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -55,15 +56,20 @@ namespace Weingartner.Json.Migration.Fody
                     GetTypeName(type),
                     string.Join("|", genericArguments));
             }
-            
+
+            var dataContractAttribute = type.Module.Import(typeof(DataContractAttribute));
+            var dataMemberAttribute = type.Module.Import(typeof(DataMemberAttribute));
             var items = type.Resolve()
                 .Properties
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic)
                 .Where(p => p.Name != VersionMemberName.Instance.VersionPropertyName)
-                // TODO if type has DataContractAttribute property must have DataMemberAttribute
-                //.Where(p => p.CustomAttributes
-                //    .Select(a => a.AttributeType)
-                //    .Contains(typeof(DataMemberAttribute)))
+                .Where(p =>
+                    !p.DeclaringType.CustomAttributes
+                        .Select(a => a.AttributeType)
+                        .Any(t => t.IsProbablyEqualTo(dataContractAttribute))
+                    || p.CustomAttributes
+                        .Select(a => a.AttributeType)
+                        .Any(t => t.IsProbablyEqualTo(dataMemberAttribute)))
                 .Select(p =>
                 {
                     var typee = type;
