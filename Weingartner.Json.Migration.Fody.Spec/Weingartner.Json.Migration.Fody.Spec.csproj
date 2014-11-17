@@ -74,13 +74,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Weingartner.Json.Migration.Fody\Weingartner.Json.Migration.Fody.csproj">
       <Project>{43c6cb51-3081-4a1e-ac14-742cc073b891}</Project>
       <Name>Weingartner.Json.Migration.Fody</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Fody.1.26.1\build\Fody.targets" Condition="Exists('..\packages\Fody.1.26.1\build\Fody.targets')" />

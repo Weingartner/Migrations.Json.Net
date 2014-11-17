@@ -8,18 +8,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Fody", "Weingartner.Json.Migration.Fody\Weingartner.Json.Migration.Fody.csproj", "{43C6CB51-3081-4A1E-AC14-742CC073B891}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Fody.Spec", "Weingartner.Json.Migration.Fody.Spec\Weingartner.Json.Migration.Fody.Spec.csproj", "{D155ACA9-6490-415C-97C0-E7339EE5044E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E} = {F9266137-70C2-4E0D-92AF-CDDE31AFD20E}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.TestApplication", "Weingartner.Json.Migration.TestApplication\Weingartner.Json.Migration.TestApplication.csproj", "{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weingartner.Json.Migration.Common", "Weingartner.Json.Migration.Common", "{6F3D53EF-3F0B-4D93-AECC-00B831C904CE}"
 	ProjectSection(SolutionItems) = preProject
 		Weingartner.Json.Migration.Common\VersionMemberName.cs = Weingartner.Json.Migration.Common\VersionMemberName.cs
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.InvalidTestApplication", "Weingartner.Json.Migration.InvalidTestApplication\Weingartner.Json.Migration.InvalidTestApplication.csproj", "{4DF334C7-B2DD-4972-947F-BED51EE9D5E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +36,6 @@ Global
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9266137-70C2-4E0D-92AF-CDDE31AFD20E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DF334C7-B2DD-4972-947F-BED51EE9D5E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DF334C7-B2DD-4972-947F-BED51EE9D5E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DF334C7-B2DD-4972-947F-BED51EE9D5E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DF334C7-B2DD-4972-947F-BED51EE9D5E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
