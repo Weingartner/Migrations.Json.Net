@@ -20,6 +20,7 @@ namespace Weingartner.Json.Migration.TestApplication
 
     [Migratable("da39a3ee5e6b4b0d3255bfef95601890afd80709")]
     public class TestDataWithoutMigration { }
+
     // ReSharper restore UnusedParameter.Local
     // ReSharper restore UnusedMember.Local
 }
