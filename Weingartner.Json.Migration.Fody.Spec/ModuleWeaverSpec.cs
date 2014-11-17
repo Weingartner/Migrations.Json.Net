@@ -19,6 +19,17 @@ namespace Weingartner.Json.Migration.Fody.Spec
         private readonly ConcurrentBag<string> _AssemblyPaths = new ConcurrentBag<string>();
 
         [Fact]
+        public void PeVerify()
+        {
+            Assembly assembly;
+            string newAssemblyPath;
+            string assemblyPath;
+            WeaveValidAssembly(out assembly, out newAssemblyPath, out assemblyPath);
+
+            Verifier.Verify(assemblyPath, newAssemblyPath);
+        }
+
+        [Fact]
         public void ShouldInjectVersionProperty()
         {
             Assembly assembly;
@@ -122,6 +133,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             {
                 try
                 {
+                    RunInStaThread(Clipboard.Clear);
                     WeaveInvalidAssembly();
                 }
                 catch (MigrationException)
@@ -138,6 +150,15 @@ namespace Weingartner.Json.Migration.Fody.Spec
             clipboardText.Should().NotBeEmpty();
         }
 
+        private static void RunInStaThread(Action action)
+        {
+            RunAndGetInStaThread(() =>
+            {
+                action();
+                return 0;
+            });
+        }
+
         private static T RunAndGetInStaThread<T>(Func<T> func)
         {
             var result = default(T);
@@ -146,17 +167,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
             thread.Start();
             thread.Join();
             return result;
-        }
-
-        [Fact]
-        public void PeVerify()
-        {
-            Assembly assembly;
-            string newAssemblyPath;
-            string assemblyPath;
-            WeaveValidAssembly(out assembly, out newAssemblyPath, out assemblyPath);
-
-            Verifier.Verify(assemblyPath, newAssemblyPath);
         }
 
         private void Weave(out Assembly assembly)
