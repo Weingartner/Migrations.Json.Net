@@ -4,8 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+<<<<<<< Updated upstream
 using System.Windows;
+=======
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+>>>>>>> Stashed changes
 using FluentAssertions;
 using Mono.Cecil;
 using Weingartner.Json.Migration.Common;
