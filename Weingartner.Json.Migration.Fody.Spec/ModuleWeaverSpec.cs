@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Windows;
+using System.Windows.Forms;
 using FluentAssertions;
 using Mono.Cecil;
 using Weingartner.Json.Migration.Common;
