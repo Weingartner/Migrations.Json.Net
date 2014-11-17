@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+using System.Windows;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
