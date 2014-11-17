@@ -179,14 +179,14 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var jsonNetDllPath = string.Format("{0}.{1}{2}", Path.GetFileNameWithoutExtension(origJsonNetDllPath), guid, Path.GetExtension(origJsonNetDllPath));
             File.Copy(origJsonNetDllPath, jsonNetDllPath);
             _CreatedFiles.Add(jsonNetDllPath);
-            jsonNetDll = ModuleDefinition.ReadModule(Path.GetFileName(origJsonNetDllPath));
+            jsonNetDll = ModuleDefinition.ReadModule(Path.GetFileName(jsonNetDllPath));
             module.AssemblyReferences.Add(jsonNetDll.Assembly.Name);
 
             const string origMigrationDllPath = @"..\..\..\Weingartner.Json.Migration\bin\Debug\Weingartner.Json.Migration.dll";
             var migrationDllPath = string.Format("{0}.{1}{2}", Path.GetFileNameWithoutExtension(origMigrationDllPath), guid, Path.GetExtension(origMigrationDllPath));
-            File.Copy(origJsonNetDllPath, migrationDllPath);
+            File.Copy(origMigrationDllPath, migrationDllPath);
             _CreatedFiles.Add(migrationDllPath);
-            migrationDll = ModuleDefinition.ReadModule(Path.GetFileName(origMigrationDllPath));
+            migrationDll = ModuleDefinition.ReadModule(Path.GetFileName(migrationDllPath));
             module.AssemblyReferences.Add(migrationDll.Assembly.Name);
             return module;
         }
