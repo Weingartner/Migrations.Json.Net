@@ -10,6 +10,7 @@ using Weingartner.Json.Migration.Common;
 using FieldAttributes = Mono.Cecil.FieldAttributes;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 using PropertyAttributes = Mono.Cecil.PropertyAttributes;
+using System.Threading;
 
 namespace Weingartner.Json.Migration.Fody
 {
@@ -53,7 +54,10 @@ namespace Weingartner.Json.Migration.Fody
 
             if (oldTypeHash != newTypeHash)
             {
-                Clipboard.SetText(newTypeHash);
+                var thread = new Thread(() => Clipboard.SetText(newTypeHash));
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+                thread.Join();
 
                 throw new MigrationException(
                     string.Format(

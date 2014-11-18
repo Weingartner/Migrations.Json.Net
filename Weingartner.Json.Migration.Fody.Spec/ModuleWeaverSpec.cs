@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Windows;
+using System.Threading;
 using FluentAssertions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -19,7 +20,17 @@ namespace Weingartner.Json.Migration.Fody.Spec
     public class ModuleWeaverSpec : IDisposable
     {
         private readonly ConcurrentBag<string> _CreatedFiles = new ConcurrentBag<string>();
-            
+
+        [Fact]
+        public void PeVerify()
+        {
+            string newAssemblyPath;
+            string assemblyPath;
+            WeaveValidAssembly(out newAssemblyPath, out assemblyPath);
+
+            Verifier.Verify(assemblyPath, newAssemblyPath);
+        }
+
         [Fact]
         public void ShouldInjectVersionProperty()
         {
@@ -117,12 +128,47 @@ namespace Weingartner.Json.Migration.Fody.Spec
         }
 
         [Fact]
-        public void PeVerify()
+        public void ShouldPutTextToClipboardWhenCalledFromNonStaThread()
         {
-            string oldAssemblyPath, newAssemblyPath;
-            WeaveValidAssembly(out oldAssemblyPath, out newAssemblyPath);
+            var clipboardText = string.Empty;
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    RunInStaThread(Clipboard.Clear);
+                    WeaveInvalidAssembly();
+                }
+                catch (MigrationException)
+                {
+                }
+                finally
+                {
+                    clipboardText = RunAndGetInStaThread(Clipboard.GetText);
+                }
+            });
+            thread.Start();
+            thread.Join();
 
-            Verifier.Verify(oldAssemblyPath, newAssemblyPath);
+            clipboardText.Should().NotBeEmpty();
+        }
+
+        private static void RunInStaThread(Action action)
+        {
+            RunAndGetInStaThread(() =>
+            {
+                action();
+                return 0;
+            });
+        }
+
+        private static T RunAndGetInStaThread<T>(Func<T> func)
+        {
+            var result = default(T);
+            var thread = new Thread(() => result = func());
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return result;
         }
 
         private void WeaveValidAssembly(out Assembly newAssembly)
