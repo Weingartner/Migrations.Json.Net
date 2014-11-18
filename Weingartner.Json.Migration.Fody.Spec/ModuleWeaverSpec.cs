@@ -21,6 +21,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
     {
         private readonly ConcurrentBag<string> _CreatedFiles = new ConcurrentBag<string>();
 
+        private const string EmptyTypeHash = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+            
         [Fact]
         public void PeVerify()
         {
@@ -109,7 +111,9 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldThrowWhenWeavingInvalidAssembly()
         {
-            new Action(WeaveInvalidAssembly).ShouldThrow<MigrationException>();
+            new Action(WeaveTypeWithWrongHash)
+                .ShouldThrow<MigrationException>()
+                .Where(e => e.Message.Contains("add a migration method"));
         }
 
         [Fact]
@@ -118,13 +122,21 @@ namespace Weingartner.Json.Migration.Fody.Spec
             try
             {
                 Clipboard.Clear();
-                WeaveInvalidAssembly();
+                WeaveTypeWithWrongHash();
             }
             catch (MigrationException) { }
             finally
             {
                 Clipboard.GetText().Should().NotBeEmpty();
             }
+        }
+
+        [Fact]
+        public void ShouldThrowWhenMigratableTypeHasNonConsecutiveMigrationMethods()
+        {
+            new Action(WeaveTypeWithNonConsecutiveMigrationMethods)
+                .ShouldThrow<MigrationException>()
+                .Where(e => e.Message.Contains("there is no migration to version"));
         }
 
         [Fact]
@@ -136,7 +148,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
                 try
                 {
                     RunInStaThread(Clipboard.Clear);
-                    WeaveInvalidAssembly();
+                    WeaveTypeWithWrongHash();
                 }
                 catch (MigrationException)
                 {
@@ -186,14 +198,14 @@ namespace Weingartner.Json.Migration.Fody.Spec
             ModuleDefinition migrationDll;
             var module = CreateTestModule(guid, out jsonNetDll, out migrationDll);
 
-            var testDataType = AddMigratableType("TestData", "da39a3ee5e6b4b0d3255bfef95601890afd80709", module, migrationDll);
+            var testDataType = AddMigratableType("TestData", EmptyTypeHash, module, migrationDll);
             AddMigrationMethod(testDataType, 1, jsonNetDll);
 
-            var testDataContractType = AddMigratableType("TestDataContract", "da39a3ee5e6b4b0d3255bfef95601890afd80709", module, migrationDll);
+            var testDataContractType = AddMigratableType("TestDataContract", EmptyTypeHash, module, migrationDll);
             testDataContractType.CustomAttributes.Add(new CustomAttribute(module.Import(typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes))));
             AddMigrationMethod(testDataContractType, 1, jsonNetDll);
 
-            AddMigratableType("TestDataWithoutMigration", "da39a3ee5e6b4b0d3255bfef95601890afd80709", module, migrationDll);
+            AddMigratableType("TestDataWithoutMigration", EmptyTypeHash, module, migrationDll);
 
             oldAssemblyPath = string.Format("Test.old.{0}.dll", guid);
             module.Write(oldAssemblyPath);
@@ -205,16 +217,31 @@ namespace Weingartner.Json.Migration.Fody.Spec
             module.Write(newAssemblyPath);
         }
 
-        private void WeaveInvalidAssembly()
+        private void WeaveTypeWithWrongHash()
         {
             ModuleDefinition jsonNetDll;
             ModuleDefinition migrationDll;
             var module = CreateTestModule(Guid.NewGuid(), out jsonNetDll, out migrationDll);
 
-            AddMigratableType("TestDataWithWrongHash", "wronghash", module, migrationDll);
+            AddMigratableType("TestData", "wronghash", module, migrationDll);
 
             var weavingTask = new ModuleWeaver { ModuleDefinition = module };
             weavingTask.Execute();
+        }
+
+        private void WeaveTypeWithNonConsecutiveMigrationMethods()
+        {
+            ModuleDefinition jsonNetDll;
+            ModuleDefinition migrationDll;
+            var module = CreateTestModule(Guid.NewGuid(), out jsonNetDll, out migrationDll);
+
+            var type = AddMigratableType("TestData", EmptyTypeHash, module, migrationDll);
+            AddMigrationMethod(type, 1, jsonNetDll);
+            AddMigrationMethod(type, 2, jsonNetDll);
+            AddMigrationMethod(type, 4, jsonNetDll);
+
+            var weavingTask = new ModuleWeaver { ModuleDefinition = module };
+            weavingTask.Execute(); 
         }
 
         private ModuleDefinition CreateTestModule(Guid guid, out ModuleDefinition jsonNetDll, out ModuleDefinition migrationDll)
