@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using System.Windows;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -9,6 +10,7 @@ using Weingartner.Json.Migration.Common;
 using FieldAttributes = Mono.Cecil.FieldAttributes;
 using MethodAttributes = Mono.Cecil.MethodAttributes;
 using PropertyAttributes = Mono.Cecil.PropertyAttributes;
+using System.Threading;
 
 namespace Weingartner.Json.Migration.Fody
 {
@@ -52,13 +54,21 @@ namespace Weingartner.Json.Migration.Fody
 
             if (oldTypeHash != newTypeHash)
             {
+                var thread = new Thread(() => Clipboard.SetText(newTypeHash));
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+                thread.Join();
+
                 throw new MigrationException(
                     string.Format(
-                        "Type '{0}' has changed. " +
-                        "If you think that a migration is needed, add a private static method named 'Migrate_X', " +
-                        "where 'X' is a consecutive number starting from 1. " +
-                        "To resolve this error, update the hash passed to the `MigratableAttribute` of the type to '{1}'.",
+                        "Type '{1}' has changed.{0}" +
+                        "If you think that a migration is needed, add a migration method with the following signature:{0}" +
+                        "private static void Migrate_{2}(ref TODO data){0}{{{0}// TODO Migrate data{0}}}{0}" +
+                        "To resolve this error, update the hash passed to the `MigratableAttribute` of the type to '{3}'.{0}" +
+                        "The hash should be in your clipboard.",
+                        Environment.NewLine,
                         type.FullName,
+                        GetVersionNumber(type) + 1,
                         newTypeHash));
             }
         }
@@ -84,12 +94,7 @@ namespace Weingartner.Json.Migration.Fody
                 , FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.Literal
                 , type.Module.TypeSystem.Int32);
 
-            var version =
-                type.Methods.Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
-                    .Where(m => m.Success)
-                    .Select(m => int.Parse(m.Value))
-                    .Concat(Enumerable.Repeat(0, 1))
-                    .Max();
+            var version = GetVersionNumber(type);
             field.Constant = version;
             field.HasDefault = true;
 
@@ -117,6 +122,17 @@ namespace Weingartner.Json.Migration.Fody
             il.Emit(OpCodes.Ret);
 
             il.Body.OptimizeMacros();
+        }
+
+        private static int GetVersionNumber(TypeDefinition type)
+        {
+            var version =
+                type.Methods.Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
+                    .Where(m => m.Success)
+                    .Select(m => int.Parse(m.Value))
+                    .Concat(Enumerable.Repeat(0, 1))
+                    .Max();
+            return version;
         }
 
         private static bool TypeIsDataContract(TypeDefinition type)

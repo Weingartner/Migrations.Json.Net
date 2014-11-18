@@ -77,6 +77,24 @@ namespace Weingartner.Json.Migration.Fody.Spec
             hash.Should().Be(GetExpectedHashForVersionedData());
         }
 
+        [Fact]
+        public void ShouldIgnorePropertiesWithoutDataMemberAttributeWhenDeclaringTypeHasDataContractAttribute()
+        {
+            var sut = new TypeHashGenerator();
+            var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(DataContractWithExcludedProperties)));
+
+            hash.Should().Be(GetExpectedHashForDataContractWithExcludedProperties());
+        }
+
+        [Fact]
+        public void ShouldNotIgnorePropertiesWithoutDataMemberAttributeWhenDeclaringTypeDoesntHaveDataContractAttribute()
+        {
+            var sut = new TypeHashGenerator();
+            var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(NonDataContract)));
+
+            hash.Should().Be(GetExpectedHashForNonDataContract());
+        }
+
         // TODO support type hierarchies
 
         private static TypeDefinition GetTypeDefinition(Type type)
@@ -133,6 +151,17 @@ namespace Weingartner.Json.Migration.Fody.Spec
             return string.Empty;
         }
 
+        private static string GetExpectedHashForDataContractWithExcludedProperties()
+        {
+            return string.Format("System.String-IncludedProperty");
+        }
+
+        private static string GetExpectedHashForNonDataContract()
+        {
+            return string.Format("System.Int32-PropertyA|System.String-PropertyB");
+        }
+
+        [DataContract]
         private class LinkedPersonEntry
         {
             [DataMember]
@@ -142,24 +171,28 @@ namespace Weingartner.Json.Migration.Fody.Spec
             public LinkedPersonEntry Next { get; private set; }
         }
 
+        [DataContract]
         private class Club
         {
             [DataMember]
             public IDictionary<int, Person> Members { get; private set; }
         }
 
+        [DataContract]
         private class ClubEntry
         {
             [DataMember]
             public Tuple<int, Person> Member { get; private set; }
         }
 
+        [DataContract]
         private class Employee : Person
         {
             [DataMember]
             public string EmployeeId { get; private set; }
         }
 
+        [DataContract]
         private class Person
         {
             [DataMember]
@@ -169,6 +202,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             public Address Address { get; private set; }
         }
 
+        [DataContract]
         private class Address
         {
             [DataMember]
@@ -178,6 +212,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             public string Street { get; private set; }
         }
 
+        [DataContract]
         private class Address2
         {
             [DataMember]
@@ -187,10 +222,28 @@ namespace Weingartner.Json.Migration.Fody.Spec
             public string City { get; private set; }
         }
 
+        [DataContract]
         private class VersionedData
         {
             [DataMember]
             public string Version { get; private set; }
+        }
+
+        [DataContract]
+        private class DataContractWithExcludedProperties
+        {
+            [DataMember]
+            public string IncludedProperty { get; private set; }
+
+            public string ExcludedProperty { get; private set; }
+        }
+
+        private class NonDataContract
+        {
+            [DataMember]
+            public int PropertyA { get; private set; }
+
+            public string PropertyB { get; private set; }
         }
     }
 }

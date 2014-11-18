@@ -4,8 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+<<<<<<< Updated upstream
 using System.Windows;
+=======
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+>>>>>>> Stashed changes
 using FluentAssertions;
 using Mono.Cecil;
 using Weingartner.Json.Migration.Common;
@@ -17,17 +22,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
     public class ModuleWeaverSpec : IDisposable
     {
         private readonly ConcurrentBag<string> _AssemblyPaths = new ConcurrentBag<string>();
-
-        [Fact]
-        public void PeVerify()
-        {
-            Assembly assembly;
-            string newAssemblyPath;
-            string assemblyPath;
-            WeaveValidAssembly(out assembly, out newAssemblyPath, out assemblyPath);
-
-            Verifier.Verify(assemblyPath, newAssemblyPath);
-        }
 
         [Fact]
         public void ShouldInjectVersionProperty()
@@ -133,7 +127,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
             {
                 try
                 {
-                    RunInStaThread(Clipboard.Clear);
                     WeaveInvalidAssembly();
                 }
                 catch (MigrationException)
@@ -150,15 +143,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
             clipboardText.Should().NotBeEmpty();
         }
 
-        private static void RunInStaThread(Action action)
-        {
-            RunAndGetInStaThread(() =>
-            {
-                action();
-                return 0;
-            });
-        }
-
         private static T RunAndGetInStaThread<T>(Func<T> func)
         {
             var result = default(T);
@@ -167,6 +151,17 @@ namespace Weingartner.Json.Migration.Fody.Spec
             thread.Start();
             thread.Join();
             return result;
+        }
+
+        [Fact]
+        public void PeVerify()
+        {
+            Assembly assembly;
+            string newAssemblyPath;
+            string assemblyPath;
+            WeaveValidAssembly(out assembly, out newAssemblyPath, out assemblyPath);
+
+            Verifier.Verify(assemblyPath, newAssemblyPath);
         }
 
         private void Weave(out Assembly assembly)
