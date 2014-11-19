@@ -2,29 +2,33 @@
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Threading;
 using FluentAssertions;
 using Mono.Cecil;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
 using Weingartner.Json.Migration.Common;
 using Xunit;
+using Assembly = System.Reflection.Assembly;
+using BindingFlags = System.Reflection.BindingFlags;
 using FieldAttributes = System.Reflection.FieldAttributes;
 
 namespace Weingartner.Json.Migration.Fody.Spec
 {
     public class ModuleWeaverSpec : IDisposable
     {
-        private readonly ConcurrentBag<string> _AssemblyPaths = new ConcurrentBag<string>();
+        private readonly ConcurrentBag<string> _CreatedFiles = new ConcurrentBag<string>();
 
+        private const string EmptyTypeHash = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
+            
         [Fact]
         public void PeVerify()
         {
-            Assembly assembly;
             string newAssemblyPath;
             string assemblyPath;
-            WeaveValidAssembly(out assembly, out newAssemblyPath, out assemblyPath);
+            WeaveValidAssembly(out newAssemblyPath, out assemblyPath);
 
             Verifier.Verify(assemblyPath, newAssemblyPath);
         }
@@ -33,8 +37,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldInjectVersionProperty()
         {
             Assembly assembly;
-            Weave(out assembly);
-            var type = assembly.GetType("Weingartner.Json.Migration.TestApplication.TestData");
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
             var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
@@ -45,8 +49,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldInjectCorrectVersionInTypeThatHasMigrationMethods()
         {
             Assembly assembly;
-            Weave(out assembly);
-            var type = assembly.GetType("Weingartner.Json.Migration.TestApplication.TestData");
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
             var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
@@ -57,8 +61,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldInjectCorrectVersionInTypeThatHasNoMigrationMethods()
         {
             Assembly assembly;
-            Weave(out assembly);
-            var type = assembly.GetType("Weingartner.Json.Migration.TestApplication.TestDataWithoutMigration");
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TestDataWithoutMigration");
             var instance = Activator.CreateInstance(type);
 
             var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
@@ -69,8 +73,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldInjectDataMemberAttributeIfTypeHasDataContractAttribute()
         {
             Assembly assembly;
-            Weave(out assembly);
-            var type = assembly.GetType("Weingartner.Json.Migration.TestApplication.TestDataContract");
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TestDataContract");
 
             type.GetProperty(VersionMemberName.Instance.VersionPropertyName)
                 .CustomAttributes
@@ -83,8 +87,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldHaveVersion0WhenNoMigrationMethodExists()
         {
             Assembly assembly;
-            Weave(out assembly);
-            var type = assembly.GetType("Weingartner.Json.Migration.TestApplication.TestDataWithoutMigration");
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TestDataWithoutMigration");
 
             // ReSharper disable once PossibleNullReferenceException
             ((int)type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
@@ -94,8 +98,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldCreateConstVersionField()
         {
             Assembly assembly;
-            Weave(out assembly);
-            var type = assembly.GetType("Weingartner.Json.Migration.TestApplication.TestData");
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
             var field = instance.GetType().GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
@@ -107,7 +111,9 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldThrowWhenWeavingInvalidAssembly()
         {
-            new Action(WeaveInvalidAssembly).ShouldThrow<MigrationException>();
+            new Action(WeaveTypeWithWrongHash)
+                .ShouldThrow<MigrationException>()
+                .Where(e => e.Message.Contains("add a migration method"));
         }
 
         [Fact]
@@ -116,13 +122,21 @@ namespace Weingartner.Json.Migration.Fody.Spec
             try
             {
                 Clipboard.Clear();
-                WeaveInvalidAssembly();
+                WeaveTypeWithWrongHash();
             }
             catch (MigrationException) { }
             finally
             {
                 Clipboard.GetText().Should().NotBeEmpty();
             }
+        }
+
+        [Fact]
+        public void ShouldThrowWhenMigratableTypeHasNonConsecutiveMigrationMethods()
+        {
+            new Action(WeaveTypeWithNonConsecutiveMigrationMethods)
+                .ShouldThrow<MigrationException>()
+                .Where(e => e.Message.Contains("there is no migration to version"));
         }
 
         [Fact]
@@ -134,7 +148,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
                 try
                 {
                     RunInStaThread(Clipboard.Clear);
-                    WeaveInvalidAssembly();
+                    WeaveTypeWithWrongHash();
                 }
                 catch (MigrationException)
                 {
@@ -169,63 +183,145 @@ namespace Weingartner.Json.Migration.Fody.Spec
             return result;
         }
 
-        private void Weave(out Assembly assembly)
+        private void WeaveValidAssembly(out Assembly newAssembly)
         {
-            string _, __;
-            WeaveValidAssembly(out assembly, out _, out __);
+            string newAssemblyPath, _;
+            WeaveValidAssembly(out _, out newAssemblyPath);
+            newAssembly = Assembly.LoadFrom(Path.GetFullPath(newAssemblyPath));
         }
 
-        private void WeaveValidAssembly(out Assembly assembly, out string newAssemblyPath, out string assemblyPath)
+        private void WeaveValidAssembly(out string oldAssemblyPath, out string newAssemblyPath)
         {
-            assemblyPath = GetAssemblyPath("Weingartner.Json.Migration.TestApplication");
-            Weave(assemblyPath, out assembly, out newAssemblyPath);
-        }
+            var guid = Guid.NewGuid();
 
-        private void WeaveInvalidAssembly()
-        {
-            var assemblyPath = GetAssemblyPath("Weingartner.Json.Migration.InvalidTestApplication");
-            Assembly _;
-            string __;
-            Weave(assemblyPath, out _, out __);
-        }
+            ModuleDefinition jsonNetDll;
+            ModuleDefinition migrationDll;
+            var module = CreateTestModule(guid, out jsonNetDll, out migrationDll);
 
-        private static string GetAssemblyPath(string assemblyName)
-        {
-            var path = Path.GetFullPath(string.Format(@"..\..\..\{0}\bin\Debug\{0}.dll", assemblyName));
-#if !DEBUG
-            path = path.Replace(@"\Debug\", @"\Release\");
-#endif
-            return path;
-        }
+            var testDataType = AddMigratableType("TestData", EmptyTypeHash, module, migrationDll);
+            AddMigrationMethod(testDataType, 1, jsonNetDll);
 
-        private void Weave(string assemblyPath, out Assembly assembly, out string newAssemblyPath)
-        {
-            newAssemblyPath = Path.ChangeExtension(assemblyPath, Guid.NewGuid() + ".dll");
-            File.Copy(assemblyPath, newAssemblyPath, true);
+            var testDataContractType = AddMigratableType("TestDataContract", EmptyTypeHash, module, migrationDll);
+            testDataContractType.CustomAttributes.Add(new CustomAttribute(module.Import(typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes))));
+            AddMigrationMethod(testDataContractType, 1, jsonNetDll);
 
-            _AssemblyPaths.Add(newAssemblyPath);
+            AddMigratableType("TestDataWithoutMigration", EmptyTypeHash, module, migrationDll);
 
-            var moduleDefinition = ModuleDefinition.ReadModule(newAssemblyPath);
-            var weavingTask = new ModuleWeaver
-            {
-                ModuleDefinition = moduleDefinition
-            };
+            oldAssemblyPath = string.Format("Test.old.{0}.dll", guid);
+            module.Write(oldAssemblyPath);
 
+            var weavingTask = new ModuleWeaver { ModuleDefinition = module };
             weavingTask.Execute();
-            moduleDefinition.Write(newAssemblyPath);
 
-            assembly = Assembly.LoadFile(newAssemblyPath);
+            newAssemblyPath = string.Format("Test.new.{0}.dll", guid);
+            module.Write(newAssemblyPath);
+        }
+
+        private void WeaveTypeWithWrongHash()
+        {
+            ModuleDefinition jsonNetDll;
+            ModuleDefinition migrationDll;
+            var module = CreateTestModule(Guid.NewGuid(), out jsonNetDll, out migrationDll);
+
+            AddMigratableType("TestData", "wronghash", module, migrationDll);
+
+            var weavingTask = new ModuleWeaver { ModuleDefinition = module };
+            weavingTask.Execute();
+        }
+
+        private void WeaveTypeWithNonConsecutiveMigrationMethods()
+        {
+            ModuleDefinition jsonNetDll;
+            ModuleDefinition migrationDll;
+            var module = CreateTestModule(Guid.NewGuid(), out jsonNetDll, out migrationDll);
+
+            var type = AddMigratableType("TestData", EmptyTypeHash, module, migrationDll);
+            AddMigrationMethod(type, 1, jsonNetDll);
+            AddMigrationMethod(type, 2, jsonNetDll);
+            AddMigrationMethod(type, 4, jsonNetDll);
+
+            var weavingTask = new ModuleWeaver { ModuleDefinition = module };
+            weavingTask.Execute(); 
+        }
+
+        private ModuleDefinition CreateTestModule(Guid guid, out ModuleDefinition jsonNetDll, out ModuleDefinition migrationDll)
+        {
+            var module = ModuleDefinition.CreateModule("Test", ModuleKind.Dll);
+
+            const string origJsonNetDllPath = @"..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll";
+            var jsonNetDllPath = string.Format("{0}.{1}{2}", Path.GetFileNameWithoutExtension(origJsonNetDllPath), guid, Path.GetExtension(origJsonNetDllPath));
+            File.Copy(origJsonNetDllPath, jsonNetDllPath);
+            _CreatedFiles.Add(jsonNetDllPath);
+            jsonNetDll = ModuleDefinition.ReadModule(Path.GetFileName(jsonNetDllPath));
+            module.AssemblyReferences.Add(jsonNetDll.Assembly.Name);
+
+            var origMigrationDllPath = string.Format(@"..\..\..\Weingartner.Json.Migration\bin\{0}\Weingartner.Json.Migration.dll", Configuration);
+            var migrationDllPath = string.Format("{0}.{1}{2}", Path.GetFileNameWithoutExtension(origMigrationDllPath), guid, Path.GetExtension(origMigrationDllPath));
+            File.Copy(origMigrationDllPath, migrationDllPath);
+            _CreatedFiles.Add(migrationDllPath);
+            migrationDll = ModuleDefinition.ReadModule(Path.GetFileName(migrationDllPath));
+            module.AssemblyReferences.Add(migrationDll.Assembly.Name);
+            return module;
+        }
+
+        private static TypeDefinition AddMigratableType(string name, string typeHash, ModuleDefinition module, ModuleDefinition migrationDll)
+        {
+            const TypeAttributes typeAttributes =
+                TypeAttributes.Public
+                | TypeAttributes.AutoClass
+                | TypeAttributes.AnsiClass
+                | TypeAttributes.BeforeFieldInit;
+
+            var type = new TypeDefinition("Test", name, typeAttributes) { BaseType = module.TypeSystem.Object };
+
+            var attributeCtor = module.Import(migrationDll.Types.Single(t => t.Name == "MigratableAttribute").GetConstructors().Single());
+            var attribute = new CustomAttribute(attributeCtor);
+            attribute.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.String, typeHash));
+            type.CustomAttributes.Add(attribute);
+
+            var ctor = new MethodDefinition(".ctor",
+                MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName,
+                module.TypeSystem.Void);
+            var il = ctor.Body.GetILProcessor();
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Call, module.Import(typeof(object).GetConstructor(Type.EmptyTypes)));
+            il.Emit(OpCodes.Ret);
+            type.Methods.Add(ctor);
+
+            module.Types.Add(type);
+
+            return type;
+        }
+
+        private static void AddMigrationMethod(TypeDefinition type, int version, ModuleDefinition jsonNetDll)
+        {
+            var method = new MethodDefinition("Migrate_" + version,
+                MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.Static, type.Module.TypeSystem.Void);
+            method.Parameters.Add(
+                new ParameterDefinition(type.Module.Import(jsonNetDll.Types.Single(t => t.Name == "JObject"))));
+            type.Methods.Add(method);
+
+            var il = method.Body.GetILProcessor();
+            il.Emit(OpCodes.Ret);
         }
 
         public void Dispose()
         {
-            foreach (var path in _AssemblyPaths)
+            foreach (var file in _CreatedFiles)
             {
-                try
-                {
-                    File.Delete(path);
-                }
-                catch (UnauthorizedAccessException) { }
+                File.Delete(file);
+            }
+        }
+
+        public static string Configuration
+        {
+            get
+            {
+#if DEBUG
+                return "Debug";
+#else
+                return "Release";
+#endif
             }
         }
     }

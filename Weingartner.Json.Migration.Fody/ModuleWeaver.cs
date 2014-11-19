@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
@@ -47,6 +48,12 @@ namespace Weingartner.Json.Migration.Fody
 
         private static void CheckMigration(TypeDefinition type)
         {
+            CheckHash(type);
+            CheckConsecutiveMigrationMethods(type);
+        }
+
+        private static void CheckHash(TypeDefinition type)
+        {
             var oldTypeHash = (string)GetMigratableAttribute(type)
                 .ConstructorArguments.Single().Value;
 
@@ -70,6 +77,24 @@ namespace Weingartner.Json.Migration.Fody
                         type.FullName,
                         GetVersionNumber(type) + 1,
                         newTypeHash));
+            }
+        }
+
+        private static void CheckConsecutiveMigrationMethods(TypeDefinition type)
+        {
+            var migrationMethodNumbers = GetMigrationMethodVersions(type);
+            var error = migrationMethodNumbers
+                .Select((version, index) => new { index = index + 1, version })
+                .FirstOrDefault(x => x.index != x.version);
+            if (error != null)
+            {
+                throw new MigrationException(
+                    string.Format(
+                        "The migration methods of type '{0}' are erroneous, because there is no migration to version {1}. " +
+                        "Migration methods must be named 'Migrate_X', where X is a consecutive number starting from 1. " +
+                        "Furthermore, they must be private, static and have one ref parameter.",
+                        type.FullName,
+                        error.index));
             }
         }
 
@@ -109,7 +134,7 @@ namespace Weingartner.Json.Migration.Fody
             return property;
         }
 
-        private static void CreatePropertyGetter(TypeDefinition type, PropertyDefinition property, FieldDefinition field)
+        private static void CreatePropertyGetter(TypeDefinition type, PropertyDefinition property, IConstantProvider valueProvider)
         {
             var getter = new MethodDefinition("get_" + property.Name,
                 MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName,
@@ -118,7 +143,7 @@ namespace Weingartner.Json.Migration.Fody
             type.Methods.Add(getter);
 
             var il = getter.Body.GetILProcessor();
-            il.Emit(OpCodes.Ldc_I4, (int)field.Constant);
+            il.Emit(OpCodes.Ldc_I4, (int)valueProvider.Constant);
             il.Emit(OpCodes.Ret);
 
             il.Body.OptimizeMacros();
@@ -126,13 +151,20 @@ namespace Weingartner.Json.Migration.Fody
 
         private static int GetVersionNumber(TypeDefinition type)
         {
-            var version =
-                type.Methods.Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
-                    .Where(m => m.Success)
-                    .Select(m => int.Parse(m.Value))
-                    .Concat(Enumerable.Repeat(0, 1))
-                    .Max();
+            var version = GetMigrationMethodVersions(type)
+                .Concat(Enumerable.Repeat(0, 1))
+                .Max();
             return version;
+        }
+
+        private static IEnumerable<int> GetMigrationMethodVersions(TypeDefinition type)
+        {
+            return type.Methods
+                .Where(m => m.IsStatic && m.IsPrivate)
+                .Where(m => m.Parameters.Count == 1)
+                .Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
+                .Where(m => m.Success)
+                .Select(m => int.Parse(m.Value));
         }
 
         private static bool TypeIsDataContract(TypeDefinition type)

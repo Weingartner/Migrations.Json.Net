@@ -10,11 +10,6 @@ namespace Weingartner.Json.Migration.Spec
 {
     public class HashBasedDataMigratorSpec
     {
-        public HashBasedDataMigratorSpec()
-        {
-            VersionMemberName.TrySetInstance(new ValidCsVersionMemberName());
-        }
-
         [Theory]
         [InlineData(0, "Name_0_1_2")]
         [InlineData(1, "_1_2")]
