@@ -20,14 +20,17 @@ namespace Weingartner.Json.Migration
             if (data == null) throw new ArgumentNullException("data");
             if (dataType == null) throw new ArgumentNullException("dataType");
 
-            if (dataType.GetCustomAttribute<MigratableAttribute>() == null) return;
+            var migrationSettings = dataType.GetCustomAttribute<MigratableAttribute>();
+            if (migrationSettings == null) return;
+
+            var migrator = migrationSettings.MigratorType ?? dataType;
 
             var currentVersion = GetCurrentVersion(dataType);
             var version = _VersionExtractor.GetVersion(data);
 
             while (version < currentVersion)
             {
-                var migrationMethod = GetMigrationMethod(dataType, version + 1);
+                var migrationMethod = GetMigrationMethod(migrator, version + 1);
                 if (migrationMethod == null)
                 {
                     throw new MigrationException(

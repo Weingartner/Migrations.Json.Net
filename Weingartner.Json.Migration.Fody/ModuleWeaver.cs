@@ -55,7 +55,7 @@ namespace Weingartner.Json.Migration.Fody
         private static void CheckHash(TypeDefinition type)
         {
             var oldTypeHash = (string)GetMigratableAttribute(type)
-                .ConstructorArguments.Single().Value;
+                .ConstructorArguments.First().Value;
 
             var newTypeHash = new TypeHashGenerator().GenerateHash(type);
 

@@ -109,6 +109,17 @@ namespace Weingartner.Json.Migration.Spec
             configData.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
         }
 
+        [Fact]
+        public void ShouldWorkWithCustomDataConverter()
+        {
+            var configData = CreateConfigurationFromObject(new FixtureDataWithCustomMigrator(), 0);
+
+            var sut = CreateMigrator();
+            sut.TryMigrate(ref configData, typeof(FixtureDataWithCustomMigrator));
+
+            configData["Name"].Value<string>().Should().Be("Name_A_B_C"); 
+        }
+
         private static IMigrateData<JToken> CreateMigrator()
         {
             return new HashBasedDataMigrator<JToken>(new JsonVersionUpdater());
@@ -116,7 +127,12 @@ namespace Weingartner.Json.Migration.Spec
 
         private static JToken CreateConfigurationData(int version)
         {
-            var data = JToken.FromObject(new FixtureData());
+            return CreateConfigurationFromObject(new FixtureData(), version);
+        }
+
+        private static JToken CreateConfigurationFromObject(object obj, int version)
+        {
+            var data = JToken.FromObject(obj);
             data[VersionMemberName.Instance.VersionPropertyName] = version;
             return data;
         }
@@ -196,6 +212,33 @@ namespace Weingartner.Json.Migration.Spec
             private static void Migrate_1(ref JToken data)
             {
                 data["Name"] += " - migrated";
+            }
+        }
+
+        [Migratable("", typeof(FixtureDataMigrator))]
+        public class FixtureDataWithCustomMigrator
+        {
+            private static int _version = 3;
+
+            [DataMember]
+            public string Name { get; private set; }
+        }
+
+        public class FixtureDataMigrator
+        {
+            private static void Migrate_1(ref JObject data)
+            {
+                data["Name"] = "Name_A";
+            }
+
+            private static void Migrate_2(ref JObject data)
+            {
+                data["Name"] += "_B";
+            }
+
+            private static void Migrate_3(ref JObject data)
+            {
+                data["Name"] += "_C";
             }
         }
 
