@@ -10,9 +10,10 @@ namespace Weingartner.Json.Migration.Fody.Spec
     {
         public static void Verify(string beforeAssemblyPath, string afterAssemblyPath)
         {
-            var before = Validate(beforeAssemblyPath);
-            var after = Validate(afterAssemblyPath);
-            TrimLineNumbers(after).Should().Be(TrimLineNumbers(before));
+            var before = TrimLineNumbers(Validate(beforeAssemblyPath));
+            var after = TrimLineNumbers(Validate(afterAssemblyPath));
+            before.Should().MatchRegex(@"^All Classes and Methods in .* Verified.$");
+            after.Should().Be(before);
         }
 
         static string Validate(string assemblyPath)
@@ -23,7 +24,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
                 return string.Empty;
             }
 
-            var startInfo = new ProcessStartInfo(exePath, "/NoLogo \"" + assemblyPath + "\"")
+            var startInfo = new ProcessStartInfo(exePath, "/NoLogo \"" + Path.GetFullPath(assemblyPath) + "\"")
             {
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
