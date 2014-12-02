@@ -22,7 +22,7 @@ namespace Weingartner.Json.Migration.Fody
         public void Execute()
         {
             ModuleDefinition
-                .Types
+                .GetTypes()
                 .Where(IsMigratable)
                 .ToList()
                 .ForEach(CheckMigrationAndAddVersion);

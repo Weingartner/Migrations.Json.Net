@@ -170,6 +170,15 @@ namespace Weingartner.Json.Migration.Fody.Spec
             clipboardText.Should().NotBeEmpty();
         }
 
+        [Fact]
+        public void ShouldFindNestedTypes()
+        {
+            Assembly assembly;
+            WeaveValidAssembly(out assembly);
+            var type = assembly.GetType("Test.TopLevelType+NestedType");
+            type.GetProperty(VersionMemberName.Instance.VersionPropertyName).Should().NotBeNull();
+        }
+
         private static void RunInStaThread(Action action)
         {
             RunAndGetInStaThread(() =>
