@@ -39,6 +39,18 @@ namespace Weingartner.Json.Migration.Fody.Spec
             _MigrationDll = ModuleDefinition.ReadModule(Path.GetFileName(migrationDllPath));
         }
 
+        public static string Configuration
+        {
+            get
+            {
+#if DEBUG
+                return "Debug";
+#else
+                return "Release";
+#endif
+            }
+        }
+
         [Fact]
         public void ShouldInjectVersionProperty()
         {
@@ -179,23 +191,11 @@ namespace Weingartner.Json.Migration.Fody.Spec
             type.GetProperty(VersionMemberName.Instance.VersionPropertyName).Should().NotBeNull();
         }
 
-        private static void RunInStaThread(Action action)
+        [Fact]
+        public void ShouldWorkWithCustomMigrator()
         {
-            RunAndGetInStaThread(() =>
-            {
-                action();
-                return 0;
-            });
-        }
-
-        private static T RunAndGetInStaThread<T>(Func<T> func)
-        {
-            var result = default(T);
-            var thread = new Thread(() => result = func());
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-            thread.Join();
-            return result;
+            Assembly assembly;
+            new Action(() => WeaveValidAssembly(out assembly)).ShouldNotThrow<MigrationException>();
         }
 
         private void WeaveValidAssembly(out Assembly newAssembly)
@@ -214,21 +214,28 @@ namespace Weingartner.Json.Migration.Fody.Spec
 
             var module = CreateTestModule();
 
-            var testDataType = AddMigratableType("TestData", EmptyTypeHash, module, _MigrationDll);
-            AddMigrationMethod(testDataType, 1, _JsonNetDll);
+            var testDataType = AddMigratableType("TestData", EmptyTypeHash, module);
+            AddMigrationMethod(testDataType, 1);
 
-            var testDataContractType = AddMigratableType("TestDataContract", EmptyTypeHash, module, _MigrationDll);
+            var testDataContractType = AddMigratableType("TestDataContract", EmptyTypeHash, module);
             testDataContractType.CustomAttributes.Add(new CustomAttribute(module.Import(typeof(DataContractAttribute).GetConstructor(Type.EmptyTypes))));
-            AddMigrationMethod(testDataContractType, 1, _JsonNetDll);
+            AddMigrationMethod(testDataContractType, 1);
 
-            AddMigratableType("TestDataWithoutMigration", EmptyTypeHash, module, _MigrationDll);
+            AddMigratableType("TestDataWithoutMigration", EmptyTypeHash, module);
 
             var topLevelType = AddType("TopLevelType", module);
-            var nestedType = CreateMigratableType("NestedType", EmptyTypeHash, module, _MigrationDll);
+            var nestedType = CreateMigratableType("NestedType", EmptyTypeHash, module);
             nestedType.Namespace = string.Empty;
             nestedType.Attributes &= ~TypeAttributes.Public;
             nestedType.Attributes |= TypeAttributes.NestedPublic;
             topLevelType.NestedTypes.Add(nestedType);
+
+            var customMigratorType = AddType("CustomMigrator", module);
+            AddMigrationMethod(customMigratorType, 1);
+            AddMigrationMethod(customMigratorType, 2);
+            AddMigrationMethod(customMigratorType, 3);
+            var typeWithCustomMigrator = CreateMigratableTypeWithCustomMigrator("TypeWithCustomMigrator", EmptyTypeHash, customMigratorType, module);
+            module.Types.Add(typeWithCustomMigrator);
 
             oldAssemblyPath = string.Format("Test.old.{0}.dll", guid);
             newAssemblyPath = string.Format("Test.new.{0}.dll", guid);
@@ -251,7 +258,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         {
             var module = CreateTestModule();
 
-            AddMigratableType("TestData", "wronghash", module, _MigrationDll);
+            AddMigratableType("TestData", "wronghash", module);
 
             var weavingTask = new ModuleWeaver { ModuleDefinition = module };
             weavingTask.Execute();
@@ -261,10 +268,10 @@ namespace Weingartner.Json.Migration.Fody.Spec
         {
             var module = CreateTestModule();
 
-            var type = AddMigratableType("TestData", EmptyTypeHash, module, _MigrationDll);
-            AddMigrationMethod(type, 1, _JsonNetDll);
-            AddMigrationMethod(type, 2, _JsonNetDll);
-            AddMigrationMethod(type, 4, _JsonNetDll);
+            var type = AddMigratableType("TestData", EmptyTypeHash, module);
+            AddMigrationMethod(type, 1);
+            AddMigrationMethod(type, 2);
+            AddMigrationMethod(type, 4);
 
             var weavingTask = new ModuleWeaver { ModuleDefinition = module };
             weavingTask.Execute();
@@ -278,23 +285,49 @@ namespace Weingartner.Json.Migration.Fody.Spec
             return module;
         }
 
-        private static TypeDefinition AddMigratableType(string name, string typeHash, ModuleDefinition module, ModuleDefinition migrationDll)
+        private TypeDefinition AddMigratableType(string name, string typeHash, ModuleDefinition module)
         {
-            var type = CreateMigratableType(name, typeHash, module, migrationDll);
+            var type = CreateMigratableType(name, typeHash, module);
             module.Types.Add(type);
             return type;
         }
 
-        private static TypeDefinition CreateMigratableType(string name, string typeHash, ModuleDefinition module, ModuleDefinition migrationDll)
+        private TypeDefinition CreateMigratableType(string name, string typeHash, ModuleDefinition module)
         {
             var type = CreateType(name, module);
 
-            var attributeCtor = module.Import(migrationDll.Types.Single(t => t.Name == "MigratableAttribute").GetConstructors().Single());
-            var attribute = new CustomAttribute(attributeCtor);
-            attribute.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.String, typeHash));
-            type.CustomAttributes.Add(attribute);
+            var attributeCtor = GetMigratableAttribute(c => c.Parameters.Count == 1);
+            AddMigratableAttribute(type, attributeCtor, typeHash, module);
 
             return type;
+        }
+
+        private TypeDefinition CreateMigratableTypeWithCustomMigrator(string name, string typeHash, TypeReference migratorType, ModuleDefinition module)
+        {
+            var type = CreateType(name, module);
+
+            var attributeCtor = GetMigratableAttribute(c => c.Parameters.Count == 2);
+            var attribute = AddMigratableAttribute(type, attributeCtor, typeHash, module);
+            attribute.ConstructorArguments.Add(new CustomAttributeArgument(module.Import(typeof(Type)), migratorType));
+
+            return type;
+        }
+
+        private MethodDefinition GetMigratableAttribute(Func<MethodDefinition, bool> filter)
+        {
+            return _MigrationDll
+                .Types
+                .Single(t => t.Name == "MigratableAttribute")
+                .GetConstructors()
+                .Single(filter);
+        }
+
+        private static CustomAttribute AddMigratableAttribute(TypeDefinition type, MethodReference attributeCtor, string typeHash, ModuleDefinition module)
+        {
+            var attribute = new CustomAttribute(module.Import(attributeCtor));
+            attribute.ConstructorArguments.Add(new CustomAttributeArgument(module.TypeSystem.String, typeHash));
+            type.CustomAttributes.Add(attribute);
+            return attribute;
         }
 
         private static TypeDefinition AddType(string name, ModuleDefinition module)
@@ -327,16 +360,35 @@ namespace Weingartner.Json.Migration.Fody.Spec
             return type;
         }
 
-        private static void AddMigrationMethod(TypeDefinition type, int version, ModuleDefinition jsonNetDll)
+        private void AddMigrationMethod(TypeDefinition type, int version)
         {
             var method = new MethodDefinition("Migrate_" + version,
                 MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.Static, type.Module.TypeSystem.Void);
             method.Parameters.Add(
-                new ParameterDefinition(type.Module.Import(jsonNetDll.Types.Single(t => t.Name == "JObject"))));
+                new ParameterDefinition(type.Module.Import(_JsonNetDll.Types.Single(t => t.Name == "JObject"))));
             type.Methods.Add(method);
 
             var il = method.Body.GetILProcessor();
             il.Emit(OpCodes.Ret);
+        }
+
+        private static void RunInStaThread(Action action)
+        {
+            RunAndGetInStaThread(() =>
+            {
+                action();
+                return 0;
+            });
+        }
+
+        private static T RunAndGetInStaThread<T>(Func<T> func)
+        {
+            var result = default(T);
+            var thread = new Thread(() => result = func());
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+            return result;
         }
 
         public void Dispose()
@@ -344,18 +396,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
             foreach (var file in _CreatedTestFiles)
             {
                 File.Delete(file);
-            }
-        }
-
-        public static string Configuration
-        {
-            get
-            {
-#if DEBUG
-                return "Debug";
-#else
-                return "Release";
-#endif
             }
         }
     }

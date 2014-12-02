@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using FluentAssertions;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
-using Weingartner.Json.Migration.Common;
 using Xunit;
 
 namespace Weingartner.Json.Migration.Fody.Spec
