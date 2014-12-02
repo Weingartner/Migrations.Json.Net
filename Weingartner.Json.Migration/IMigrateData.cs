@@ -2,10 +2,8 @@
 
 namespace Weingartner.Json.Migration
 {
-    public interface IMigrateData<TSerializedData>
+    public interface IMigrateData<TData>
     {
-        void TryMigrate(ref TSerializedData data, Type dataType);
-
-        void TryMigrate(ref TSerializedData data, Type dataType, IMigrator<TSerializedData> migrator);
+        void TryMigrate(ref TData data, Type dataType);
     }
 }
