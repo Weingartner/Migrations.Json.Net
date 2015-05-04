@@ -14,6 +14,7 @@ using Xunit;
 using Assembly = System.Reflection.Assembly;
 using BindingFlags = System.Reflection.BindingFlags;
 using FieldAttributes = System.Reflection.FieldAttributes;
+using System.Threading.Tasks;
 
 namespace Weingartner.Json.Migration.Fody.Spec
 {
@@ -134,20 +135,6 @@ namespace Weingartner.Json.Migration.Fody.Spec
                 .Where(e => e.Message.Contains("add a migration method"));
         }
 
-        [Fact]
-        public void ShouldHaveMigrationMethodSignatureInClipboardWhenMigrationMethodMightBeNeeded()
-        {
-            try
-            {
-                Clipboard.Clear();
-                WeaveTypeWithWrongHash();
-            }
-            catch (MigrationException) { }
-            finally
-            {
-                Clipboard.GetText().Should().NotBeEmpty();
-            }
-        }
 
         [Fact]
         public void ShouldThrowWhenMigratableTypeHasNonConsecutiveMigrationMethods()
@@ -158,7 +145,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         }
 
         [Fact]
-        public void ShouldPutTextToClipboardWhenCalledFromNonStaThread()
+        public async Task ShouldPutTextToClipboardWhenCalledFromNonStaThread()
         {
             var clipboardText = string.Empty;
             var thread = new Thread(() =>
@@ -176,6 +163,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
                     clipboardText = RunAndGetInStaThread(Clipboard.GetText);
                 }
             });
+            thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             thread.Join();
 
