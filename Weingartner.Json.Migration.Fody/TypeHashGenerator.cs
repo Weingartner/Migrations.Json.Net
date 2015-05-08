@@ -72,8 +72,6 @@ namespace Weingartner.Json.Migration.Fody
                         .Any(t => t.IsProbablyEqualTo(dataMemberAttribute)))
                 .Select(p =>
                 {
-                    var typee = type;
-                    Console.WriteLine(typee);
                     TypeReference propertyType;
                     if (p.PropertyType.IsGenericParameter)
                     {
