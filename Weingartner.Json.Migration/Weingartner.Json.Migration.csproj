@@ -91,6 +91,7 @@
     <Compile Include="MigrationConverter.cs" />
     <Compile Include="MigrationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VerifyingJsonDataMigrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
