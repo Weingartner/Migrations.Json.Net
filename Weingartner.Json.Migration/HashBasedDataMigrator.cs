@@ -101,8 +101,8 @@ namespace Weingartner.Json.Migration
                 "Migration method '{0}.{1}' should have one of the following signatures:",
                 method.DeclaringType.FullName,
                 method.Name));
-            builder.AppendLine(string.Format("private static {0} {1}({0} data)", method.DeclaringType.FullName, method.Name));
-            builder.AppendLine(string.Format("private static {0} {1}({0} data, Func<{2}, Type, {2}> migrateChild)", method.DeclaringType.FullName, method.Name, typeof(TData).FullName));
+            builder.AppendLine(string.Format("private static {0} {1}({0} data)", typeof(TData).FullName, method.Name));
+            builder.AppendLine(string.Format("private static {0} {1}({0} data, Func<{0}, Type, {0}> migrateChild)", typeof(TData).FullName, method.Name));
             throw new MigrationException(builder.ToString());
         }
 
