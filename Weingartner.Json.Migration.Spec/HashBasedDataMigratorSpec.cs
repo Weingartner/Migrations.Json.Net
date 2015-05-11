@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using FluentAssertions;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 using Xunit;
-using Xunit.Extensions;
 
 namespace Weingartner.Json.Migration.Spec
 {
@@ -115,6 +116,22 @@ namespace Weingartner.Json.Migration.Spec
             result["Name"].Value<string>().Should().Be("Name_A_B_C");
         }
 
+        [Fact]
+        public void ShouldDoDeepMigration()
+        {
+            var configData = CreateConfigurationFromObject(new FixtureDataContainer(new FixtureData(), new[] { new FixtureData(), new FixtureData() }), 0);
+            configData["AllData"][0]["Version"] = 1;
+
+            var sut = CreateMigrator();
+            var result = sut.TryMigrate(configData, typeof(FixtureDataContainer));
+
+            result["Data"]["Name"].Value<string>().Should().Be("Name_0_1_2");
+            result["AllData"].Count().Should().Be(3);
+            result["AllData"][0]["Name"].Value<string>().Should().Be("Name_0_1_2");
+            result["AllData"][1]["Name"].Value<string>().Should().Be("_1_2");
+            result["AllData"][2]["Name"].Value<string>().Should().Be("Name_0_1_2");
+        }
+
         private static IMigrateData<JToken> CreateMigrator()
         {
             return new HashBasedDataMigrator<JToken>(new JsonVersionUpdater());
@@ -159,6 +176,34 @@ namespace Weingartner.Json.Migration.Spec
             private static JObject Migrate_3(JObject data)
             {
                 data["Name"] += "_2";
+                return data;
+            }
+        }
+
+        [Migratable("")]
+        private class FixtureDataContainer
+        {
+            private static int _version = 1;
+            
+            [DataMember]
+            public FixtureData Data { get; private set; }
+
+            [DataMember]
+            public IEnumerable<FixtureData> AllData { get; private set; }
+
+            public FixtureDataContainer(FixtureData data, IEnumerable<FixtureData> allData)
+            {
+                Data = data;
+                AllData = allData;
+            }
+
+            private static JObject Migrate_1(JObject data, Func<JToken, Type, JToken> migrateChild)
+            {
+                var allData = (JArray)data["AllData"];
+                allData.AddFirst(new JObject());
+                data["AllData"] = new JArray(allData.Select(c => migrateChild(c, typeof(FixtureData))));
+                
+                data["Data"] = migrateChild(data["Data"], typeof (FixtureData));
                 return data;
             }
         }
