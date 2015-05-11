@@ -14,10 +14,11 @@ namespace Weingartner.Json.Migration
             _Inner = inner;
         }
 
-        public void TryMigrate(ref JToken data, Type dataType)
+        public JToken TryMigrate(JToken data, Type dataType)
         {
-            _Inner.TryMigrate(ref data, dataType);
-            VerifyMigration(data, dataType);
+            var migratedData = _Inner.TryMigrate(data, dataType);
+            VerifyMigration(migratedData, dataType);
+            return migratedData;
         }
 
         private static void VerifyMigration(JToken data, Type dataType)

@@ -15,13 +15,13 @@ namespace Weingartner.Json.Migration
             _VersionExtractor = versionExtractor;
         }
 
-        public void TryMigrate(ref TData data, Type dataType)
+        public TData TryMigrate(TData data, Type dataType)
         {
             if (data == null) throw new ArgumentNullException("data");
             if (dataType == null) throw new ArgumentNullException("dataType");
 
             var migrationSettings = dataType.GetCustomAttribute<MigratableAttribute>();
-            if (migrationSettings == null) return;
+            if (migrationSettings == null) return data;
 
             var migrator = migrationSettings.MigratorType ?? dataType;
 
@@ -36,7 +36,7 @@ namespace Weingartner.Json.Migration
                     throw new MigrationException(
                         string.Format(
                             "The migration method, which migrates an instance of type '{0}' to version {1} cannot be found. " +
-                            "To resolve this, add a method with the following signature: `private static void Migrate_{1}(ref {2} data)",
+                            "To resolve this, add a method with the following signature: `private static {2} Migrate_{1}(ref {2} data)",
                             dataType.FullName,
                             version + 1,
                             typeof(TData).FullName));
@@ -44,7 +44,7 @@ namespace Weingartner.Json.Migration
 
                 CheckParameters(migrationMethod, data.GetType());
 
-                ExecuteMigration(migrationMethod, ref data);
+                data = ExecuteMigration(migrationMethod, data);
 
                 version++;
 

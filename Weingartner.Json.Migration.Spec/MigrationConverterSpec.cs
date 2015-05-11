@@ -92,7 +92,7 @@ namespace Weingartner.Json.Migration.Spec
                 : this(color, Enumerable.Empty<House>())
             { }
 
-            private static void Migrate_1(ref JToken data) { }
+            private static JToken Migrate_1(JToken data) { return data; }
         }
 
         [Migratable("")]
@@ -109,9 +109,10 @@ namespace Weingartner.Json.Migration.Spec
                 Address = address;
             }
 
-            private static void Migrate_1(ref JToken data)
+            private static JToken Migrate_1(JToken data)
             {
                 data["Name"] += " Migrated";
+                return data;
             }
         }
 
@@ -127,9 +128,10 @@ namespace Weingartner.Json.Migration.Spec
                 Street = street;
             }
 
-            private static void Migrate_1(ref JToken data)
+            private static JToken Migrate_1(JToken data)
             {
                 data["Street"] += " Migrated";
+                return data;
             }
         }
         // ReSharper restore InconsistentNaming

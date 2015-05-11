@@ -16,7 +16,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(ref obj, type)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type)).ShouldThrow<MigrationException>();
         }
 
         [Theory]
@@ -27,7 +27,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(ref obj, type)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type)).ShouldThrow<MigrationException>();
         }
 
         [Theory]
@@ -38,7 +38,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(ref obj, type)).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
         }
 
         private static IMigrateData<JToken> GetVerifyingMigrator()
@@ -56,8 +56,9 @@ namespace Weingartner.Json.Migration.Spec
 
         private class NullMigrator : IMigrateData<JToken>
         {
-            public void TryMigrate(ref JToken data, Type dataType)
+            public JToken TryMigrate(JToken data, Type dataType)
             {
+                return data;
             }
         }
     }

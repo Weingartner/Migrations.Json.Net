@@ -19,9 +19,9 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(configVersion);
 
             var sut = CreateMigrator();
-            sut.TryMigrate(ref configData, typeof(FixtureData));
+            var result = sut.TryMigrate(configData, typeof(FixtureData));
 
-            configData["Name"].Value<string>().Should().Be(expectedName);
+            result["Name"].Value<string>().Should().Be(expectedName);
         }
 
         [Fact]
@@ -30,9 +30,9 @@ namespace Weingartner.Json.Migration.Spec
             var configData = JToken.FromObject(new[] { 1, 2, 3 });
 
             var sut = CreateMigrator();
-            sut.TryMigrate(ref configData, typeof(FixtureData2));
+            var result = sut.TryMigrate(configData, typeof(FixtureData2));
 
-            configData.Should().BeOfType<JObject>();
+            result.Should().BeOfType<JObject>();
         }
 
         [Fact]
@@ -41,9 +41,9 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            sut.TryMigrate(ref configData, typeof(FixtureData));
+            var result = sut.TryMigrate(configData, typeof(FixtureData));
 
-            configData[VersionMemberName.Instance.VersionPropertyName].Value<int>().Should().Be(3);
+            result[VersionMemberName.Instance.VersionPropertyName].Value<int>().Should().Be(3);
         }
 
         [Fact]
@@ -53,8 +53,7 @@ namespace Weingartner.Json.Migration.Spec
             ((JObject)configData).Remove(VersionMemberName.Instance.VersionPropertyName);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(ref configData, typeof(FixtureData)))
-                .ShouldNotThrow();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldNotThrow();
         }
 
         [Fact]
@@ -63,8 +62,7 @@ namespace Weingartner.Json.Migration.Spec
             JToken configData = null;
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(ref configData, typeof(FixtureData)))
-                .ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -73,8 +71,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(ref configData, null))
-                .ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(configData, null)).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -84,8 +81,7 @@ namespace Weingartner.Json.Migration.Spec
             configData[VersionMemberName.Instance.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(ref configData, typeof(DataWithInvalidMigrationMethod)))
-                .ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, typeof(DataWithInvalidMigrationMethod))).ShouldThrow<MigrationException>();
         }
 
         [Fact]
@@ -94,8 +90,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = JToken.FromObject(new DataWithoutVersion());
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(ref configData, typeof(DataWithoutVersion)))
-                .ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, typeof(DataWithoutVersion))).ShouldThrow<MigrationException>();
         }
 
         [Fact]
@@ -105,8 +100,8 @@ namespace Weingartner.Json.Migration.Spec
             var origConfigData = configData.DeepClone();
 
             var sut = CreateMigrator();
-            sut.TryMigrate(ref configData, typeof(NotMigratableData));
-            configData.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
+            var result = sut.TryMigrate(configData, typeof(NotMigratableData));
+            result.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
         }
 
         [Fact]
@@ -115,9 +110,9 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationFromObject(new FixtureDataWithCustomMigrator(), 0);
 
             var sut = CreateMigrator();
-            sut.TryMigrate(ref configData, typeof(FixtureDataWithCustomMigrator));
+            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator));
 
-            configData["Name"].Value<string>().Should().Be("Name_A_B_C"); 
+            result["Name"].Value<string>().Should().Be("Name_A_B_C");
         }
 
         private static IMigrateData<JToken> CreateMigrator()
@@ -149,19 +144,22 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_1(ref JObject data)
+            private static JObject Migrate_1(JObject data)
             {
                 data["Name"] = "Name_0";
+                return data;
             }
 
-            private static void Migrate_2(ref JObject data)
+            private static JObject Migrate_2(JObject data)
             {
                 data["Name"] += "_1";
+                return data;
             }
 
-            private static void Migrate_3(ref JObject data)
+            private static JObject Migrate_3(JObject data)
             {
                 data["Name"] += "_2";
+                return data;
             }
         }
 
@@ -173,9 +171,10 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public int[] Values { get; private set; }
 
-            private static void Migrate_1(ref JToken data)
+            private static JToken Migrate_1(JToken data)
             {
                 data = new JObject { { "Values", data } };
+                return data;
             }
         }
 
@@ -187,7 +186,7 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_1(ref JToken data, string additionalData) { }
+            private static JToken Migrate_1(JToken data, string additionalData) { return data; }
         }
 
         [Migratable("")]
@@ -196,7 +195,7 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static void Migrate_1(ref JToken data) { }
+            private static JToken Migrate_1(JToken data) { return data; }
         }
 
         private class NotMigratableData
@@ -209,9 +208,10 @@ namespace Weingartner.Json.Migration.Spec
                 Name = name;
             }
 
-            private static void Migrate_1(ref JToken data)
+            private static JToken Migrate_1(JToken data)
             {
                 data["Name"] += " - migrated";
+                return data;
             }
         }
 
@@ -226,19 +226,22 @@ namespace Weingartner.Json.Migration.Spec
 
         public class FixtureDataMigrator
         {
-            private static void Migrate_1(ref JObject data)
+            private static JObject Migrate_1(JObject data)
             {
                 data["Name"] = "Name_A";
+                return data;
             }
 
-            private static void Migrate_2(ref JObject data)
+            private static JObject Migrate_2(JObject data)
             {
                 data["Name"] += "_B";
+                return data;
             }
 
-            private static void Migrate_3(ref JObject data)
+            private static JObject Migrate_3(JObject data)
             {
                 data["Name"] += "_C";
+                return data;
             }
         }
 
