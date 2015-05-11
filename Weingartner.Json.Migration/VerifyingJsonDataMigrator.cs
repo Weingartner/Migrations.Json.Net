@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Newtonsoft.Json.Linq;
 
 namespace Weingartner.Json.Migration
@@ -39,8 +40,21 @@ namespace Weingartner.Json.Migration
                 return;
             }
 
-            var dataProperties = data.Children<JProperty>().Select(p => p.Name);
-            var typeProperties = dataType.GetProperties(BindingFlags.Instance | BindingFlags.Public).Select(p => p.Name);
+            var dataProperties = data
+                .Children<JProperty>()
+                .Select(p => p.Name)
+                .ToList();
+            
+            var typePropertyFilter =
+                dataType.GetCustomAttribute<DataContractAttribute>() != null
+                ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<DataMemberAttribute>() != null)
+                : (_ => true);
+            var typeProperties = dataType
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .Where(typePropertyFilter)
+                .Select(p => p.Name)
+                .ToArray();
+
             var superfluousDataProperties = dataProperties.Except(typeProperties).ToList();
             if (superfluousDataProperties.Count > 0)
             {
