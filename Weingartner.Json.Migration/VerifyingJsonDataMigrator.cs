@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 
@@ -26,7 +23,8 @@ namespace Weingartner.Json.Migration
 
         private static void VerifyMigration(JToken data, Type dataType)
         {
-            if (data is JArray)
+            var dataArr = data as JArray;
+            if (dataArr != null)
             {
                 if (!dataType.IsGenericType)
                 {
@@ -45,42 +43,20 @@ namespace Weingartner.Json.Migration
             var dataProperties = data
                 .Children<JProperty>()
                 .Select(p => p.Name)
-                .Where(n => !VersionMemberName.SupportedVersionPropertyNames.Contains(n))
                 .ToList();
 
-            var dataMemberFilter =
-                dataType.GetCustomAttribute<DataContractAttribute>() != null
-                ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<DataMemberAttribute>() != null)
-                : (_ => true);
+            var roundTripProperties = JToken.FromObject(data.ToObject(dataType))
+                .Children<JProperty>()
+                .Select(p => p.Name)
+                .ToList();
 
-            var jsonObjectAttr = dataType.GetCustomAttribute<JsonObjectAttribute>();
-            
-            var jsonPropertyFilter =
-                jsonObjectAttr != null && jsonObjectAttr.MemberSerialization == MemberSerialization.OptIn
-                    ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<JsonPropertyAttribute>() != null)
-                    : (_ => true);
-
-            var jsonIgnoreFilter =
-                jsonObjectAttr != null && jsonObjectAttr.MemberSerialization != MemberSerialization.OptIn
-                    ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<JsonIgnoreAttribute>() == null)
-                    : (_ => true);
-
-            var typeProperties = dataType
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic) // Accessible getter
-                .Where(p => !VersionMemberName.SupportedVersionPropertyNames.Contains(p.Name)) // Exclude version property
-                .Where(dataMemberFilter)
-                .Where(jsonPropertyFilter)
-                .Where(jsonIgnoreFilter)
-                .ToArray();
-
-            var superfluousDataProperties = dataProperties.Except(typeProperties.Select(p => p.Name)).ToList();
+            var superfluousDataProperties = dataProperties.Except(roundTripProperties).ToList();
             if (superfluousDataProperties.Count > 0)
             {
                 throw new MigrationException(string.Format("The following properties should be removed from the serialized data because they don't exist in type {0}: {1}", dataType.FullName, string.Join(", ", superfluousDataProperties)));
             }
 
-            var missingDataProperties = typeProperties.Where(p => p.SetMethod != null).Select(p => p.Name).Except(dataProperties).ToList();
+            var missingDataProperties = roundTripProperties.Except(dataProperties.Concat(VersionMemberName.SupportedVersionPropertyNames)).ToList();
             if (missingDataProperties.Count > 0)
             {
                 throw new MigrationException(string.Format("The following properties should be added to the serialized data because they exist in type {0}: {1}", dataType.FullName, string.Join(", ", missingDataProperties)));
