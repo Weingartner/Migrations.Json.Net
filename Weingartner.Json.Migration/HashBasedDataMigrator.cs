@@ -87,6 +87,8 @@ namespace Weingartner.Json.Migration
             if (!parameters[0].ParameterType.IsAssignableFrom(dataType))
                 ThrowInvalidMigrationSignature(method);
 
+            if (!typeof(TData).IsAssignableFrom(method.ReturnType))
+                ThrowInvalidMigrationSignature(method);
         }
 
         private static void ThrowInvalidMigrationSignature(MethodInfo method)

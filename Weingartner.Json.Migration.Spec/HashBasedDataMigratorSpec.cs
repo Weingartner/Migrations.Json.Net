@@ -75,14 +75,16 @@ namespace Weingartner.Json.Migration.Spec
             new Action(() => sut.TryMigrate(configData, null)).ShouldThrow<ArgumentNullException>();
         }
 
-        [Fact]
-        public void ShouldThrowIfMigrationMethodHasTooManyParameters()
+        [Theory]
+        [InlineData(typeof(DataWithInvalidMigrationMethod))]
+        [InlineData(typeof(DataWithInvalidMigrationMethod2))]
+        public void ShouldThrowIfMigrationMethodHasTooManyParameters(Type configType)
         {
-            var configData = JToken.FromObject(new DataWithInvalidMigrationMethod());
+            var configData = new JObject();
             configData[VersionMemberName.Instance.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(DataWithInvalidMigrationMethod))).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, configType)).ShouldThrow<MigrationException>();
         }
 
         [Fact]
@@ -188,6 +190,17 @@ namespace Weingartner.Json.Migration.Spec
             public string Name { get; private set; }
 
             private static JToken Migrate_1(JToken data, string additionalData) { return data; }
+        }
+
+        [Migratable("")]
+        private class DataWithInvalidMigrationMethod2
+        {
+            private static int _version = 3;
+
+            [DataMember]
+            public string Name { get; private set; }
+
+            private static object Migrate_1(JToken data) { return data; }
         }
 
         [Migratable("")]
