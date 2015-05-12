@@ -60,7 +60,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
-            var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
+            var property = instance.GetType().GetProperty(VersionMemberName.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
             property.Should().NotBeNull();
         }
 
@@ -72,7 +72,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
-            var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
+            var property = instance.GetType().GetProperty(VersionMemberName.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
             property.GetValue(instance).Should().Be(1);
         }
 
@@ -84,7 +84,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestDataWithoutMigration");
             var instance = Activator.CreateInstance(type);
 
-            var property = instance.GetType().GetProperty(VersionMemberName.Instance.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
+            var property = instance.GetType().GetProperty(VersionMemberName.VersionPropertyName, BindingFlags.Instance | BindingFlags.Public);
             property.GetValue(instance).Should().Be(0);
         }
 
@@ -95,7 +95,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             WeaveValidAssembly(out assembly);
             var type = assembly.GetType("Test.TestDataContract");
 
-            type.GetProperty(VersionMemberName.Instance.VersionPropertyName)
+            type.GetProperty(VersionMemberName.VersionPropertyName)
                 .CustomAttributes
                 .Select(attr => attr.AttributeType)
                 .Should()
@@ -110,7 +110,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestDataWithoutMigration");
 
             // ReSharper disable once PossibleNullReferenceException
-            ((int)type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
+            ((int)type.GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
-            var field = instance.GetType().GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var field = instance.GetType().GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
             const FieldAttributes attributes = (FieldAttributes.Literal | FieldAttributes.Static);
             // ReSharper disable once PossibleNullReferenceException
             (field.Attributes & attributes).Should().Be(attributes);
@@ -176,7 +176,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             Assembly assembly;
             WeaveValidAssembly(out assembly);
             var type = assembly.GetType("Test.TopLevelType+NestedType");
-            type.GetProperty(VersionMemberName.Instance.VersionPropertyName).Should().NotBeNull();
+            type.GetProperty(VersionMemberName.VersionPropertyName).Should().NotBeNull();
         }
 
         [Fact]

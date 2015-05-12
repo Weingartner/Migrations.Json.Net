@@ -62,7 +62,7 @@ namespace Weingartner.Json.Migration.Fody
             var items = type.Resolve()
                 .Properties
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic)
-                .Where(p => p.Name != VersionMemberName.Instance.VersionPropertyName)
+                .Where(p => p.Name != VersionMemberName.VersionPropertyName)
                 .Where(p =>
                     !p.DeclaringType.CustomAttributes
                         .Select(a => a.AttributeType)

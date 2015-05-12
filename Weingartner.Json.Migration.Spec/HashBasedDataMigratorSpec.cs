@@ -44,14 +44,14 @@ namespace Weingartner.Json.Migration.Spec
             var sut = CreateMigrator();
             var result = sut.TryMigrate(configData, typeof(FixtureData));
 
-            result[VersionMemberName.Instance.VersionPropertyName].Value<int>().Should().Be(3);
+            result[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
         }
 
         [Fact]
         public void ShouldWorkWithNonVersionedData()
         {
             var configData = CreateConfigurationData(0);
-            ((JObject)configData).Remove(VersionMemberName.Instance.VersionPropertyName);
+            ((JObject)configData).Remove(VersionMemberName.VersionPropertyName);
 
             var sut = CreateMigrator();
             new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldNotThrow();
@@ -81,7 +81,7 @@ namespace Weingartner.Json.Migration.Spec
         public void ShouldThrowIfMigrationMethodIsInvalid(Type configType)
         {
             var configData = new JObject();
-            configData[VersionMemberName.Instance.VersionPropertyName] = 0;
+            configData[VersionMemberName.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
             new Action(() => sut.TryMigrate(configData, configType)).ShouldThrow<MigrationException>();
@@ -131,7 +131,7 @@ namespace Weingartner.Json.Migration.Spec
         private static JToken CreateConfigurationFromObject(object obj, int version)
         {
             var data = JToken.FromObject(obj);
-            data[VersionMemberName.Instance.VersionPropertyName] = version;
+            data[VersionMemberName.VersionPropertyName] = version;
             return data;
         }
 
