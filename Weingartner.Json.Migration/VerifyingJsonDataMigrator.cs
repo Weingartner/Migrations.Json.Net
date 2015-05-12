@@ -68,6 +68,7 @@ namespace Weingartner.Json.Migration
             var typeProperties = dataType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && !VersionMemberName.SupportedVersionPropertyNames.Contains(p.Name))
+                .Where(p => p.SetMethod != null) // No set method
                 .Where(dataMemberFilter)
                 .Where(jsonPropertyFilter)
                 .Where(jsonIgnoreFilter)

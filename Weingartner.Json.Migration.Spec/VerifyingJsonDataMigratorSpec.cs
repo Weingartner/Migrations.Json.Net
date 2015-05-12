@@ -51,6 +51,7 @@ namespace Weingartner.Json.Migration.Spec
         [InlineData(typeof(PrivateProperty))]
         [InlineData(typeof(PrivateGetter))]
         [InlineData(typeof(NoGetter))]
+        [InlineData(typeof(NoSetter))]
         [InlineData(typeof(MigratableType))]
         public void ShouldIgnoreNotSerializedProperties(Type type)
         {
@@ -120,6 +121,14 @@ namespace Weingartner.Json.Migration.Spec
             public string Data
             {
                 set { }
+            }
+        }
+
+        private class NoSetter
+        {
+            public string Data
+            {
+                get { return ""; }
             }
         }
 
