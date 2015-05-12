@@ -15,7 +15,6 @@
         <dependencies>
             <group targetFramework=".NETFramework4.5">
                 <dependency id="Newtonsoft.Json" version="6.0.0" />
-                <dependency id="Fody" version="1.28.3" />
             </group>
         </dependencies>
     </metadata>
