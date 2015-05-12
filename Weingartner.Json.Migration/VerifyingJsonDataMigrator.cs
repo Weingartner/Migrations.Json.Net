@@ -9,9 +9,9 @@ namespace Weingartner.Json.Migration
     public class VerifyingJsonDataMigrator : IMigrateData<JToken>
     {
         private readonly IMigrateData<JToken> _Inner;
-        private readonly JsonSerializer _Serializer;
+        private readonly Func<JsonSerializer> _Serializer;
 
-        public VerifyingJsonDataMigrator(IMigrateData<JToken> inner, JsonSerializer serializer)
+        public VerifyingJsonDataMigrator(IMigrateData<JToken> inner, Func<JsonSerializer> serializer)
         {
             _Inner = inner;
             _Serializer = serializer;
@@ -48,7 +48,8 @@ namespace Weingartner.Json.Migration
                 .Select(p => p.Name)
                 .ToList();
 
-            var roundTripProperties = JToken.FromObject(data.ToObject(dataType, _Serializer), _Serializer)
+            var serializer = _Serializer();
+            var roundTripProperties = JToken.FromObject(data.ToObject(dataType, serializer), serializer)
                 .Children<JProperty>()
                 .Select(p => p.Name)
                 .ToList();
