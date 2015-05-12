@@ -36,6 +36,7 @@ namespace Weingartner.Json.Migration.Spec
         [Theory]
         [InlineData("{'Street': 'Teststreet', 'Number': 5}", typeof(Address))]
         [InlineData("[{'Street': 'Teststreet', 'Number': 5}]", typeof(IEnumerable<Address>))]
+        [InlineData("{'Street': 'Teststreet', 'Number': 5, 'Version': 2}", typeof(Address))]
         public void ShouldSucceedVerificationWhenDataIsOk(string jsonData, Type type)
         {
             var obj = JToken.Parse(jsonData);
@@ -59,20 +60,6 @@ namespace Weingartner.Json.Migration.Spec
             var sut = GetVerifyingMigrator();
 
             new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
-        }
-
-        [Fact]
-        public void ShouldIgnoreSerializedVersionField()
-        {
-            var obj = new JObject
-            {
-                { VersionMemberName.VersionPropertyName, 5 },
-                { "Street", "Teststreet" },
-                { "Number", 5 }
-            };
-            var sut = GetVerifyingMigrator();
-
-            new Action(() => sut.TryMigrate(obj, typeof(Address))).ShouldNotThrow<MigrationException>();
         }
 
         private static IMigrateData<JToken> GetVerifyingMigrator()
