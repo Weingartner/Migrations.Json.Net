@@ -78,7 +78,7 @@ namespace Weingartner.Json.Migration.Spec
         [Theory]
         [InlineData(typeof(DataWithInvalidMigrationMethod))]
         [InlineData(typeof(DataWithInvalidMigrationMethod2))]
-        public void ShouldThrowIfMigrationMethodHasTooManyParameters(Type configType)
+        public void ShouldThrowIfMigrationMethodIsInvalid(Type configType)
         {
             var configData = new JObject();
             configData[VersionMemberName.Instance.VersionPropertyName] = 0;
