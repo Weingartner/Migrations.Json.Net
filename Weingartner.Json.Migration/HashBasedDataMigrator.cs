@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
@@ -84,36 +81,28 @@ namespace Weingartner.Json.Migration
         protected void VerifyMigrationMethodSignature(MethodInfo method, Type dataType)
         {
             var parameters = method.GetParameters();
-            if (parameters.Length < 1)
+            if (parameters.Length != 1)
                 ThrowInvalidMigrationSignature(method);
 
             if (!parameters[0].ParameterType.IsAssignableFrom(dataType))
                 ThrowInvalidMigrationSignature(method);
 
-            if (parameters.Length > 1 && !parameters[1].ParameterType.IsAssignableFrom(typeof(Func<TData, Type, TData>)))
-                ThrowInvalidMigrationSignature(method);
         }
 
         private static void ThrowInvalidMigrationSignature(MethodInfo method)
         {
             var builder = new StringBuilder();
             builder.AppendLine(string.Format(
-                "Migration method '{0}.{1}' should have one of the following signatures:",
+                "Migration method '{0}.{1}' should have the following signature:",
                 method.DeclaringType.FullName,
                 method.Name));
             builder.AppendLine(string.Format("private static {0} {1}({0} data)", typeof(TData).FullName, method.Name));
-            builder.AppendLine(string.Format("private static {0} {1}({0} data, Func<{0}, Type, {0}> migrateChild)", typeof(TData).FullName, method.Name));
             throw new MigrationException(builder.ToString());
         }
 
         protected TData ExecuteMigration(MethodInfo method, TData data)
         {
-            var parameters = new List<object> { data };
-            if (method.GetParameters().Length > 1)
-            {
-                parameters.Add(new Func<TData, Type, TData>(TryMigrate));
-            }
-            return (TData)method.Invoke(null, parameters.ToArray());
+            return (TData)method.Invoke(null, new object[] { data });
         }
     }
 }
