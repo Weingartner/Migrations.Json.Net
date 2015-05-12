@@ -5,6 +5,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration.Spec
 {
@@ -57,6 +58,20 @@ namespace Weingartner.Json.Migration.Spec
             var sut = GetVerifyingMigrator();
 
             new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
+        }
+
+        [Fact]
+        public void ShouldIgnoreSerializedVersionField()
+        {
+            var obj = new JObject
+            {
+                { VersionMemberName.VersionPropertyName, 5 },
+                { "Street", "Teststreet" },
+                { "Number", 5 }
+            };
+            var sut = GetVerifyingMigrator();
+
+            new Action(() => sut.TryMigrate(obj, typeof(Address))).ShouldNotThrow<MigrationException>();
         }
 
         private static IMigrateData<JToken> GetVerifyingMigrator()

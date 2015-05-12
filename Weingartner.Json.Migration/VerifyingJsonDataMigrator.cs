@@ -45,6 +45,7 @@ namespace Weingartner.Json.Migration
             var dataProperties = data
                 .Children<JProperty>()
                 .Select(p => p.Name)
+                .Where(n => !VersionMemberName.SupportedVersionPropertyNames.Contains(n))
                 .ToList();
 
             var dataMemberFilter =
