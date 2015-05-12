@@ -63,7 +63,7 @@ namespace Weingartner.Json.Migration.Spec
 
         private static IMigrateData<JToken> GetVerifyingMigrator()
         {
-            return new VerifyingJsonDataMigrator(new NullMigrator());
+            return new VerifyingJsonDataMigrator(new NullMigrator(), new JsonSerializer());
         }
 
         // ReSharper disable UnusedMember.Local
