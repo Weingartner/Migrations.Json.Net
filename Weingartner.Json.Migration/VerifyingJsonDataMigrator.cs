@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 
@@ -8,10 +9,12 @@ namespace Weingartner.Json.Migration
     public class VerifyingJsonDataMigrator : IMigrateData<JToken>
     {
         private readonly IMigrateData<JToken> _Inner;
+        private readonly JsonSerializer _Serializer;
 
-        public VerifyingJsonDataMigrator(IMigrateData<JToken> inner)
+        public VerifyingJsonDataMigrator(IMigrateData<JToken> inner, JsonSerializer serializer)
         {
             _Inner = inner;
+            _Serializer = serializer;
         }
 
         public JToken TryMigrate(JToken data, Type dataType)
@@ -21,7 +24,7 @@ namespace Weingartner.Json.Migration
             return migratedData;
         }
 
-        private static void VerifyMigration(JToken data, Type dataType)
+        private void VerifyMigration(JToken data, Type dataType)
         {
             var dataArr = data as JArray;
             if (dataArr != null)
@@ -45,7 +48,7 @@ namespace Weingartner.Json.Migration
                 .Select(p => p.Name)
                 .ToList();
 
-            var roundTripProperties = JToken.FromObject(data.ToObject(dataType))
+            var roundTripProperties = JToken.FromObject(data.ToObject(dataType, _Serializer), _Serializer)
                 .Children<JProperty>()
                 .Select(p => p.Name)
                 .ToList();
