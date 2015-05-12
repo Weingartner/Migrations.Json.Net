@@ -67,22 +67,20 @@ namespace Weingartner.Json.Migration
 
             var typeProperties = dataType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic) // Inaccessible getter
-                .Where(p => !VersionMemberName.SupportedVersionPropertyNames.Contains(p.Name)) // Version property
-                .Where(p => p.SetMethod != null) // No set method
+                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic) // Accessible getter
+                .Where(p => !VersionMemberName.SupportedVersionPropertyNames.Contains(p.Name)) // Exclude version property
                 .Where(dataMemberFilter)
                 .Where(jsonPropertyFilter)
                 .Where(jsonIgnoreFilter)
-                .Select(p => p.Name)
                 .ToArray();
 
-            var superfluousDataProperties = dataProperties.Except(typeProperties).ToList();
+            var superfluousDataProperties = dataProperties.Except(typeProperties.Select(p => p.Name)).ToList();
             if (superfluousDataProperties.Count > 0)
             {
                 throw new MigrationException(string.Format("The following properties should be removed from the serialized data because they don't exist in type {0}: {1}", dataType.FullName, string.Join(", ", superfluousDataProperties)));
             }
 
-            var missingDataProperties = typeProperties.Except(dataProperties).ToList();
+            var missingDataProperties = typeProperties.Where(p => p.SetMethod != null).Select(p => p.Name).Except(dataProperties).ToList();
             if (missingDataProperties.Count > 0)
             {
                 throw new MigrationException(string.Format("The following properties should be added to the serialized data because they exist in type {0}: {1}", dataType.FullName, string.Join(", ", missingDataProperties)));

@@ -37,6 +37,7 @@ namespace Weingartner.Json.Migration.Spec
         [InlineData("{'Street': 'Teststreet', 'Number': 5}", typeof(Address))]
         [InlineData("[{'Street': 'Teststreet', 'Number': 5}]", typeof(IEnumerable<Address>))]
         [InlineData("{'Street': 'Teststreet', 'Number': 5, 'Version': 2}", typeof(Address))]
+        [InlineData("{'Data': 'Test'}", typeof(NoSetter))]
         public void ShouldSucceedVerificationWhenDataIsOk(string jsonData, Type type)
         {
             var obj = JToken.Parse(jsonData);
