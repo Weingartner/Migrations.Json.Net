@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {
@@ -44,14 +46,30 @@ namespace Weingartner.Json.Migration
                 .Children<JProperty>()
                 .Select(p => p.Name)
                 .ToList();
-            
-            var typePropertyFilter =
+
+            var dataMemberFilter =
                 dataType.GetCustomAttribute<DataContractAttribute>() != null
                 ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<DataMemberAttribute>() != null)
                 : (_ => true);
+
+            var jsonObjectAttr = dataType.GetCustomAttribute<JsonObjectAttribute>();
+            
+            var jsonPropertyFilter =
+                jsonObjectAttr != null && jsonObjectAttr.MemberSerialization == MemberSerialization.OptIn
+                    ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<JsonPropertyAttribute>() != null)
+                    : (_ => true);
+
+            var jsonIgnoreFilter =
+                jsonObjectAttr != null && jsonObjectAttr.MemberSerialization != MemberSerialization.OptIn
+                    ? new Func<PropertyInfo, bool>(p => p.GetCustomAttribute<JsonIgnoreAttribute>() == null)
+                    : (_ => true);
+
             var typeProperties = dataType
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .Where(typePropertyFilter)
+                .Where(p => p.GetMethod != null && p.GetMethod.IsPublic && p.Name != VersionMemberName.Instance.VersionPropertyName)
+                .Where(dataMemberFilter)
+                .Where(jsonPropertyFilter)
+                .Where(jsonIgnoreFilter)
                 .Select(p => p.Name)
                 .ToArray();
 

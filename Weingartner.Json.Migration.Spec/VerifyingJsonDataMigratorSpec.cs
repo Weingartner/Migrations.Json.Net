@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using FluentAssertions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -41,6 +43,22 @@ namespace Weingartner.Json.Migration.Spec
             new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
         }
 
+        [Theory]
+        [InlineData(typeof(NoDataMemberAttribute))]
+        [InlineData(typeof(NoJsonPropertyAttribute))]
+        [InlineData(typeof(WithJsonIgnoreAttribute))]
+        [InlineData(typeof(PrivateProperty))]
+        [InlineData(typeof(PrivateGetter))]
+        [InlineData(typeof(NoGetter))]
+        [InlineData(typeof(MigratableType))]
+        public void ShouldIgnoreNotSerializedProperties(Type type)
+        {
+            var obj = new JObject();
+            var sut = GetVerifyingMigrator();
+
+            new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
+        }
+
         private static IMigrateData<JToken> GetVerifyingMigrator()
         {
             return new VerifyingJsonDataMigrator(new NullMigrator());
@@ -52,6 +70,53 @@ namespace Weingartner.Json.Migration.Spec
             public string Street { get; set; }
             public int Number { get; set; }
         }
+
+        [DataContract]
+        private class NoDataMemberAttribute
+        {
+            public string Data { get; set; }
+        }
+
+        [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+        private class NoJsonPropertyAttribute
+        {
+            public string Data { get; set; }
+        }
+
+        [JsonObject]
+        private class WithJsonIgnoreAttribute
+        {
+            [JsonIgnore]
+            public string Data { get; set; }
+        }
+
+        private class PrivateProperty
+        {
+            private string Data { get; set; }
+        }
+
+        private class PrivateGetter
+        {
+            public string Data { private get; set; }
+        }
+
+        private class NoGetter
+        {
+            public string Data
+            {
+                set { }
+            }
+        }
+
+        [Migratable("")]
+        public class MigratableType
+        {
+            public int Version
+            {
+                get { return 0; }
+            }
+        }
+
         // ReSharper restore UnusedMember.Local
 
         private class NullMigrator : IMigrateData<JToken>
