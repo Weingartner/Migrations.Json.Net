@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -57,7 +58,9 @@ namespace Weingartner.Json.Migration
 
         protected int GetCurrentVersion(Type type)
         {
-            var versionField = type.GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var versionField = VersionMemberName.SupportedVersionBackingFieldNames
+                .Select(n => type.GetField(n, BindingFlags.Static | BindingFlags.NonPublic))
+                .FirstOrDefault(x => x != null);
             if (versionField == null)
             {
                 throw new MigrationException(
