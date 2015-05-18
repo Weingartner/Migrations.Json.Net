@@ -11,6 +11,8 @@ namespace Weingartner.Json.Migration
         private readonly IMigrateData<JToken> _Inner;
         private readonly Func<JsonSerializer> _Serializer;
 
+        public bool IsVerifying { private set; get; }
+
         public VerifyingJsonDataMigrator(IMigrateData<JToken> inner, Func<JsonSerializer> serializer)
         {
             _Inner = inner;
@@ -19,9 +21,20 @@ namespace Weingartner.Json.Migration
 
         public JToken TryMigrate(JToken data, Type dataType)
         {
-            var migratedData = _Inner.TryMigrate(data, dataType);
-            VerifyMigration(migratedData, dataType);
-            return migratedData;
+            IsVerifying = true;
+            try
+            {
+                var migratedData = _Inner.TryMigrate(data, dataType);
+                if (!IsVerifying)
+                {
+                    VerifyMigration(migratedData, dataType);
+                }
+                return migratedData;
+            }
+            finally
+            {
+                IsVerifying = false;
+            }
         }
 
         private void VerifyMigration(JToken data, Type dataType)
