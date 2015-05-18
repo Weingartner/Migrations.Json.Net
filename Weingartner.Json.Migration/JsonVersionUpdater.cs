@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Linq;
+using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
@@ -9,17 +10,18 @@ namespace Weingartner.Json.Migration
         {
             if (!(data is JObject)) return 0;
 
-            var versionToken = data[VersionMemberName.Instance.VersionPropertyName];
+            var versionToken = VersionMemberName.SupportedVersionPropertyNames
+                .Select(n => data[n])
+                .FirstOrDefault(x => x != null);
             return versionToken != null
                 ? versionToken.Value<int>()
                 : 0;
         }
 
-
         public void SetVersion(JToken data, int version)
         {
             if (!(data is JObject)) return;
-            data[VersionMemberName.Instance.VersionPropertyName] = version;
+            data[VersionMemberName.VersionPropertyName] = version;
         }
     }
 }

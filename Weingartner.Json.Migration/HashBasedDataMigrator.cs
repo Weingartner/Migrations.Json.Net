@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Weingartner.Json.Migration.Common;
 
@@ -15,13 +17,13 @@ namespace Weingartner.Json.Migration
             _VersionExtractor = versionExtractor;
         }
 
-        public void TryMigrate(ref TData data, Type dataType)
+        public TData TryMigrate(TData data, Type dataType)
         {
             if (data == null) throw new ArgumentNullException("data");
             if (dataType == null) throw new ArgumentNullException("dataType");
 
             var migrationSettings = dataType.GetCustomAttribute<MigratableAttribute>();
-            if (migrationSettings == null) return;
+            if (migrationSettings == null) return data;
 
             var migrator = migrationSettings.MigratorType ?? dataType;
 
@@ -36,35 +38,29 @@ namespace Weingartner.Json.Migration
                     throw new MigrationException(
                         string.Format(
                             "The migration method, which migrates an instance of type '{0}' to version {1} cannot be found. " +
-                            "To resolve this, add a method with the following signature: `private static void Migrate_{1}(ref {2} data)",
+                            "To resolve this, add a method with the following signature: `private static {2} Migrate_{1}(ref {2} data)",
                             dataType.FullName,
                             version + 1,
                             typeof(TData).FullName));
                 }
 
-                CheckParameters(migrationMethod, data.GetType());
+                VerifyMigrationMethodSignature(migrationMethod, data.GetType());
 
-                ExecuteMigration(migrationMethod, ref data);
+                data = ExecuteMigration(migrationMethod, data);
 
                 version++;
 
                 _VersionExtractor.SetVersion(data, version);
             }
-        }
 
-        protected void ThrowInvalidParametersException(string typeName, string methodName)
-        {
-            throw new MigrationException(
-                string.Format(
-                    "Migration method '{0}.{1}' must have a single parameter of type '{2}'.",
-                    typeName,
-                    methodName,
-                    typeof(TData).FullName));
+            return data;
         }
 
         protected int GetCurrentVersion(Type type)
         {
-            var versionField = type.GetField(VersionMemberName.Instance.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var versionField = VersionMemberName.SupportedVersionBackingFieldNames
+                .Select(n => type.GetField(n, BindingFlags.Static | BindingFlags.NonPublic))
+                .FirstOrDefault(x => x != null);
             if (versionField == null)
             {
                 throw new MigrationException(
@@ -75,7 +71,7 @@ namespace Weingartner.Json.Migration
                         type.FullName,
                         Regex.Replace(typeof(MigratableAttribute).Name, "Attribute$", string.Empty),
                         typeof(HashBasedDataMigrator<>).Assembly.GetName().Name,
-                        VersionMemberName.Instance.VersionBackingFieldName));
+                        VersionMemberName.VersionBackingFieldName));
             }
             return (int)versionField.GetValue(null);
         }
@@ -85,21 +81,33 @@ namespace Weingartner.Json.Migration
             return type.GetMethod("Migrate_" + version, BindingFlags.Static | BindingFlags.NonPublic);
         }
 
-        protected void CheckParameters(MethodInfo method, Type dataType)
+        protected void VerifyMigrationMethodSignature(MethodInfo method, Type dataType)
         {
             var parameters = method.GetParameters();
-            if (parameters.Length != 1 || !parameters[0].ParameterType.IsAssignableFrom(dataType.MakeByRefType()))
-            {
-                // ReSharper disable once PossibleNullReferenceException
-                ThrowInvalidParametersException(method.DeclaringType.FullName, method.Name);
-            }
+            if (parameters.Length != 1)
+                ThrowInvalidMigrationSignature(method);
+
+            if (!parameters[0].ParameterType.IsAssignableFrom(dataType))
+                ThrowInvalidMigrationSignature(method);
+
+            if (!typeof(TData).IsAssignableFrom(method.ReturnType))
+                ThrowInvalidMigrationSignature(method);
         }
 
-        protected void ExecuteMigration(MethodInfo method, ref TData data)
+        private static void ThrowInvalidMigrationSignature(MethodInfo method)
         {
-            var parameters = new object[] { data };
-            method.Invoke(null, parameters);
-            data = (TData)parameters[0];
+            var builder = new StringBuilder();
+            builder.AppendLine(string.Format(
+                "Migration method '{0}.{1}' should have the following signature:",
+                method.DeclaringType.FullName,
+                method.Name));
+            builder.AppendLine(string.Format("private static {0} {1}({0} data)", typeof(TData).FullName, method.Name));
+            throw new MigrationException(builder.ToString());
+        }
+
+        protected TData ExecuteMigration(MethodInfo method, TData data)
+        {
+            return (TData)method.Invoke(null, new object[] { data });
         }
     }
 }

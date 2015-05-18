@@ -1,0 +1,12 @@
+assembly-versioning-scheme: MajorMinorPatchMetadata
+tag-prefix: '[vV|version-]' # regex to match git tag prefix
+#next-version: 1.0.0
+mode: ContinuousDeployment
+continuous-delivery-fallback-tag: ci
+#branches:
+#   release[/-]:
+#    mode: ContinuousDeployment
+#    tag: rc
+#   develop:
+#    mode: ContinuousDelivery | ContinuousDeployment
+#    tag: alpha

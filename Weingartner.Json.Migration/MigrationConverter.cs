@@ -23,7 +23,7 @@ namespace Weingartner.Json.Migration
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public static bool GetOrDefault
@@ -43,12 +43,12 @@ namespace Weingartner.Json.Migration
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var data = JToken.Load(reader);
-            DataMigrator.TryMigrate(ref data, objectType);
+            var migratedData = DataMigrator.TryMigrate(data, objectType);
 
             try
             {
                 _MigratedTypes.Value[objectType] = true;
-                return serializer.Deserialize(data.CreateReader(), objectType);
+                return serializer.Deserialize(migratedData.CreateReader(), objectType);
             }
             finally
             {

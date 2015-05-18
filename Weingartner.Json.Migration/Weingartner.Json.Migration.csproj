@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Weingartner.Json.Migration</RootNamespace>
     <AssemblyName>Weingartner.Json.Migration</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
@@ -91,6 +92,7 @@
     <Compile Include="MigrationConverter.cs" />
     <Compile Include="MigrationException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VerifyingJsonDataMigrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
