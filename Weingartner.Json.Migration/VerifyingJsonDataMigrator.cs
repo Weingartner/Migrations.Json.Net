@@ -21,20 +21,20 @@ namespace Weingartner.Json.Migration
 
         public JToken TryMigrate(JToken data, Type dataType)
         {
-            IsVerifying = true;
-            try
+            var migratedData = _Inner.TryMigrate(data, dataType);
+            if (!IsVerifying)
             {
-                var migratedData = _Inner.TryMigrate(data, dataType);
-                if (!IsVerifying)
+                try
                 {
+                    IsVerifying = true;
                     VerifyMigration(migratedData, dataType);
                 }
-                return migratedData;
+                finally
+                {
+                    IsVerifying = false;
+                }
             }
-            finally
-            {
-                IsVerifying = false;
-            }
+            return migratedData;
         }
 
         private void VerifyMigration(JToken data, Type dataType)
