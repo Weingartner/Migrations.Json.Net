@@ -5,7 +5,6 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration.Spec
 {
