@@ -61,6 +61,15 @@ namespace Weingartner.Json.Migration.Spec
             new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
         }
 
+        [Fact]
+        public void ShouldWorkWithNullData()
+        {
+            var obj = JValue.CreateNull();
+            var sut = GetVerifyingMigrator();
+
+            new Action(() => sut.TryMigrate(obj, typeof(Address))).ShouldNotThrow<Exception>();
+        }
+
         private static IMigrateData<JToken> GetVerifyingMigrator()
         {
             return new VerifyingJsonDataMigrator(new NullMigrator(), () => new JsonSerializer());

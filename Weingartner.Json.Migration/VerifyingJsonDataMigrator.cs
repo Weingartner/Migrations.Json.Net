@@ -62,7 +62,9 @@ namespace Weingartner.Json.Migration
                 .ToList();
 
             var serializer = _Serializer();
-            var roundTripProperties = JToken.FromObject(data.ToObject(dataType, serializer), serializer)
+            var serialized = data.ToObject(dataType, serializer);
+            var deserialized = serialized != null ? JToken.FromObject(serialized, serializer) : new JObject();
+            var roundTripProperties = deserialized
                 .Children<JProperty>()
                 .Select(p => p.Name)
                 .ToList();
