@@ -75,11 +75,15 @@ namespace Weingartner.Json.Migration.Spec
         }
 
         // ReSharper disable UnusedMember.Local
+        // ReSharper disable MemberCanBePrivate.Local
+        // ReSharper disable UnusedAutoPropertyAccessor.Local
         private class Address
         {
             public string Street { get; set; }
             public int Number { get; set; }
         }
+        // ReSharper restore UnusedAutoPropertyAccessor.Local
+        // ReSharper restore MemberCanBePrivate.Local
 
         [DataContract]
         private class NoDataMemberAttribute
@@ -114,6 +118,7 @@ namespace Weingartner.Json.Migration.Spec
         {
             public string Data
             {
+                // ReSharper disable once ValueParameterNotUsed
                 set { }
             }
         }
