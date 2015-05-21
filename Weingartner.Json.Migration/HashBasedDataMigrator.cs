@@ -59,7 +59,7 @@ namespace Weingartner.Json.Migration
         protected int GetCurrentVersion(Type type)
         {
             var versionField = VersionMemberName.SupportedVersionBackingFieldNames
-                .Select(n => type.GetField(n, BindingFlags.Static | BindingFlags.NonPublic))
+                .Select(n => type.GetField(n, BindingFlags.Static | BindingFlags.Public))
                 .FirstOrDefault(x => x != null);
             if (versionField == null)
             {
