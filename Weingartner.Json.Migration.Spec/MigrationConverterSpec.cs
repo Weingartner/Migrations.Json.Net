@@ -76,7 +76,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class House
         {
-            private const int _version = 1;
+            public const int _version = 1;
 
             public string Color { get; private set; }
             public IEnumerable<House> Neighbors { get; private set; }
@@ -98,7 +98,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Person
         {
-            private const int _version = 1;
+            public const int _version = 1;
 
             public string Name { get; private set; }
             public Address Address { get; private set; }
@@ -119,7 +119,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Address
         {
-            private const int _version = 1;
+            public const int _version = 1;
 
             public string Street { get; private set; }
 
