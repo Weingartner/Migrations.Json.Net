@@ -110,7 +110,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestDataWithoutMigration");
 
             // ReSharper disable once PossibleNullReferenceException
-            ((int)type.GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Should().Be(0);
+            ((int)type.GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.Public).GetValue(null)).Should().Be(0);
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var type = assembly.GetType("Test.TestData");
             var instance = Activator.CreateInstance(type);
 
-            var field = instance.GetType().GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.NonPublic);
+            var field = instance.GetType().GetField(VersionMemberName.VersionBackingFieldName, BindingFlags.Static | BindingFlags.Public);
             const FieldAttributes attributes = (FieldAttributes.Literal | FieldAttributes.Static);
             // ReSharper disable once PossibleNullReferenceException
             (field.Attributes & attributes).Should().Be(attributes);

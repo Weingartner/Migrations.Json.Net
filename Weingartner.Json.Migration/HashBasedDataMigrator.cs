@@ -67,7 +67,7 @@ namespace Weingartner.Json.Migration
                     string.Format(
                         "Type '{0}' has no version field. " +
                         "Ensure that either the type has the custom attribute `[{1}]` and " +
-                        "the NuGet package '{2}' is installed or add a private static field named '{3}'.",
+                        "the NuGet package '{2}' is installed or add a public static field named '{3}'.",
                         type.FullName,
                         Regex.Replace(typeof(MigratableAttribute).Name, "Attribute$", string.Empty),
                         typeof(HashBasedDataMigrator<>).Assembly.GetName().Name,

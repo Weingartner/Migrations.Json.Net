@@ -116,7 +116,7 @@ namespace Weingartner.Json.Migration.Fody
         {
             var field = new FieldDefinition(
                 VersionMemberName.VersionBackingFieldName
-                , FieldAttributes.Private | FieldAttributes.Static | FieldAttributes.Literal
+                , FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal
                 , type.Module.TypeSystem.Int32);
 
             var version = GetVersionNumber(type);
