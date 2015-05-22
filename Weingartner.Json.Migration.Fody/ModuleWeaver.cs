@@ -70,7 +70,7 @@ namespace Weingartner.Json.Migration.Fody
                     string.Format(
                         "Type '{1}' has changed.{0}" +
                         "If you think that a migration is needed, add a migration method with the following signature:{0}" +
-                        "private static void Migrate_{2}(ref TODO data){0}{{{0}// TODO Migrate data{0}}}{0}" +
+                        "private static TYPE Migrate_{2}(TYPE data){0}{{{0}// TODO Migrate data{0}}}{0}" +
                         "To resolve this error, update the hash passed to the `MigratableAttribute` of the type to '{3}'.{0}" +
                         "The hash should be in your clipboard.",
                         Environment.NewLine,
