@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weingartner.Json.Migration.
 		Weingartner.Json.Migration.Common\VersionMemberName.cs = Weingartner.Json.Migration.Common\VersionMemberName.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyWeaver.Fody", "DummyWeaver.Fody\DummyWeaver.Fody.csproj", "{6833376E-ECA2-4271-80C9-A4ECD744A74B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,10 +36,6 @@ Global
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6833376E-ECA2-4271-80C9-A4ECD744A74B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6833376E-ECA2-4271-80C9-A4ECD744A74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6833376E-ECA2-4271-80C9-A4ECD744A74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6833376E-ECA2-4271-80C9-A4ECD744A74B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
