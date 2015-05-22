@@ -127,7 +127,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
             (field.Attributes & attributes).Should().Be(attributes);
         }
 
-        [Fact(Skip = "Currently we swallow all exceptions")]
+        [Fact]
         public void ShouldThrowWhenWeavingInvalidAssembly()
         {
             new Action(WeaveTypeWithWrongHash)
@@ -136,7 +136,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         }
 
 
-        [Fact(Skip = "Currently we swallow all exceptions")]
+        [Fact]
         public void ShouldThrowWhenMigratableTypeHasNonConsecutiveMigrationMethods()
         {
             new Action(WeaveTypeWithNonConsecutiveMigrationMethods)

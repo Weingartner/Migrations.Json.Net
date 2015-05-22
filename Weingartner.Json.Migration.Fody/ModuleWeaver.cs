@@ -21,18 +21,11 @@ namespace Weingartner.Json.Migration.Fody
 
         public void Execute()
         {
-            try
-            {
-                ModuleDefinition
-                    .GetTypes()
-                    .Where(IsMigratable)
-                    .ToList()
-                    .ForEach(CheckMigrationAndAddVersion);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("An error occured while executing Weingartner.Json.Migration.Fody: {0}", e);
-            }
+            ModuleDefinition
+                .GetTypes()
+                .Where(IsMigratable)
+                .ToList()
+                .ForEach(CheckMigrationAndAddVersion);
         }
 
         private static bool IsMigratable(TypeDefinition type)
