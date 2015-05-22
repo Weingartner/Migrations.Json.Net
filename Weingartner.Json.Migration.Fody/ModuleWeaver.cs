@@ -17,15 +17,7 @@ namespace Weingartner.Json.Migration.Fody
 {
     public class ModuleWeaver
     {
-        // Will log an MessageImportance.High message to MSBuild.
-        public Action<string> LogInfo { get; set; }
-
         public ModuleDefinition ModuleDefinition { get; set; }
-
-        public ModuleWeaver()
-        {
-            LogInfo = delegate { };
-        }
 
         public void Execute()
         {
@@ -65,7 +57,7 @@ namespace Weingartner.Json.Migration.Fody
             var oldTypeHash = (string)GetMigratableAttribute(type)
                 .ConstructorArguments.First().Value;
 
-            var newTypeHash = new TypeHashGenerator(LogInfo).GenerateHash(type);
+            var newTypeHash = new TypeHashGenerator().GenerateHash(type);
 
             if (oldTypeHash != newTypeHash)
             {

@@ -13,13 +13,6 @@ namespace Weingartner.Json.Migration.Fody
 {
     public class TypeHashGenerator : IGenerateTypeHashes
     {
-        private readonly Action<string> _Log;
-
-        public TypeHashGenerator(Action<string> log)
-        {
-            _Log = log;
-        }
-
         public string GenerateHash(TypeDefinition type)
         {
             using (var shaManager = new SHA1Managed())
@@ -39,7 +32,6 @@ namespace Weingartner.Json.Migration.Fody
 
         private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeReference> processedTypes)
         {
-            _Log("=== TypeHashGenerator: Processing " + type.FullName);
             if (type.IsGenericParameter)
             {
                 return type.FullName;

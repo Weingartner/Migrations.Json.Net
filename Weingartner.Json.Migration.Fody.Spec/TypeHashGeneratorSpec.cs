@@ -98,7 +98,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
 
         private static TypeHashGenerator CreateSut()
         {
-            return new TypeHashGenerator(delegate { });
+            return new TypeHashGenerator();
         }
 
         private static TypeDefinition GetTypeDefinition(Type type)
