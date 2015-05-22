@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -92,6 +92,13 @@ namespace Weingartner.Json.Migration.Fody.Spec
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(NonDataContract)));
 
             hash.Should().Be(GetExpectedHashForNonDataContract());
+        }
+
+        [Fact]
+        public void ShouldDetectReferenceLoops()
+        {
+            var sut = CreateSut();
+            new Action(() => sut.GenerateHashBase(GetTypeDefinition(typeof(Node)))).ShouldNotThrow<StackOverflowException>();
         }
 
         // TODO support type hierarchies
@@ -248,6 +255,11 @@ namespace Weingartner.Json.Migration.Fody.Spec
             public int PropertyA { get; private set; }
 
             public string PropertyB { get; private set; }
+        }
+
+        private class Node 
+        {
+            public Node Parent { get; private set; }
         }
     }
 }
