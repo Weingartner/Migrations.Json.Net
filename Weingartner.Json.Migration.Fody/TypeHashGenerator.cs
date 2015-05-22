@@ -37,24 +37,6 @@ namespace Weingartner.Json.Migration.Fody
             return Regex.Replace(result, @"^[^(]*\((.*)\)$", "$1");
         }
 
-        public class TypeReferenceEqualityComparer : IEqualityComparer<TypeReference>
-        {
-            public bool Equals(TypeReference x, TypeReference y)
-            {
-                if (ReferenceEquals(x, y))
-                    return true;
-                if (x == null || y == null)
-                    return false;
-                return x.FullName == y.FullName;// && x.Scope.MetadataToken == y.Scope.MetadataToken;
-            }
-
-            public int GetHashCode(TypeReference obj)
-            {
-                throw new NotImplementedException();
-            }
-            public static  TypeReferenceEqualityComparer Default = new TypeReferenceEqualityComparer();
-        }
-
         private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeReference> processedTypes)
         {
             _Log("=== TypeHashGenerator: Processing " + type.FullName);
