@@ -37,7 +37,7 @@ namespace Weingartner.Json.Migration.Fody
             return Regex.Replace(result, @"^[^(]*\((.*)\)$", "$1");
         }
 
-        private static string GenerateHashBaseInternal(TypeReference type, ICollection<TypeDefinition> processedTypes)
+        private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeDefinition> processedTypes)
         {
             _Log("=== TypeHashGenerator: Processing " + type.FullName);
             if (type.IsGenericParameter || IsSimpleType(type.Resolve()) || processedTypes.Contains(type))
