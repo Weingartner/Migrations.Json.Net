@@ -13,6 +13,13 @@ namespace Weingartner.Json.Migration.Fody
 {
     public class TypeHashGenerator : IGenerateTypeHashes
     {
+        private readonly Action<string> _Log;
+
+        public TypeHashGenerator(Action<string> log)
+        {
+            _Log = log;
+        }
+
         public string GenerateHash(TypeDefinition type)
         {
             using (var shaManager = new SHA1Managed())
@@ -26,18 +33,25 @@ namespace Weingartner.Json.Migration.Fody
 
         public string GenerateHashBase(TypeDefinition type)
         {
-            var result = GenerateHashBaseInternal(type, new List<TypeDefinition>());
+            var result = GenerateHashBaseInternal(type, new List<TypeReference>());
             return Regex.Replace(result, @"^[^(]*\((.*)\)$", "$1");
         }
 
-        private static string GenerateHashBaseInternal(TypeReference type, ICollection<TypeDefinition> processedTypes)
+        private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeReference> processedTypes)
         {
-            if (type.IsGenericParameter || IsSimpleType(type.Resolve()) || processedTypes.Contains(type))
+            _Log("=== TypeHashGenerator: Processing " + type.FullName);
+            if (type.IsGenericParameter)
             {
                 return GetTypeName(type);
             }
 
-            processedTypes.Add(type.Resolve());
+            var typeDef = type.Resolve();
+            if (IsSimpleType(typeDef) || processedTypes.Contains(type, TypeReferenceEqualityComparer.Default))
+            {
+                return GetTypeName(type);
+            }
+
+            processedTypes.Add(type);
 
             var genericInstance = type as GenericInstanceType;
             
@@ -59,7 +73,7 @@ namespace Weingartner.Json.Migration.Fody
 
             var dataContractAttribute = type.Module.Import(typeof(DataContractAttribute));
             var dataMemberAttribute = type.Module.Import(typeof(DataMemberAttribute));
-            var items = type.Resolve()
+            var items = typeDef
                 .Properties
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic)
                 .Where(p => !VersionMemberName.SupportedVersionPropertyNames.Contains(p.Name))

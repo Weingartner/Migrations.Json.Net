@@ -15,7 +15,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldGenerateCorrectHashForSimpleType()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(Address)));
 
             hash.Should().Be(GetExpectedHashForAddress());
@@ -24,7 +24,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldGenerateCorrectHashForNestedTypes()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(Person)));
 
             hash.Should().Be(GetExpectedHashForPerson());
@@ -33,7 +33,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldGenerateCorrectHashForNestedEnumerableTypes()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(Club)));
 
             hash.Should().Be(GetExpectedHashForClub());
@@ -42,7 +42,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldGenerateCorrectHashForNestedTypesWithGenericArguments()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(ClubEntry)));
 
             hash.Should().Be(GetExpectedHashForClubEntry());
@@ -51,16 +51,16 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldWorkWithCircularTypeDefinitions()
         {
-            var sut = new TypeHashGenerator();
-            var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(LinkedPersonEntry)));
+            var sut = CreateSut();
+            var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(LinkedEntry<>)));
 
-            hash.Should().Be(GetExpectedHashForLinkedPersonEntry());
+            hash.Should().Be(GetExpectedHashForLinkedEntry());
         }
 
         [Fact]
         public void ShouldGenerateSameHashWhenPropertyPositionsSwitched()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash1 = sut.GenerateHashBase(GetTypeDefinition(typeof(Address)));
             var hash2 = sut.GenerateHashBase(GetTypeDefinition(typeof(Address2))).Replace("/Address2", "/Address");
 
@@ -70,7 +70,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldIgnoreVersionProperty()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(VersionedData)));
 
             hash.Should().Be(GetExpectedHashForVersionedData());
@@ -79,7 +79,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldIgnorePropertiesWithoutDataMemberAttributeWhenDeclaringTypeHasDataContractAttribute()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(DataContractWithExcludedProperties)));
 
             hash.Should().Be(GetExpectedHashForDataContractWithExcludedProperties());
@@ -88,13 +88,18 @@ namespace Weingartner.Json.Migration.Fody.Spec
         [Fact]
         public void ShouldNotIgnorePropertiesWithoutDataMemberAttributeWhenDeclaringTypeDoesntHaveDataContractAttribute()
         {
-            var sut = new TypeHashGenerator();
+            var sut = CreateSut();
             var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(NonDataContract)));
 
             hash.Should().Be(GetExpectedHashForNonDataContract());
         }
 
         // TODO support type hierarchies
+
+        private static TypeHashGenerator CreateSut()
+        {
+            return new TypeHashGenerator(delegate { });
+        }
 
         private static TypeDefinition GetTypeDefinition(Type type)
         {
@@ -140,9 +145,9 @@ namespace Weingartner.Json.Migration.Fody.Spec
             return "System.Collections.Generic.IDictionary`2(System.Int32|" + GetExpectedHashForPersonWithType() + ")-Members";
         }
 
-        private static string GetExpectedHashForLinkedPersonEntry()
+        private static string GetExpectedHashForLinkedEntry()
         {
-            return string.Format("{0}/LinkedPersonEntry-Next|{1}-Current", BaseName, GetExpectedHashForPersonWithType());
+            return string.Format("{0}/LinkedEntry`1({0}/LinkedEntry`1<T>-Next|{0}/Person-Current)-Next|{1}-Current", BaseName, GetExpectedHashForPersonWithType());
         }
 
         private static string GetExpectedHashForVersionedData()
@@ -161,13 +166,13 @@ namespace Weingartner.Json.Migration.Fody.Spec
         }
 
         [DataContract]
-        private class LinkedPersonEntry
+        private class LinkedEntry<T>
         {
             [DataMember]
             public Person Current { get; private set; }
 
             [DataMember]
-            public LinkedPersonEntry Next { get; private set; }
+            public LinkedEntry<T> Next { get; private set; }
         }
 
         [DataContract]

@@ -17,7 +17,15 @@ namespace Weingartner.Json.Migration.Fody
 {
     public class ModuleWeaver
     {
+        // Will log an MessageImportance.High message to MSBuild.
+        public Action<string> LogInfo { get; set; }
+
         public ModuleDefinition ModuleDefinition { get; set; }
+
+        public ModuleWeaver()
+        {
+            LogInfo = delegate { };
+        }
 
         public void Execute()
         {
@@ -40,24 +48,24 @@ namespace Weingartner.Json.Migration.Fody
                 .SingleOrDefault(attr => attr.AttributeType.FullName == "Weingartner.Json.Migration.MigratableAttribute");
         }
 
-        private static void CheckMigrationAndAddVersion(TypeDefinition type)
+        private void CheckMigrationAndAddVersion(TypeDefinition type)
         {
             CheckMigration(type);
             AddVersion(type);
         }
 
-        private static void CheckMigration(TypeDefinition type)
+        private void CheckMigration(TypeDefinition type)
         {
             CheckHash(type);
             CheckConsecutiveMigrationMethods(type);
         }
 
-        private static void CheckHash(TypeDefinition type)
+        private void CheckHash(TypeDefinition type)
         {
             var oldTypeHash = (string)GetMigratableAttribute(type)
                 .ConstructorArguments.First().Value;
 
-            var newTypeHash = new TypeHashGenerator().GenerateHash(type);
+            var newTypeHash = new TypeHashGenerator(LogInfo).GenerateHash(type);
 
             if (oldTypeHash != newTypeHash)
             {
