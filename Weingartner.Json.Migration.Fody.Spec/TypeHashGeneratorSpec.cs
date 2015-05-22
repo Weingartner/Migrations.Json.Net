@@ -52,9 +52,9 @@ namespace Weingartner.Json.Migration.Fody.Spec
         public void ShouldWorkWithCircularTypeDefinitions()
         {
             var sut = CreateSut();
-            var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(LinkedPersonEntry)));
+            var hash = sut.GenerateHashBase(GetTypeDefinition(typeof(LinkedEntry<>)));
 
-            hash.Should().Be(GetExpectedHashForLinkedPersonEntry());
+            hash.Should().Be(GetExpectedHashForLinkedEntry());
         }
 
         [Fact]
@@ -145,9 +145,9 @@ namespace Weingartner.Json.Migration.Fody.Spec
             return "System.Collections.Generic.IDictionary`2(System.Int32|" + GetExpectedHashForPersonWithType() + ")-Members";
         }
 
-        private static string GetExpectedHashForLinkedPersonEntry()
+        private static string GetExpectedHashForLinkedEntry()
         {
-            return string.Format("{0}/LinkedPersonEntry-Next|{1}-Current", BaseName, GetExpectedHashForPersonWithType());
+            return string.Format("{0}/LinkedEntry`1({0}/LinkedEntry`1<T>-Next|{0}/Person-Current)-Next|{1}-Current", BaseName, GetExpectedHashForPersonWithType());
         }
 
         private static string GetExpectedHashForVersionedData()
@@ -166,13 +166,13 @@ namespace Weingartner.Json.Migration.Fody.Spec
         }
 
         [DataContract]
-        private class LinkedPersonEntry
+        private class LinkedEntry<T>
         {
             [DataMember]
             public Person Current { get; private set; }
 
             [DataMember]
-            public LinkedPersonEntry Next { get; private set; }
+            public LinkedEntry<T> Next { get; private set; }
         }
 
         [DataContract]

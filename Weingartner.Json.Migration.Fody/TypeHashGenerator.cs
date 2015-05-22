@@ -33,7 +33,7 @@ namespace Weingartner.Json.Migration.Fody
 
         public string GenerateHashBase(TypeDefinition type)
         {
-            var result = GenerateHashBaseInternal(type, new List<TypeDefinition>());
+            var result = GenerateHashBaseInternal(type, new List<TypeReference>());
             return Regex.Replace(result, @"^[^(]*\((.*)\)$", "$1");
         }
 
@@ -55,7 +55,7 @@ namespace Weingartner.Json.Migration.Fody
             public static  TypeReferenceEqualityComparer Default = new TypeReferenceEqualityComparer();
         }
 
-        private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeDefinition> processedTypes)
+        private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeReference> processedTypes)
         {
             _Log("=== TypeHashGenerator: Processing " + type.FullName);
             if (type.IsGenericParameter)
@@ -63,12 +63,13 @@ namespace Weingartner.Json.Migration.Fody
                 return GetTypeName(type);
             }
 
-            var resolvedType = type.Resolve();
-
-            if (IsSimpleType(resolvedType) || processedTypes.Contains(resolvedType, TypeReferenceEqualityComparer.Default))
+            var typeDef = type.Resolve();
+            if (IsSimpleType(typeDef) || processedTypes.Contains(type, TypeReferenceEqualityComparer.Default))
+            {
                 return GetTypeName(type);
+            }
 
-            processedTypes.Add(resolvedType);
+            processedTypes.Add(type);
 
             var genericInstance = type as GenericInstanceType;
             
@@ -90,7 +91,7 @@ namespace Weingartner.Json.Migration.Fody
 
             var dataContractAttribute = type.Module.Import(typeof(DataContractAttribute));
             var dataMemberAttribute = type.Module.Import(typeof(DataMemberAttribute));
-            var items = type.Resolve()
+            var items = typeDef
                 .Properties
                 .Where(p => p.GetMethod != null && p.GetMethod.IsPublic)
                 .Where(p => !VersionMemberName.SupportedVersionPropertyNames.Contains(p.Name))
