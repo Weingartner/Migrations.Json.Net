@@ -33,18 +33,13 @@ namespace Weingartner.Json.Migration.Fody
 
         public string GenerateHashBase(TypeDefinition type)
         {
-            var result = GenerateHashBaseInternal(type, new List<TypeDefinition>(), 0);
+            var result = GenerateHashBaseInternal(type, new List<TypeDefinition>());
             return Regex.Replace(result, @"^[^(]*\((.*)\)$", "$1");
         }
 
-        private string GenerateHashBaseInternal(TypeReference type, ICollection<TypeDefinition> processedTypes, int depth)
+        private static string GenerateHashBaseInternal(TypeReference type, ICollection<TypeDefinition> processedTypes)
         {
             _Log("=== TypeHashGenerator: Processing " + type.FullName);
-            if (depth > 100)
-            {
-                throw new MigrationException("Aborting hash generation because of possible reference loop.");
-            }
-
             if (type.IsGenericParameter || IsSimpleType(type.Resolve()) || processedTypes.Contains(type))
             {
                 return GetTypeName(type);
@@ -61,7 +56,7 @@ namespace Weingartner.Json.Migration.Fody
                 {
                     genericArguments = genericInstance
                         .GenericArguments
-                        .Select(argType => GenerateHashBaseInternal(argType, processedTypes, depth + 1));
+                        .Select(argType => GenerateHashBaseInternal(argType, processedTypes));
                 }
 
                 return string.Format(
@@ -98,7 +93,7 @@ namespace Weingartner.Json.Migration.Fody
                     }
                     return string.Format(
                         "{0}-{1}",
-                        GenerateHashBaseInternal(propertyType, processedTypes, depth + 1), p.Name);
+                        GenerateHashBaseInternal(propertyType, processedTypes), p.Name);
                 })
                 .OrderBy(p => p);
 
