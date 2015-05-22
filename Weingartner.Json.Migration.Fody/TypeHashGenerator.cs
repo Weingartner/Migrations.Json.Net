@@ -42,13 +42,13 @@ namespace Weingartner.Json.Migration.Fody
             _Log("=== TypeHashGenerator: Processing " + type.FullName);
             if (type.IsGenericParameter)
             {
-                return GetTypeName(type);
+                return type.FullName;
             }
 
             var typeDef = type.Resolve();
             if (IsSimpleType(typeDef) || processedTypes.Contains(type, TypeReferenceEqualityComparer.Default))
             {
-                return GetTypeName(type);
+                return type.FullName;
             }
 
             processedTypes.Add(type);
@@ -67,7 +67,7 @@ namespace Weingartner.Json.Migration.Fody
 
                 return string.Format(
                     "{0}({1})",
-                    GetTypeName(type),
+                    typeDef.FullName,
                     string.Join("|", genericArguments));
             }
 
@@ -103,7 +103,7 @@ namespace Weingartner.Json.Migration.Fody
                 })
                 .OrderBy(p => p);
 
-            return string.Format("{0}({1})", GetTypeName(type), string.Join("|", items));
+            return string.Format("{0}({1})", typeDef.FullName, string.Join("|", items));
         }
 
         private static readonly List<Type> SimpleTypes = new List<Type>
@@ -123,11 +123,6 @@ namespace Weingartner.Json.Migration.Fody
         private static bool IsEnumerable(TypeReference type)
         {
             return type.HasInterface(type.Module.Import(typeof(System.Collections.IEnumerable)).Resolve());
-        }
-
-        private static string GetTypeName(TypeReference type)
-        {
-            return type.IsGenericParameter ? type.FullName : type.Resolve().FullName;
         }
     }
 }
