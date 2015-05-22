@@ -29,7 +29,7 @@ namespace Weingartner.Json.Migration.Fody.Spec
 
         public ModuleWeaverSpec()
         {
-            const string jsonNetDllPath = @"..\..\..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll";
+            const string jsonNetDllPath = @"..\..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll";
             File.Copy(jsonNetDllPath, Path.GetFileName(jsonNetDllPath), true);
             _CreatedTestFiles.Add(Path.GetFileName(jsonNetDllPath));
             _JsonNetDll = ModuleDefinition.ReadModule(Path.GetFileName(jsonNetDllPath));
