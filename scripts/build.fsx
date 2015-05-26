@@ -49,11 +49,10 @@ Target "CreateAndPublishNuGetPackage" (fun () ->
     let setParams (p: NuGetParams) =
         { p with
             ToolPath = @"BuildTools\lib\NuGet.CommandLine\tools\NuGet.exe"
-            Title = "Migrations.Json.Net"
+//            Title = "Migrations.Json.Net"
             Version = GitVersion.Vars.NuGetVersion
             OutputPath = outputPath
-            Publish = true
-            AccessKey = nugetApiKey
+            Publish = false 
         }
     NuGet setParams @"NuGet\Weingartner.Json.Migration.Fody.nuspec"
 )
