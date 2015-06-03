@@ -138,6 +138,7 @@ namespace Weingartner.Json.Migration.Spec
         // ReSharper disable UnusedMember.Local
         // ReSharper disable UnusedParameter.Local
         // ReSharper disable UnusedField.Compiler
+        // ReSharper disable InconsistentNaming
 
         [Migratable("")]
         private class FixtureData
@@ -259,6 +260,7 @@ namespace Weingartner.Json.Migration.Spec
             }
         }
 
+        // ReSharper restore InconsistentNaming
         // ReSharper restore UnusedField.Compiler
         // ReSharper restore UnusedParameter.Local
         // ReSharper restore UnusedMember.Local
