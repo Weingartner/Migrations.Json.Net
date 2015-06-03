@@ -142,7 +142,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class FixtureData
         {
-            public static int _version = 3;
+            public const int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
@@ -169,7 +169,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class FixtureData2
         {
-            public static int _version = 1;
+            public const int _version = 1;
 
             [DataMember]
             public int[] Values { get; private set; }
@@ -184,7 +184,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class DataWithInvalidMigrationMethod
         {
-            public static int _version = 3;
+            public const int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
@@ -195,7 +195,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class DataWithInvalidMigrationMethod2
         {
-            public static int _version = 3;
+            public const int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
@@ -232,7 +232,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("", typeof(FixtureDataMigrator))]
         public class FixtureDataWithCustomMigrator
         {
-            public static int _version = 3;
+            public const int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
