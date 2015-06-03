@@ -47,6 +47,7 @@
     <Compile Include="..\Weingartner.Json.Migration.Common\VersionMemberName.cs">
       <Link>VersionMemberName.cs</Link>
     </Compile>
+    <Compile Include="DataVersionTooHighException.cs" />
     <Compile Include="HashBasedDataMigrator.cs" />
     <Compile Include="IExtractHashes.cs" />
     <Compile Include="IMigrateData.cs" />

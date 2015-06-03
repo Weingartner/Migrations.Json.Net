@@ -53,6 +53,11 @@ namespace Weingartner.Json.Migration
                 _VersionExtractor.SetVersion(data, version);
             }
 
+            if (version > currentVersion)
+            {
+                throw new DataVersionTooHighException("Can't migrate data of type {0} because there is no migration method available.");
+            }
+
             return data;
         }
 

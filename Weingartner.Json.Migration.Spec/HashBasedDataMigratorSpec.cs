@@ -116,6 +116,15 @@ namespace Weingartner.Json.Migration.Spec
             result["Name"].Value<string>().Should().Be("Name_A_B_C");
         }
 
+        [Fact]
+        public void ShouldThrowWhenVersionOfDataIsTooHigh()
+        {
+            var configData = CreateConfigurationFromObject(new FixtureData(), FixtureData._version + 1);
+
+            var sut = CreateMigrator();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldThrow<DataVersionTooHighException>();
+        }
+
         private static IMigrateData<JToken> CreateMigrator()
         {
             return new HashBasedDataMigrator<JToken>(new JsonVersionUpdater());
