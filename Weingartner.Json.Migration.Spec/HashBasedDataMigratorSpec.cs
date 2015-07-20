@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using FluentAssertions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 using Xunit;
@@ -9,6 +10,13 @@ namespace Weingartner.Json.Migration.Spec
 {
     public class HashBasedDataMigratorSpec
     {
+        public HashBasedDataMigratorSpec()
+        {
+            _Serializer = new JsonSerializer();
+        }
+
+        public static JsonSerializer _Serializer = new JsonSerializer();
+
         [Theory]
         [InlineData(0, "Name_0_1_2")]
         [InlineData(1, "_1_2")]
@@ -18,7 +26,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(configVersion);
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureData));
+            var result = sut.TryMigrate(configData, typeof(FixtureData), _Serializer);
 
             result["Name"].Value<string>().Should().Be(expectedName);
         }
@@ -29,7 +37,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = JToken.FromObject(new[] { 1, 2, 3 });
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureData2));
+            var result = sut.TryMigrate(configData, typeof(FixtureData2), _Serializer);
 
             result.Should().BeOfType<JObject>();
         }
@@ -40,7 +48,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureData));
+            var result = sut.TryMigrate(configData, typeof(FixtureData), _Serializer);
 
             result[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
         }
@@ -52,7 +60,7 @@ namespace Weingartner.Json.Migration.Spec
             ((JObject)configData).Remove(VersionMemberName.VersionPropertyName);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldNotThrow();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldNotThrow();
         }
 
         [Fact]
@@ -61,7 +69,7 @@ namespace Weingartner.Json.Migration.Spec
             JToken configData = null;
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -70,7 +78,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, null)).ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(configData, null, _Serializer)).ShouldThrow<ArgumentNullException>();
         }
 
         [Theory]
@@ -82,7 +90,7 @@ namespace Weingartner.Json.Migration.Spec
             configData[VersionMemberName.VersionPropertyName] = 0;
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, configType)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, configType, _Serializer)).ShouldThrow<MigrationException>();
         }
 
         [Fact]
@@ -91,7 +99,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = JToken.FromObject(new DataWithoutVersion());
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(DataWithoutVersion))).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, typeof(DataWithoutVersion), _Serializer)).ShouldThrow<MigrationException>();
         }
 
         [Fact]
@@ -101,7 +109,7 @@ namespace Weingartner.Json.Migration.Spec
             var origConfigData = configData.DeepClone();
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(NotMigratableData));
+            var result = sut.TryMigrate(configData, typeof(NotMigratableData), _Serializer);
             result.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
         }
 
@@ -111,7 +119,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationFromObject(new FixtureDataWithCustomMigrator(), 0);
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator));
+            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator), _Serializer);
 
             result["Name"].Value<string>().Should().Be("Name_A_B_C");
         }
@@ -122,7 +130,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationFromObject(new FixtureData(), FixtureData._version + 1);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData))).ShouldThrow<DataVersionTooHighException>();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldThrow<DataVersionTooHighException>();
         }
 
         private static IMigrateData<JToken> CreateMigrator()
@@ -155,19 +163,19 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static JObject Migrate_1(JObject data)
+            private static JObject Migrate_1(JObject data, JsonSerializer serializer)
             {
                 data["Name"] = "Name_0";
                 return data;
             }
 
-            private static JObject Migrate_2(JObject data)
+            private static JObject Migrate_2(JObject data, JsonSerializer serializer)
             {
                 data["Name"] += "_1";
                 return data;
             }
 
-            private static JObject Migrate_3(JObject data)
+            private static JObject Migrate_3(JObject data, JsonSerializer serializer)
             {
                 data["Name"] += "_2";
                 return data;
@@ -182,7 +190,7 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public int[] Values { get; private set; }
 
-            private static JToken Migrate_1(JToken data)
+            private static JToken Migrate_1(JToken data, JsonSerializer serializer)
             {
                 data = new JObject { { "Values", data } };
                 return data;
@@ -217,7 +225,10 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
-            private static JToken Migrate_1(JToken data) { return data; }
+            private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+            {
+                return data;
+            }
         }
 
         private class NotMigratableData
@@ -230,7 +241,7 @@ namespace Weingartner.Json.Migration.Spec
                 Name = name;
             }
 
-            private static JToken Migrate_1(JToken data)
+            private static JToken Migrate_1(JToken data, JsonSerializer serializer)
             {
                 data["Name"] += " - migrated";
                 return data;
@@ -248,19 +259,19 @@ namespace Weingartner.Json.Migration.Spec
 
         public class FixtureDataMigrator
         {
-            private static JObject Migrate_1(JObject data)
+            private static JObject Migrate_1(JObject data, JsonSerializer serializer)
             {
                 data["Name"] = "Name_A";
                 return data;
             }
 
-            private static JObject Migrate_2(JObject data)
+            private static JObject Migrate_2(JObject data, JsonSerializer serializer)
             {
                 data["Name"] += "_B";
                 return data;
             }
 
-            private static JObject Migrate_3(JObject data)
+            private static JObject Migrate_3(JObject data, JsonSerializer serializer)
             {
                 data["Name"] += "_C";
                 return data;

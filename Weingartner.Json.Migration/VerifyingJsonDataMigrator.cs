@@ -19,9 +19,9 @@ namespace Weingartner.Json.Migration
             _Serializer = serializer;
         }
 
-        public JToken TryMigrate(JToken data, Type dataType)
+        public JToken TryMigrate(JToken data, Type dataType, JsonSerializer serializer)
         {
-            var migratedData = _Inner.TryMigrate(data, dataType);
+            var migratedData = _Inner.TryMigrate(data, dataType, serializer);
             if (!IsVerifying)
             {
                 try

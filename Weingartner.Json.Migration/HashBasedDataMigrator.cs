@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
@@ -17,7 +18,7 @@ namespace Weingartner.Json.Migration
             _VersionExtractor = versionExtractor;
         }
 
-        public TData TryMigrate(TData data, Type dataType)
+        public TData TryMigrate(TData data, Type dataType, JsonSerializer serializer)
         {
             if (data == null) throw new ArgumentNullException("data");
             if (dataType == null) throw new ArgumentNullException("dataType");
@@ -46,7 +47,7 @@ namespace Weingartner.Json.Migration
 
                 VerifyMigrationMethodSignature(migrationMethod, data.GetType());
 
-                data = ExecuteMigration(migrationMethod, data);
+                data = ExecuteMigration(migrationMethod, data, serializer);
 
                 version++;
 
@@ -89,14 +90,18 @@ namespace Weingartner.Json.Migration
         protected void VerifyMigrationMethodSignature(MethodInfo method, Type dataType)
         {
             var parameters = method.GetParameters();
-            if (parameters.Length != 1)
+            if (parameters.Length != 2)
                 ThrowInvalidMigrationSignature(method);
 
             if (!parameters[0].ParameterType.IsAssignableFrom(dataType))
                 ThrowInvalidMigrationSignature(method);
 
+            if (!typeof(JsonSerializer).IsAssignableFrom(parameters[1].ParameterType))
+                ThrowInvalidMigrationSignature(method);
+
             if (!typeof(TData).IsAssignableFrom(method.ReturnType))
                 ThrowInvalidMigrationSignature(method);
+
         }
 
         private static void ThrowInvalidMigrationSignature(MethodInfo method)
@@ -106,13 +111,13 @@ namespace Weingartner.Json.Migration
                 "Migration method '{0}.{1}' should have the following signature:",
                 method.DeclaringType.FullName,
                 method.Name));
-            builder.AppendLine(string.Format("private static {0} {1}({0} data)", typeof(TData).FullName, method.Name));
+            builder.AppendLine(string.Format("private static {0} {1}({0} data, JsonSerializer serializer)", typeof(TData).FullName, method.Name));
             throw new MigrationException(builder.ToString());
         }
 
-        protected TData ExecuteMigration(MethodInfo method, TData data)
+        protected TData ExecuteMigration(MethodInfo method, TData data, JsonSerializer serializer)
         {
-            return (TData)method.Invoke(null, new object[] { data });
+            return (TData)method.Invoke(null, new object[] { data, serializer });
         }
     }
 }

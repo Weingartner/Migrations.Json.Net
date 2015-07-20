@@ -92,7 +92,10 @@ namespace Weingartner.Json.Migration.Spec
                 : this(color, Enumerable.Empty<House>())
             { }
 
-            private static JToken Migrate_1(JToken data) { return data; }
+            private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+            {
+                return data;
+            }
         }
 
         [Migratable("")]
@@ -109,7 +112,7 @@ namespace Weingartner.Json.Migration.Spec
                 Address = address;
             }
 
-            private static JToken Migrate_1(JToken data)
+            private static JToken Migrate_1(JToken data, JsonSerializer serializer)
             {
                 data["Name"] += " Migrated";
                 return data;
@@ -128,7 +131,7 @@ namespace Weingartner.Json.Migration.Spec
                 Street = street;
             }
 
-            private static JToken Migrate_1(JToken data)
+            private static JToken Migrate_1(JToken data, JsonSerializer serializer)
             {
                 data["Street"] += " Migrated";
                 return data;

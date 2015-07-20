@@ -11,6 +11,13 @@ namespace Weingartner.Json.Migration.Spec
 {
     public class VerifyingJsonDataMigratorSpec
     {
+        public VerifyingJsonDataMigratorSpec()
+        {
+            _Serializer = new JsonSerializer();
+        }
+
+        private JsonSerializer _Serializer;
+
         [Theory]
         [InlineData("{'Street': 'Teststreet', 'Number': 5, 'Prop': 'Whatever'}", typeof(Address))]
         [InlineData("[{'Street': 'Teststreet', 'Number': 5, 'Prop': 'Whatever'}]", typeof(IEnumerable<Address>))]
@@ -19,7 +26,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldThrow<MigrationException>();
         }
 
         [Theory]
@@ -30,7 +37,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldThrow<MigrationException>();
         }
 
         [Theory]
@@ -42,7 +49,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldNotThrow<MigrationException>();
         }
 
         [Theory]
@@ -58,7 +65,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = new JObject();
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type)).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldNotThrow<MigrationException>();
         }
 
         [Fact]
@@ -71,7 +78,7 @@ namespace Weingartner.Json.Migration.Spec
             }
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, typeof(Address))).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, typeof(Address), _Serializer)).ShouldNotThrow<MigrationException>();
         }
 
         [Fact]
@@ -80,7 +87,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JValue.CreateNull();
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, typeof(Address))).ShouldNotThrow<Exception>();
+            new Action(() => sut.TryMigrate(obj, typeof(Address), _Serializer)).ShouldNotThrow<Exception>();
         }
 
         private static IMigrateData<JToken> GetVerifyingMigrator()
@@ -158,7 +165,7 @@ namespace Weingartner.Json.Migration.Spec
 
         private class NullMigrator : IMigrateData<JToken>
         {
-            public JToken TryMigrate(JToken data, Type dataType)
+            public JToken TryMigrate(JToken data, Type dataType, JsonSerializer serializer)
             {
                 return data;
             }

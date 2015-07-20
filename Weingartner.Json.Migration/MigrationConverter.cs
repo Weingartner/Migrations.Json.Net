@@ -43,7 +43,7 @@ namespace Weingartner.Json.Migration
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var data = JToken.Load(reader);
-            var migratedData = DataMigrator.TryMigrate(data, objectType);
+            var migratedData = DataMigrator.TryMigrate(data, objectType, serializer );
 
             try
             {
