@@ -161,7 +161,7 @@ namespace Weingartner.Json.Migration.Fody
         {
             return type.Methods
                 .Where(m => m.IsStatic && m.IsPrivate)
-                .Where(m => m.Parameters.Count == 1)
+                .Where(m => m.Parameters.Count == 2)
                 .Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
                 .Where(m => m.Success)
                 .Select(m => int.Parse(m.Value));

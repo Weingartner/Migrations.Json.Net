@@ -354,6 +354,8 @@ namespace Weingartner.Json.Migration.Fody.Spec
                 MethodAttributes.Private | MethodAttributes.HideBySig | MethodAttributes.Static, type.Module.TypeSystem.Void);
             method.Parameters.Add(
                 new ParameterDefinition(type.Module.Import(_JsonNetDll.Types.Single(t => t.Name == "JObject"))));
+            method.Parameters.Add(
+                new ParameterDefinition(type.Module.Import(_JsonNetDll.Types.Single(t => t.Name == "JsonSerializer"))));
             type.Methods.Add(method);
 
             var il = method.Body.GetILProcessor();

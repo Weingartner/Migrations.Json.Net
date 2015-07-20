@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using FluentAssertions;
 using Newtonsoft.Json;
@@ -133,6 +135,42 @@ namespace Weingartner.Json.Migration.Spec
             new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldThrow<DataVersionTooHighException>();
         }
 
+        [Fact]
+        public void ShouldBeAbleToMigrateAnArray()
+        {
+            var ints = new[] { 3, 4, 5 }.ToList();
+            var configData = JToken.FromObject( ints);
+
+            var sut = CreateMigrator();
+            var result = sut.TryMigrate(configData, typeof (ArrayFixtureData), _Serializer);
+            result["Name"].ToString().Should().Be("Brad");
+            result["Data"].ToList().Should().BeEquivalentTo(ints.Select(i=>JToken.FromObject(i)));
+        }
+
+        [Migratable("")]
+        private class ArrayFixtureData
+        {
+            public const int _version = 1;
+
+            [DataMember]
+            public string Name { get; private set; }
+
+            [DataMember]
+            public List<int> Data { get; private set; } 
+
+            private static JObject Migrate_1(JToken data, JsonSerializer serializer)
+            {
+                var array = data as JArray;
+
+                var obj = new JObject();
+                obj["Data"] = array;
+                obj["Name"] = "Brad";
+
+                return obj;
+
+            }
+        }
+
         private static IMigrateData<JToken> CreateMigrator()
         {
             return new HashBasedDataMigrator<JToken>(new JsonVersionUpdater());
@@ -154,6 +192,7 @@ namespace Weingartner.Json.Migration.Spec
         // ReSharper disable UnusedParameter.Local
         // ReSharper disable UnusedField.Compiler
         // ReSharper disable InconsistentNaming
+
 
         [Migratable("")]
         private class FixtureData
