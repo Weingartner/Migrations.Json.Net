@@ -9,14 +9,12 @@ namespace Weingartner.Json.Migration
     public class VerifyingJsonDataMigrator : IMigrateData<JToken>
     {
         private readonly IMigrateData<JToken> _Inner;
-        private readonly Func<JsonSerializer> _Serializer;
 
         public bool IsVerifying { private set; get; }
 
-        public VerifyingJsonDataMigrator(IMigrateData<JToken> inner, Func<JsonSerializer> serializer)
+        public VerifyingJsonDataMigrator(IMigrateData<JToken> inner)
         {
             _Inner = inner;
-            _Serializer = serializer;
         }
 
         public JToken TryMigrate(JToken data, Type dataType, JsonSerializer serializer)
@@ -27,7 +25,7 @@ namespace Weingartner.Json.Migration
                 try
                 {
                     IsVerifying = true;
-                    VerifyMigration(migratedData, dataType);
+                    VerifyMigration(migratedData, dataType, serializer);
                 }
                 finally
                 {
@@ -37,7 +35,7 @@ namespace Weingartner.Json.Migration
             return migratedData;
         }
 
-        private void VerifyMigration(JToken data, Type dataType)
+        private void VerifyMigration(JToken data, Type dataType, JsonSerializer jsonSerializer)
         {
             var dataArr = data as JArray;
             if (dataArr != null)
@@ -51,7 +49,7 @@ namespace Weingartner.Json.Migration
                 var childType = dataType.GetGenericArguments().First();
                 foreach (var child in data)
                 {
-                    VerifyMigration(child, childType);
+                    VerifyMigration(child, childType, jsonSerializer);
                 }
                 return;
             }
@@ -61,9 +59,8 @@ namespace Weingartner.Json.Migration
                 .Select(p => p.Name)
                 .ToList();
 
-            var serializer = _Serializer();
-            var serialized = data.ToObject(dataType, serializer);
-            var deserialized = serialized != null ? JToken.FromObject(serialized, serializer) : new JObject();
+            var serialized = data.ToObject(dataType, jsonSerializer);
+            var deserialized = serialized != null ? JToken.FromObject(serialized, jsonSerializer ) : new JObject();
             var roundTripProperties = deserialized
                 .Children<JProperty>()
                 .Select(p => p.Name)
