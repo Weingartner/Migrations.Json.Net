@@ -78,6 +78,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Weingartner.Json.Migration\Weingartner.Json.Migration.csproj">
+      <Project>{A3C46398-1E1D-4261-97F0-487D7FFAC49C}</Project>
+      <Name>Weingartner.Json.Migration</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

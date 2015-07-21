@@ -74,15 +74,14 @@ namespace Weingartner.Json.Migration.Fody
                         "To resolve this error, update the hash passed to the `MigratableAttribute` of the type to '{3}'.{0}" +
                         "The hash should be in your clipboard.",
                         Environment.NewLine,
-                        type.FullName,
-                        GetVersionNumber(type) + 1,
+                        type.FullName, VersionMemberName.MaxMigrationMethodVersionUsingCecil(type) + 1,
                         newTypeHash));
             }
         }
 
         private static void CheckConsecutiveMigrationMethods(TypeDefinition type)
         {
-            var migrationMethodNumbers = GetMigrationMethodVersions(type);
+            var migrationMethodNumbers = VersionMemberName.MigrationMethodVersionsUsingCecil(type);
             var error = migrationMethodNumbers
                 .Select((version, index) => new { index = index + 1, version })
                 .FirstOrDefault(x => x.index != x.version);
@@ -119,7 +118,7 @@ namespace Weingartner.Json.Migration.Fody
                 , FieldAttributes.Public | FieldAttributes.Static | FieldAttributes.Literal
                 , type.Module.TypeSystem.Int32);
 
-            var version = GetVersionNumber(type);
+            var version = VersionMemberName.MaxMigrationMethodVersionUsingCecil(type);
             field.Constant = version;
             field.HasDefault = true;
 
@@ -147,24 +146,6 @@ namespace Weingartner.Json.Migration.Fody
             il.Emit(OpCodes.Ret);
 
             il.Body.OptimizeMacros();
-        }
-
-        private static int GetVersionNumber(TypeDefinition type)
-        {
-            var version = GetMigrationMethodVersions(type)
-                .Concat(Enumerable.Repeat(0, 1))
-                .Max();
-            return version;
-        }
-
-        private static IEnumerable<int> GetMigrationMethodVersions(TypeDefinition type)
-        {
-            return type.Methods
-                .Where(m => m.IsStatic && m.IsPrivate)
-                .Where(m => m.Parameters.Count == 2)
-                .Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
-                .Where(m => m.Success)
-                .Select(m => int.Parse(m.Value));
         }
 
         private static bool TypeIsDataContract(TypeDefinition type)

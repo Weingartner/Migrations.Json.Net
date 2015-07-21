@@ -28,7 +28,7 @@ namespace Weingartner.Json.Migration
 
             var migrator = migrationSettings.MigratorType ?? dataType;
 
-            var currentVersion = GetCurrentVersion(dataType);
+            var currentVersion = VersionMemberName.GetCurrentVersion(dataType);
             var version = _VersionExtractor.GetVersion(data);
 
             while (version < currentVersion)
@@ -45,7 +45,7 @@ namespace Weingartner.Json.Migration
                             typeof(TData).FullName));
                 }
 
-                VerifyMigrationMethodSignature(migrationMethod, data.GetType());
+               VersionMemberName.VerifyMigrationMethodSignature<TData>(migrationMethod, data.GetType());
 
                 data = ExecuteMigration(migrationMethod, data, serializer);
 
@@ -62,57 +62,9 @@ namespace Weingartner.Json.Migration
             return data;
         }
 
-        protected int GetCurrentVersion(Type type)
-        {
-            var versionField = VersionMemberName.SupportedVersionBackingFieldNames
-                .Select(n => type.GetField(n, BindingFlags.Static | BindingFlags.Public))
-                .FirstOrDefault(x => x != null);
-            if (versionField == null)
-            {
-                throw new MigrationException(
-                    string.Format(
-                        "Type '{0}' has no version field. " +
-                        "Ensure that either the type has the custom attribute `[{1}]` and " +
-                        "the NuGet package '{2}' is installed or add a public static field named '{3}'.",
-                        type.FullName,
-                        Regex.Replace(typeof(MigratableAttribute).Name, "Attribute$", string.Empty),
-                        typeof(HashBasedDataMigrator<>).Assembly.GetName().Name,
-                        VersionMemberName.VersionBackingFieldName));
-            }
-            return (int)versionField.GetValue(null);
-        }
-
         protected MethodInfo GetMigrationMethod(Type type, int version)
         {
             return type.GetMethod("Migrate_" + version, BindingFlags.Static | BindingFlags.NonPublic);
-        }
-
-        protected void VerifyMigrationMethodSignature(MethodInfo method, Type dataType)
-        {
-            var parameters = method.GetParameters();
-            if (parameters.Length != 2)
-                ThrowInvalidMigrationSignature(method);
-
-            if (!parameters[0].ParameterType.IsAssignableFrom(dataType))
-                ThrowInvalidMigrationSignature(method);
-
-            if (!typeof(JsonSerializer).IsAssignableFrom(parameters[1].ParameterType))
-                ThrowInvalidMigrationSignature(method);
-
-            if (!typeof(TData).IsAssignableFrom(method.ReturnType))
-                ThrowInvalidMigrationSignature(method);
-
-        }
-
-        private static void ThrowInvalidMigrationSignature(MethodInfo method)
-        {
-            var builder = new StringBuilder();
-            builder.AppendLine(string.Format(
-                "Migration method '{0}.{1}' should have the following signature:",
-                method.DeclaringType.FullName,
-                method.Name));
-            builder.AppendLine(string.Format("private static {0} {1}({0} data, JsonSerializer serializer)", typeof(TData).FullName, method.Name));
-            throw new MigrationException(builder.ToString());
         }
 
         protected TData ExecuteMigration(MethodInfo method, TData data, JsonSerializer serializer)
