@@ -28,8 +28,6 @@ namespace Weingartner.Json.Migration.Common
     {
         public static string VersionPropertyName => "Version";
 
-        public static string VersionBackingFieldName => "_version";
-
         public static IEnumerable<string> SupportedVersionPropertyNames
         {
             get
