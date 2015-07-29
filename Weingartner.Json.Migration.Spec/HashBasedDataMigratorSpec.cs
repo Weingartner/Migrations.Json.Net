@@ -14,10 +14,10 @@ namespace Weingartner.Json.Migration.Spec
     {
         public HashBasedDataMigratorSpec()
         {
-            _Serializer = new JsonSerializer();
+            Serializer = new JsonSerializer();
         }
 
-        public static JsonSerializer _Serializer = new JsonSerializer();
+        public static JsonSerializer Serializer = new JsonSerializer();
 
         [Theory]
         [InlineData(0, "Name_0_1_2")]
@@ -28,7 +28,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(configVersion);
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureData), _Serializer);
+            var result = sut.TryMigrate(configData, typeof(FixtureData), Serializer);
 
             result["Name"].Value<string>().Should().Be(expectedName);
         }
@@ -39,7 +39,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = JToken.FromObject(new[] { 1, 2, 3 });
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureData2), _Serializer);
+            var result = sut.TryMigrate(configData, typeof(FixtureData2), Serializer);
 
             result.Should().BeOfType<JObject>();
         }
@@ -51,16 +51,14 @@ namespace Weingartner.Json.Migration.Spec
             ((JObject)configData).Remove(VersionMemberName.VersionPropertyName);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldNotThrow();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), Serializer)).ShouldNotThrow();
         }
 
         [Fact]
         public void ShouldThrowIfConfigurationDataIsNull()
         {
-            JToken configData = null;
-
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(null, typeof(FixtureData), Serializer)).ShouldThrow<ArgumentNullException>();
         }
 
         [Fact]
@@ -69,7 +67,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, null, _Serializer)).ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(configData, null, Serializer)).ShouldThrow<ArgumentNullException>();
         }
 
         [Theory]
@@ -77,11 +75,10 @@ namespace Weingartner.Json.Migration.Spec
         [InlineData(typeof(DataWithInvalidMigrationMethod2))]
         public void ShouldThrowIfMigrationMethodIsInvalid(Type configType)
         {
-            var configData = new JObject();
-            configData[VersionMemberName.VersionPropertyName] = 0;
+            var configData = new JObject {[VersionMemberName.VersionPropertyName] = 0};
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, configType, _Serializer)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, configType, Serializer)).ShouldThrow<MigrationException>();
         }
 
 
@@ -92,7 +89,7 @@ namespace Weingartner.Json.Migration.Spec
             var origConfigData = configData.DeepClone();
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(NotMigratableData), _Serializer);
+            var result = sut.TryMigrate(configData, typeof(NotMigratableData), Serializer);
             result.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
         }
 
@@ -102,7 +99,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationFromObject(new FixtureDataWithCustomMigrator(), 0);
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator), _Serializer);
+            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator), Serializer);
 
             result["Name"].Value<string>().Should().Be("Name_A_B_C");
         }
@@ -113,7 +110,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationFromObject(new FixtureData(), FixtureData._version + 1);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), _Serializer)).ShouldThrow<DataVersionTooHighException>();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), Serializer)).ShouldThrow<DataVersionTooHighException>();
         }
 
         [Fact]
@@ -123,34 +120,37 @@ namespace Weingartner.Json.Migration.Spec
             var configData = JToken.FromObject( ints);
 
             var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof (ArrayFixtureData), _Serializer);
+            var result = sut.TryMigrate(configData, typeof (ArrayFixtureData), Serializer);
             result["Name"].ToString().Should().Be("Brad");
             result["Data"].ToList().Should().BeEquivalentTo(ints.Select(i=>JToken.FromObject(i)));
         }
 
+        // ReSharper disable UnusedMember.Local
         [Migratable("")]
         private class ArrayFixtureData
         {
-            public const int _version = 1;
-
             [DataMember]
             public string Name { get; private set; }
 
             [DataMember]
             public List<int> Data { get; private set; } 
 
+            // ReSharper disable once UnusedParameter.Local
             private static JObject Migrate_1(JToken data, JsonSerializer serializer)
             {
                 var array = data as JArray;
 
-                var obj = new JObject();
-                obj["Data"] = array;
-                obj["Name"] = "Brad";
+                var obj = new JObject
+                {
+                    ["Data"] = array,
+                    ["Name"] = "Brad"
+                };
 
                 return obj;
 
             }
         }
+        // ReSharper restore UnusedMember.Local
 
         private static IMigrateData<JToken> CreateMigrator()
         {

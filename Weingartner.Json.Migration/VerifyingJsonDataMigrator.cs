@@ -70,13 +70,17 @@ namespace Weingartner.Json.Migration
             var superfluousDataProperties = dataProperties.Except(ignoredMembers).Except(roundTripProperties).ToList();
             if (superfluousDataProperties.Count > 0)
             {
-                throw new MigrationException(string.Format("The following properties should be removed from the serialized data because they don't exist in type {0}: {1}", dataType.FullName, string.Join(", ", superfluousDataProperties)));
+                throw new MigrationException(
+                    "The following properties should be removed from the serialized data because they don't exist in type " +
+                    $"{dataType.FullName}: {string.Join(", ", superfluousDataProperties)}");
             }
 
             var missingDataProperties = roundTripProperties.Except(ignoredMembers).Except(dataProperties).ToList();
             if (missingDataProperties.Count > 0)
             {
-                throw new MigrationException(string.Format("The following properties should be added to the serialized data because they exist in type {0}: {1}", dataType.FullName, string.Join(", ", missingDataProperties)));
+                throw new MigrationException(
+                    "The following properties should be added to the serialized data because they exist in type " +
+                    $"{dataType.FullName}: {string.Join(", ", missingDataProperties)}");
             }
         }
     }

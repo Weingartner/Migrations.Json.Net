@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Weingartner.Json.Migration.Common;
 
@@ -24,11 +21,12 @@ namespace Weingartner.Json.Migration
         /// </summary>
         /// <param name="serializedData"></param>
         /// <param name="unserializedDataType"></param>
+        /// <param name="serializer"></param>
         /// <returns></returns>
         public TSerializedData TryMigrate(TSerializedData serializedData, Type unserializedDataType, JsonSerializer serializer)
         {
-            if (serializedData == null) throw new ArgumentNullException("serializedData");
-            if (unserializedDataType == null) throw new ArgumentNullException("unserializedDataType");
+            if (serializedData == null) throw new ArgumentNullException(nameof(serializedData));
+            if (unserializedDataType == null) throw new ArgumentNullException(nameof(unserializedDataType));
 
             var migrationSettings = unserializedDataType.GetCustomAttribute<MigratableAttribute>();
             if (migrationSettings == null) return serializedData;
@@ -50,7 +48,7 @@ namespace Weingartner.Json.Migration
                 throw new DataVersionTooHighException($"Trying to load data type '{unserializedDataType.FullName}' from json data " +
                                                       $"at version {version}." +
                                                       $" However current software only supports version {maxSupportedVersion}." +
-                                                      $" Please update your installation with a newwer version.");
+                                                      " Please update your installation with a newwer version.");
             }
 
             var migrationMethods = migrationMethodCandidates

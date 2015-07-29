@@ -88,8 +88,8 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class House
         {
-            public string Color { get; private set; }
-            public IEnumerable<House> Neighbors { get; private set; }
+            public string Color { get; }
+            public IEnumerable<House> Neighbors { get; }
 
             [JsonConstructor]
             public House(string color, IEnumerable<House> neighbors)
@@ -111,8 +111,8 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Person
         {
-            public string Name { get; private set; }
-            public Address Address { get; private set; }
+            public string Name { get; }
+            public Address Address { get; }
 
             public Person(string name, Address address)
             {
@@ -130,7 +130,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Address
         {
-            public string Street { get; private set; }
+            public string Street { get; }
 
             public Address(string street)
             {

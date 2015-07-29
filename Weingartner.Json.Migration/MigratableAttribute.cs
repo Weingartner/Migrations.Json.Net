@@ -2,7 +2,7 @@
 
 namespace Weingartner.Json.Migration
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
     public sealed class MigratableAttribute : Attribute
     {
         public string TypeHash { get; private set; }

@@ -13,9 +13,7 @@ namespace Weingartner.Json.Migration
             var versionToken = VersionMemberName.SupportedVersionPropertyNames
                 .Select(n => data[n])
                 .FirstOrDefault(x => x != null);
-            return versionToken != null
-                ? versionToken.Value<int>()
-                : 0;
+            return versionToken?.Value<int>() ?? 0;
         }
 
         public void SetVersion(JToken data, int version)

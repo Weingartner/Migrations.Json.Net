@@ -16,7 +16,7 @@ namespace Weingartner.Json.Migration.Spec
             _Serializer = new JsonSerializer();
         }
 
-        private JsonSerializer _Serializer;
+        private readonly JsonSerializer _Serializer;
 
         [Theory]
         [InlineData("{'Street': 'Teststreet', 'Number': 5, 'Prop': 'Whatever'}", typeof(Address))]
@@ -146,19 +146,13 @@ namespace Weingartner.Json.Migration.Spec
 
         private class NoSetter
         {
-            public string Data
-            {
-                get { return ""; }
-            }
+            public string Data => "";
         }
 
         [Migratable("")]
         public class MigratableType
         {
-            public int Version
-            {
-                get { return 0; }
-            }
+            public int Version => 0;
         }
 
         // ReSharper restore UnusedMember.Local

@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
 using Xunit;
+// ReSharper disable All
 
 namespace Weingartner.Json.Migration.Spec
 {
@@ -47,6 +44,7 @@ namespace Weingartner.Json.Migration.Spec
         }
     }
 
+    // ReSharper disable UnusedMember.Local
     public class TypeWithMigrationMethod0
     {
         private static JToken Migrate_0(JToken data, JsonSerializer serializer)
@@ -89,7 +87,6 @@ namespace Weingartner.Json.Migration.Spec
         }
     }
 
-    // ReSharper disable UnusedMember.Local
     internal class TypeWithOneMigrationMethod
     {
         private static JToken Migrate_1(JToken data, JsonSerializer serializer)

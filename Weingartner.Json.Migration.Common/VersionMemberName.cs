@@ -9,48 +9,26 @@ using Mono.Cecil;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-
 namespace Weingartner.Json.Migration.Common
 {
     public class VersionedMethod
     {
-        private readonly int _Version;
-        private readonly MethodInfo _Method;
+        public int Version { get; }
 
-        public int Version
-        {
-            get { return _Version; }
-        }
-
-        public MethodInfo Method
-        {
-            get { return _Method; }
-        }
+        public MethodInfo Method { get; }
 
         public VersionedMethod(int version, MethodInfo method)
         {
-            _Version = version;
-            _Method = method;
+            Version = version;
+            Method = method;
         }
     }
 
     public static class VersionMemberName
     {
-        public static string VersionPropertyName
-        {
-            get
-            {
-                return "Version";
-            }
-        }
+        public static string VersionPropertyName => "Version";
 
-        public static string VersionBackingFieldName
-        {
-            get
-            {
-                return "_version";
-            }
-        }
+        public static string VersionBackingFieldName => "_version";
 
         public static IEnumerable<string> SupportedVersionPropertyNames
         {
@@ -58,15 +36,6 @@ namespace Weingartner.Json.Migration.Common
             {
                 yield return VersionPropertyName;
                 yield return "<>Version";
-            }
-        }
-
-        private static IEnumerable<string> SupportedVersionBackingFieldNames
-        {
-            get
-            {
-                yield return VersionBackingFieldName;
-                yield return "<>_version";
             }
         }
 
@@ -130,11 +99,7 @@ namespace Weingartner.Json.Migration.Common
             var builder = new StringBuilder();
             Debug.Assert(method.DeclaringType != null, "method.DeclaringType != null");
             builder.AppendLine
-                (String.Format
-                     (
-                      "Migration method '{0}.{1}' should have the following signature:",
-                      method.DeclaringType.FullName,
-                      method.Name));
+                ($"Migration method '{method.DeclaringType.FullName}.{method.Name}' should have the following signature:");
             builder.AppendLine
                 (String.Format
                      ("private static {0} {1}({0} data, JsonSerializer serializer)",
@@ -153,7 +118,7 @@ namespace Weingartner.Json.Migration.Common
             if (jsonArgumentType != null && !typeof (JToken).IsAssignableFrom(jsonArgumentType))
             {
                 ThrowInvalidMigrationSignature(method);
-            };
+            }
 
             if (method == null) throw new ArgumentNullException(nameof(method));
 
