@@ -94,17 +94,6 @@ namespace Weingartner.Json.Migration.Spec
         }
 
         [Fact]
-        public void ShouldWorkWithCustomDataConverter()
-        {
-            var configData = CreateConfigurationFromObject(new FixtureDataWithCustomMigrator(), 0);
-
-            var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator), Serializer);
-
-            result["Name"].Value<string>().Should().Be("Name_A_B_C");
-        }
-
-        [Fact]
         public void ShouldThrowWhenVersionOfDataIsTooHigh()
         {
             var configData = CreateConfigurationFromObject(new FixtureData(), FixtureData._version + 1);
@@ -268,7 +257,7 @@ namespace Weingartner.Json.Migration.Spec
             }
         }
 
-        [Migratable("", typeof(FixtureDataMigrator))]
+        [Migratable("")]
         public class FixtureDataWithCustomMigrator
         {
             public const int _version = 3;
