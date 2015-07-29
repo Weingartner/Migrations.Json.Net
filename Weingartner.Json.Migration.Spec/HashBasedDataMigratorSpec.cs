@@ -45,17 +45,6 @@ namespace Weingartner.Json.Migration.Spec
         }
 
         [Fact]
-        public void ShouldHaveCorrectVersionAfterMigration()
-        {
-            var configData = CreateConfigurationData(0);
-
-            var sut = CreateMigrator();
-            var result = sut.TryMigrate(configData, typeof(FixtureData), _Serializer);
-
-            result[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
-        }
-
-        [Fact]
         public void ShouldWorkWithNonVersionedData()
         {
             var configData = CreateConfigurationData(0);
@@ -95,14 +84,6 @@ namespace Weingartner.Json.Migration.Spec
             new Action(() => sut.TryMigrate(configData, configType, _Serializer)).ShouldThrow<MigrationException>();
         }
 
-        [Fact]
-        public void ShouldThrowIfVersionFieldIsMissing()
-        {
-            var configData = JToken.FromObject(new DataWithoutVersion());
-
-            var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(DataWithoutVersion), _Serializer)).ShouldThrow<MigrationException>();
-        }
 
         [Fact]
         public void ShouldNotChangeDataWhenTypeIsNotMigratable()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,68 +9,69 @@ using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {
-    public class HashBasedDataMigrator<TData> : IMigrateData<TData>
-        where TData : class
+    public class HashBasedDataMigrator<TSerializedData> : IMigrateData<TSerializedData>
+        where TSerializedData : class
     {
-        private readonly IUpdateVersions<TData> _VersionExtractor;
+        private readonly IUpdateVersions<TSerializedData> _VersionExtractor;
 
-        public HashBasedDataMigrator(IUpdateVersions<TData> versionExtractor)
+        public HashBasedDataMigrator(IUpdateVersions<TSerializedData> versionExtractor)
         {
             _VersionExtractor = versionExtractor;
         }
 
-        public TData TryMigrate(TData data, Type dataType, JsonSerializer serializer)
+        /// <summary>
+        /// Try to migrate the serialized data to a newer version using migration methods from type unserializedDataType.
+        /// </summary>
+        /// <param name="serializedData"></param>
+        /// <param name="unserializedDataType"></param>
+        /// <returns></returns>
+        public TSerializedData TryMigrate(TSerializedData serializedData, Type unserializedDataType, JsonSerializer serializer)
         {
-            if (data == null) throw new ArgumentNullException("data");
-            if (dataType == null) throw new ArgumentNullException("dataType");
+            if (serializedData == null) throw new ArgumentNullException("serializedData");
+            if (unserializedDataType == null) throw new ArgumentNullException("unserializedDataType");
 
-            var migrationSettings = dataType.GetCustomAttribute<MigratableAttribute>();
-            if (migrationSettings == null) return data;
+            var migrationSettings = unserializedDataType.GetCustomAttribute<MigratableAttribute>();
+            if (migrationSettings == null) return serializedData;
 
-            var migrator = migrationSettings.MigratorType ?? dataType;
 
-            var currentVersion = VersionMemberName.GetCurrentVersion(dataType);
-            var version = _VersionExtractor.GetVersion(data);
+            var version = _VersionExtractor.GetVersion(serializedData);
 
-            while (version < currentVersion)
+            var migrationMethodCandidates = VersionMemberName
+                .GetMigrationMethodCandidates(unserializedDataType)
+                .ToList();
+
+            if(migrationMethodCandidates.Count == 0)
+                return serializedData;
+
+            var maxSupportedVersion = migrationMethodCandidates.Last().Version;
+
+            if ( version > maxSupportedVersion )
             {
-                var migrationMethod = GetMigrationMethod(migrator, version + 1);
-                if (migrationMethod == null)
-                {
-                    throw new MigrationException(
-                        string.Format(
-                            "The migration method, which migrates an instance of type '{0}' to version {1} cannot be found. " +
-                            "To resolve this, add a method with the following signature: `private static {2} Migrate_{1}(ref {2} data)",
-                            dataType.FullName,
-                            version + 1,
-                            typeof(TData).FullName));
-                }
-
-               VersionMemberName.VerifyMigrationMethodSignature<TData>(migrationMethod, data.GetType());
-
-                data = ExecuteMigration(migrationMethod, data, serializer);
-
-                version++;
-
-                _VersionExtractor.SetVersion(data, version);
+                throw new DataVersionTooHighException($"Trying to load data type '{unserializedDataType.FullName}' from json data " +
+                                                      $"at version {version}." +
+                                                      $" However current software only supports version {maxSupportedVersion}." +
+                                                      $" Please update your installation with a newwer version.");
             }
 
-            if (version > currentVersion)
-            {
-                throw new DataVersionTooHighException("Can't migrate data of type {0} because there is no migration method available.");
-            }
+            var migrationMethods = migrationMethodCandidates
+                .SkipWhile(m => m.Version <= version)
+                .ToList();
+            
+            serializedData = migrationMethods
+                .Aggregate(serializedData, (data, method) => ExecuteMigration(method.Method, data, serializer));
+                
 
-            return data;
+            return serializedData;
         }
 
         protected MethodInfo GetMigrationMethod(Type type, int version)
         {
-            return type.GetMethod("Migrate_" + version, BindingFlags.Static | BindingFlags.NonPublic);
+            return type.GetMethod(VersionMemberName.MigrationMethodPrefix + version, BindingFlags.Static | BindingFlags.NonPublic);
         }
 
-        protected TData ExecuteMigration(MethodInfo method, TData data, JsonSerializer serializer)
+        protected TSerializedData ExecuteMigration(MethodInfo method, TSerializedData data, JsonSerializer serializer)
         {
-            return (TData)method.Invoke(null, new object[] { data, serializer });
+            return (TSerializedData)method.Invoke(null, new object[] { data, serializer });
         }
     }
 }

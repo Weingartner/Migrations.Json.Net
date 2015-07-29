@@ -17,15 +17,15 @@ namespace Weingartner.Json.Migration
             _Inner = inner;
         }
 
-        public JToken TryMigrate(JToken data, Type dataType, JsonSerializer serializer)
+        public JToken TryMigrate(JToken serializedData, Type unserializedDataType, JsonSerializer serializer)
         {
-            var migratedData = _Inner.TryMigrate(data, dataType, serializer);
+            var migratedData = _Inner.TryMigrate(serializedData, unserializedDataType, serializer);
             if (!IsVerifying)
             {
                 try
                 {
                     IsVerifying = true;
-                    VerifyMigration(migratedData, dataType, serializer);
+                    VerifyMigration(migratedData, unserializedDataType, serializer);
                 }
                 finally
                 {

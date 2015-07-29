@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {
@@ -17,13 +18,6 @@ namespace Weingartner.Json.Migration
         public MigrationConverter(IMigrateData<JToken> dataMigrator)
         {
             DataMigrator = dataMigrator;
-        }
-
-        public override bool CanWrite { get { return false; } }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            throw new NotSupportedException();
         }
 
         public static bool GetOrDefault
@@ -49,6 +43,22 @@ namespace Weingartner.Json.Migration
             {
                 _MigratedTypes.Value[objectType] = true;
                 return serializer.Deserialize(migratedData.CreateReader(), objectType);
+            }
+            finally
+            {
+                _MigratedTypes.Value[objectType] = false;
+            }
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            var objectType = value.GetType();
+            try
+            {
+                _MigratedTypes.Value[objectType] = true;
+                var obj = JObject.FromObject(value, serializer);
+                obj[VersionMemberName.VersionPropertyName] = VersionMemberName.GetCurrentVersion(objectType);
+                obj.WriteTo(writer);
             }
             finally
             {

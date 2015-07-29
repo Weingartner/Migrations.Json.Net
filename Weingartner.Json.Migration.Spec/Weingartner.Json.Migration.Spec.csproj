@@ -70,6 +70,7 @@
     <Compile Include="MigrationConverterSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VerifyingJsonDataMigratorSpec.cs" />
+    <Compile Include="VersionMemberNameSpec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

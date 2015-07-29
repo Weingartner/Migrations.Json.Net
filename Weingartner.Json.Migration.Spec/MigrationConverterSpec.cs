@@ -3,12 +3,24 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Weingartner.Json.Migration.Common;
 using Xunit;
 
 namespace Weingartner.Json.Migration.Spec
 {
     public class MigrationConverterSpec
     {
+        [Fact]
+        public void ShouldAddCorrectVersionToSerializedData()
+        {
+            var settings = GetSerializerSettings();
+            var obj = new Address("Street 1");
+
+            var result = JObject.FromObject(obj, JsonSerializer.Create(settings));
+
+            result[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(1);
+        }
+
         [Fact]
         public void ShouldMigrateSimpleType()
         {
@@ -65,7 +77,7 @@ namespace Weingartner.Json.Migration.Spec
 
         private static T RoundTrip<T>(T obj, JsonSerializerSettings settings)
         {
-            var serialized = JsonConvert.SerializeObject(obj, settings);
+            var serialized = JsonConvert.SerializeObject(obj);
             return JsonConvert.DeserializeObject<T>(serialized, settings);
         }
 
@@ -76,8 +88,6 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class House
         {
-            public const int _version = 1;
-
             public string Color { get; private set; }
             public IEnumerable<House> Neighbors { get; private set; }
 
@@ -101,8 +111,6 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Person
         {
-            public const int _version = 1;
-
             public string Name { get; private set; }
             public Address Address { get; private set; }
 
@@ -122,8 +130,6 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Address
         {
-            public const int _version = 1;
-
             public string Street { get; private set; }
 
             public Address(string street)

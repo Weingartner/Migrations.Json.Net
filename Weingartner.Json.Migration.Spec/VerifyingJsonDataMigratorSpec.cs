@@ -165,9 +165,9 @@ namespace Weingartner.Json.Migration.Spec
 
         private class NullMigrator : IMigrateData<JToken>
         {
-            public JToken TryMigrate(JToken data, Type dataType, JsonSerializer serializer)
+            public JToken TryMigrate(JToken serializedData, Type dataType, JsonSerializer serializer)
             {
-                return data;
+                return serializedData;
             }
         }
     }
