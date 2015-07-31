@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Weingartner.Json.Migration
 {
-    [Serializable]
     public class MigrationException : Exception
     {
         public MigrationException()
@@ -15,12 +13,6 @@ namespace Weingartner.Json.Migration
         }
 
         public MigrationException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected MigrationException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }

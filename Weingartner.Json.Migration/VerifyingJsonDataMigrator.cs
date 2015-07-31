@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
@@ -40,13 +41,13 @@ namespace Weingartner.Json.Migration
             var dataArr = data as JArray;
             if (dataArr != null)
             {
-                if (!dataType.IsGenericType)
+                if (!dataType.GetTypeInfo().IsGenericType)
                 {
                     // We can't verify anything if we don't know the type
                     return;
                 }
                 // Let's assume that the first generic argument refers to the element type
-                var childType = dataType.GetGenericArguments().First();
+                var childType = dataType.GenericTypeArguments.First();
                 foreach (var child in data)
                 {
                     VerifyMigration(child, childType, jsonSerializer);

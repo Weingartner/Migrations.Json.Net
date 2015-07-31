@@ -28,7 +28,7 @@ namespace Weingartner.Json.Migration
             if (serializedData == null) throw new ArgumentNullException(nameof(serializedData));
             if (unserializedDataType == null) throw new ArgumentNullException(nameof(unserializedDataType));
 
-            var migrationSettings = unserializedDataType.GetCustomAttribute<MigratableAttribute>();
+            var migrationSettings = unserializedDataType.GetTypeInfo().GetCustomAttribute<MigratableAttribute>();
             if (migrationSettings == null) return serializedData;
 
 
@@ -60,11 +60,6 @@ namespace Weingartner.Json.Migration
                 
 
             return serializedData;
-        }
-
-        protected MethodInfo GetMigrationMethod(Type type, int version)
-        {
-            return type.GetMethod(VersionMemberName.MigrationMethodPrefix + version, BindingFlags.Static | BindingFlags.NonPublic);
         }
 
         protected TSerializedData ExecuteMigration(MethodInfo method, TSerializedData data, JsonSerializer serializer)

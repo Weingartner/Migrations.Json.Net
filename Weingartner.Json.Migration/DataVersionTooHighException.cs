@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
 namespace Weingartner.Json.Migration
 {
-    [Serializable]
     public class DataVersionTooHighException : MigrationException
     {
         public DataVersionTooHighException()
@@ -15,12 +13,6 @@ namespace Weingartner.Json.Migration
         }
 
         public DataVersionTooHighException(string message, Exception inner) : base(message, inner)
-        {
-        }
-
-        protected DataVersionTooHighException(
-            SerializationInfo info,
-            StreamingContext context) : base(info, context)
         {
         }
     }
