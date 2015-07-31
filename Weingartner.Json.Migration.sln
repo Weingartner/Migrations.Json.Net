@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration", "Weingartner.Json.Migration\Weingartner.Json.Migration.csproj", "{A3C46398-1E1D-4261-97F0-487D7FFAC49C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Spec", "Weingartner.Json.Migration.Spec\Weingartner.Json.Migration.Spec.csproj", "{25B7F4C1-848C-43B8-94B0-0665208C4B4A}"
@@ -13,6 +15,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Weingartner.Json.Migration.
 	ProjectSection(SolutionItems) = preProject
 		Weingartner.Json.Migration.Common\VersionMemberName.cs = Weingartner.Json.Migration.Common\VersionMemberName.cs
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn", "Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.csproj", "{74477EA1-B8DC-4527-8457-6048316341AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn.Test", "Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.Test\Weingartner.Json.Migration.Roslyn.Test.csproj", "{8AB34F16-FBB3-4FDD-B956-84C4E0E2F933}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn.Vsix", "Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.Vsix\Weingartner.Json.Migration.Roslyn.Vsix.csproj", "{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,6 +44,22 @@ Global
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D155ACA9-6490-415C-97C0-E7339EE5044E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74477EA1-B8DC-4527-8457-6048316341AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74477EA1-B8DC-4527-8457-6048316341AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74477EA1-B8DC-4527-8457-6048316341AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74477EA1-B8DC-4527-8457-6048316341AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AB34F16-FBB3-4FDD-B956-84C4E0E2F933}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AB34F16-FBB3-4FDD-B956-84C4E0E2F933}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AB34F16-FBB3-4FDD-B956-84C4E0E2F933}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AB34F16-FBB3-4FDD-B956-84C4E0E2F933}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A16B8AC-6082-422C-9693-832BFCB7F2D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A16B8AC-6082-422C-9693-832BFCB7F2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A16B8AC-6082-422C-9693-832BFCB7F2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A16B8AC-6082-422C-9693-832BFCB7F2D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
