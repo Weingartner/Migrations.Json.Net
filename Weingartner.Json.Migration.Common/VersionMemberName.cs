@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using Mono.Cecil;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -70,7 +69,7 @@ namespace Weingartner.Json.Migration.Common
 
         public static IEnumerable<VersionedMethod> GetMigrationMethodCandidates(Type type)
         {
-            var v = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            var v = type.GetTypeInfo().DeclaredMethods
                 .Where(m => m.Name.StartsWith(MigrationMethodPrefix))
                 .ToList();
 
@@ -113,7 +112,8 @@ namespace Weingartner.Json.Migration.Common
         /// <param name="jsonArgumentType">Can be null if you don't want to check the type. Otherwise it should be one of JObject or JArray</param>
         public static void VerifyMigrationMethodSignature(MethodInfo method, Type jsonArgumentType)
         {
-            if (jsonArgumentType != null && !typeof (JToken).IsAssignableFrom(jsonArgumentType))
+            var jsonArgumentTypeInfo = jsonArgumentType?.GetTypeInfo();
+            if (jsonArgumentType != null && !typeof (JToken).GetTypeInfo().IsAssignableFrom(jsonArgumentTypeInfo))
             {
                 ThrowInvalidMigrationSignature(method);
             }
@@ -124,30 +124,14 @@ namespace Weingartner.Json.Migration.Common
             if (parameters.Length != 2)
                 ThrowInvalidMigrationSignature(method);
 
-            if (jsonArgumentType!=null && !parameters[0].ParameterType.IsAssignableFrom(jsonArgumentType))
+            if (jsonArgumentType!=null && !parameters[0].ParameterType.GetTypeInfo().IsAssignableFrom(jsonArgumentTypeInfo))
                 ThrowInvalidMigrationSignature(method);
 
-            if (!typeof (JsonSerializer).IsAssignableFrom(parameters[1].ParameterType))
+            if (!typeof (JsonSerializer).GetTypeInfo().IsAssignableFrom(parameters[1].ParameterType.GetTypeInfo()))
                 ThrowInvalidMigrationSignature(method);
 
-            if (!typeof (JToken).IsAssignableFrom(method.ReturnType))
+            if (!typeof (JToken).GetTypeInfo().IsAssignableFrom(method.ReturnType.GetTypeInfo()))
                 ThrowInvalidMigrationSignature(method);
         }
-
-        public static int MaxMigrationMethodVersionUsingCecil(TypeDefinition type)
-        {
-            return MigrationMethodVersionsUsingCecil(type).Concat(Enumerable.Repeat(0, 1)).Max();
-        }
-
-        public static IEnumerable<int> MigrationMethodVersionsUsingCecil(TypeDefinition type)
-        {
-            return type.Methods
-                       .Where(m => m.IsStatic && m.IsPrivate)
-                       .Where(m => m.Parameters.Count == 2)
-                       .Select(m => Regex.Match(m.Name, @"(?<=^Migrate_)(\d+)$"))
-                       .Where(m => m.Success)
-                       .Select(m => Int32.Parse(m.Value));
-        }
-
     }
 }
