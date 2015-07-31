@@ -46,21 +46,27 @@ namespace Weingartner.Json.Migration.Common
                 .Max();
         }
 
-        private static IEnumerable<int> ParseMigrationMethodVersions(IEnumerable<string> enumerable)
+        private static IEnumerable<VersionedMethod> ParseMigrationMethods(IReadOnlyList<MethodInfo> methods)
         {
-            var versions = enumerable
-                .Select(m => m.Substring(MigrationMethodPrefix.Length))
-                .Select(int.Parse)
+            var pattern = new Regex($@"^{MigrationMethodPrefix}\d+$");
+            var invalidMethods = methods.Select(m => !pattern.IsMatch(m.Name)).ToList();
+            if (invalidMethods.Count > 0)
+            {
+                throw new MigrationException($"Name of migration methods ({string.Join(", ", invalidMethods)}) must match pattern '{pattern}'");
+            }
+
+            var versions = methods
+                .Select(m => new VersionedMethod(int.Parse(m.Name.Substring(MigrationMethodPrefix.Length)), m))
                 .ToList();
 
             if (versions.Count == 0)
                 return versions;
 
             var firstVersion = versions[0];
-            if(firstVersion!=1)
+            if(firstVersion.Version!=1)
                 throw new MigrationException($"Migrations must start with 'Migrate_1. but starts with 'Migration_{firstVersion}");
 
-            var isConsecutive = !versions.Select((i, j) => i - j).Distinct().Skip(1).Any();
+            var isConsecutive = !versions.Select((i, j) => i.Version - j).Distinct().Skip(1).Any();
             if(!isConsecutive)
                 throw new MigrationException($"Migrations must be consecutive but got versions {string.Join(", ", versions)}");
 
@@ -76,8 +82,7 @@ namespace Weingartner.Json.Migration.Common
             if (v.Count == 0)
                 return Enumerable.Empty<VersionedMethod>();
 
-            var versionedMethods = ParseMigrationMethodVersions(v.Select(m => m.Name))
-                .Zip(v, (version, method) => new VersionedMethod(version, method))
+            var versionedMethods = ParseMigrationMethods(v)
                 .OrderBy(m => m.Version)
                 .ToList();
 
