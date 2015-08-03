@@ -49,7 +49,7 @@ namespace Weingartner.Json.Migration.Common
         private static IEnumerable<VersionedMethod> ParseMigrationMethods(IReadOnlyList<MethodInfo> methods)
         {
             var pattern = new Regex($@"^{MigrationMethodPrefix}\d+$");
-            var invalidMethods = methods.Select(m => !pattern.IsMatch(m.Name)).ToList();
+            var invalidMethods = methods.Where(m => !pattern.IsMatch(m.Name)).Select(m => m.Name).ToList();
             if (invalidMethods.Count > 0)
             {
                 throw new MigrationException($"Name of migration methods ({string.Join(", ", invalidMethods)}) must match pattern '{pattern}'");
