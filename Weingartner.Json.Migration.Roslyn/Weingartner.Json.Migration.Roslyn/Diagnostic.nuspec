@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>Weingartner.Json.Migration</id>
+    <id>Weingartner.Json.Migration.Analyzer</id>
     <version>0.0.0</version>
-    <title>Migrations.Json.Net</title>
+    <title>Roslyn Analyzer/Code fix for Migrations.Json.Net</title>
     <authors>Weingartner Maschinenbau GmbH</authors>
     <owners>Weingartner Maschinenbau GmbH</owners>
     <projectUrl>https://github.com/Weingartner/Migrations.Json.Net</projectUrl>
