@@ -8,6 +8,7 @@ open Fake.XUnit2Helper
 
 let nugetApiKey = getBuildParam "NuGetApiKey"
 let outputPath = @".\artifacts" |> FullName
+let buildOutputPath = @"bin\Release"
 
 Target "Clean" (fun _ ->
     CleanDir outputPath
@@ -26,7 +27,7 @@ Target "BuildSolution" (fun () ->
                     "BuildParallel", "True"
                     "BuildProjectReferences", "True"
                     "DebugSymbols", "True"
-                    "OutputPath", @"bin\Release"
+                    "OutputPath", buildOutputPath
                 ]
             Verbosity = Some(MSBuildVerbosity.Normal)
             NodeReuse = false
@@ -55,6 +56,11 @@ Target "CreateAndPublishNuGetPackage" (fun () ->
             Publish = false 
         }
     NuGet setParams @"NuGet\Weingartner.Json.Migration.nuspec"
+
+    !! "*.nupkg"
+    |> SetBaseDir (@"Weingartner.Json.Migration.Roslyn" @@ "Weingartner.Json.Migration.Roslyn" @@ buildOutputPath)
+    |> Seq.maxBy System.IO.File.GetCreationTimeUtc
+    |> CopyFile outputPath
 )
 
 Target "Default" DoNothing

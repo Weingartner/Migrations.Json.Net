@@ -1,19 +1,17 @@
-﻿<?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>Weingartner.Json.Migration.Roslyn</id>
-    <version>1.0.0.0</version>
-    <title>Weingartner.Json.Migration.Roslyn</title>
-    <authors>egger</authors>
-    <owners>egger</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Weingartner.Json.Migration.Roslyn</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright</copyright>
-    <tags>Weingartner.Json.Migration.Roslyn, analyzers</tags>
+    <id>Weingartner.Json.Migration</id>
+    <version>0.0.0</version>
+    <title>Migrations.Json.Net</title>
+    <authors>Weingartner Maschinenbau GmbH</authors>
+    <owners>Weingartner Maschinenbau GmbH</owners>
+    <projectUrl>https://github.com/Weingartner/Migrations.Json.Net</projectUrl>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Provides a type that can generate a hash out of a types properties and uses this hash to determine whether serialized data should be migrated. If the data should be migrated it calls user-defined migration methods which do the migration. A Roslyn analyzer is used to check if a type has changed at design-time.</description>
+    <summary>Helps migrating serialized data.</summary>
+    <copyright>Weingartner Maschinenbau GmbH 2014</copyright>
   </metadata>
   <!-- The convention for analyzers is to put language agnostic dlls in analyzers\dotnet and language specific analyzers in either analyzers\dotnet\cs or analyzers\dotnet\vb -->
   <files>
