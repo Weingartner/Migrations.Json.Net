@@ -54,7 +54,7 @@ Target "CreateAndPublishNuGetPackage" (fun () ->
             OutputPath = outputPath
             Publish = false 
         }
-    NuGet setParams @"NuGet\Weingartner.Json.Migration.Fody.nuspec"
+    NuGet setParams @"NuGet\Weingartner.Json.Migration.nuspec"
 )
 
 Target "Default" DoNothing

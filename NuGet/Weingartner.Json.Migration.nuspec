@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
-        <id>Weingartner.Json.Migration.Fody</id>
+        <id>Weingartner.Json.Migration</id>
         <version>0.0.0</version>
         <title>Migrations.Json.Net</title>
         <authors>Weingartner Maschinenbau GmbH</authors>
@@ -9,7 +9,7 @@
         <projectUrl>https://github.com/Weingartner/Migrations.Json.Net</projectUrl>
         <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
-        <description>Provides a type that can generate a hash out of a types properties and uses this hash to determine whether serialized data should be migrated. If the data should be migrated it calls user-defined migration methods which do the migration. A fody weaver is used to check if a type has changed at build-time.</description>
+        <description>Provides a type that can generate a hash out of a types properties and uses this hash to determine whether serialized data should be migrated. If the data should be migrated it calls user-defined migration methods which do the migration. A Roslyn analyzer is used to check if a type has changed at design-time.</description>
         <summary>Helps migrating serialized data.</summary>
         <copyright>Weingartner Maschinenbau GmbH 2014</copyright>
         <dependencies>
@@ -19,10 +19,8 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="tools\install.ps1" target="tools\install.ps1" />
-        <file src="tools\uninstall.ps1" target="tools\uninstall.ps1" />
-        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.dll" target="lib\net45\Weingartner.Json.Migration.dll" />
-        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.pdb" target="lib\net45\Weingartner.Json.Migration.pdb" />
+        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.dll" target="lib\net45\" />
+        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.pdb" target="lib\net45\" />
         <file src="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn\bin\Release\Weingartner.Json.Migration.Roslyn.dll" target="tools\analyzers\" />
         <file src="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn\bin\Release\Weingartner.Json.Migration.Roslyn.pdb" target="tools\analyzers\" />
     </files>
