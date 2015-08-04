@@ -89,6 +89,7 @@ namespace Weingartner.Json.Migration.Roslyn
                 .Where(p =>
                     p.AttributeLists.SelectMany(l => l.Attributes).Any(a => (a.Name.ToString() == "DataMember")) // TODO
                 )
+                .OrderBy(p => p.Identifier.ToString())
                 .ToImmutableList();
         }
 
