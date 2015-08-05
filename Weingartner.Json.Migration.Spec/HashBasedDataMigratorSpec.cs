@@ -45,6 +45,17 @@ namespace Weingartner.Json.Migration.Spec
         }
 
         [Fact]
+        public void ShouldHaveCorrectVersionAfterMigration()
+        {
+            var configData = CreateConfigurationData(0);
+
+            var sut = CreateMigrator();
+            var result = sut.TryMigrate(configData, typeof(FixtureData), Serializer);
+
+            result[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
+        }
+
+        [Fact]
         public void ShouldWorkWithNonVersionedData()
         {
             var configData = CreateConfigurationData(0);

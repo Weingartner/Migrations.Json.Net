@@ -57,7 +57,8 @@ namespace Weingartner.Json.Migration
             
             serializedData = migrationMethods
                 .Aggregate(serializedData, (data, method) => ExecuteMigration(method.Method, data, serializer));
-                
+
+            _VersionExtractor.SetVersion(serializedData, maxSupportedVersion);
 
             return serializedData;
         }
