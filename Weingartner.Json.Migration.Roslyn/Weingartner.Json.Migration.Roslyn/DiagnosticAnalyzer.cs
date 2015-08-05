@@ -13,7 +13,7 @@ namespace Weingartner.Json.Migration.Roslyn
     /// We just use this class for looking at the syntax
     /// tree of the Migratable attribute. Don't delete it
     /// </summary>
-    [Migratable("XXX")]
+    [DataContract(Namespace = "XXX")]
     class Foo
     {
         [DataMember()]
