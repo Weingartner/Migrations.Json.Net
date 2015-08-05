@@ -69,7 +69,19 @@ namespace Weingartner.Json.Migration.Roslyn
         public static string GetMigrationHashFromType(BaseTypeDeclarationSyntax klassSyntaxNode)
         {
             var properties = GetDataMemberProperties(klassSyntaxNode);
-            return string.Join(";", properties.Select(p => p.Type.ToString() + "|" + p.Identifier.ToString())).GetHashCode().ToString();
+            var identifier = string.Join(";", properties.Select(p => p.Type.ToString() + "|" + p.Identifier.ToString()));
+            return Hash(identifier);
+        }
+
+        private static string Hash(string text)
+        {
+            unchecked
+            {
+                return text
+                    .Cast<char>()
+                    .Aggregate(23, (current, c) => current * 31 + c)
+                    .ToString();
+            }
         }
 
         public static string GetMigrationHashFromAttribute(BaseTypeDeclarationSyntax type)
