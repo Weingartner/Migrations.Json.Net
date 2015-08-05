@@ -21,8 +21,8 @@ namespace Weingartner.Json.Migration.Spec
 
         [Theory]
         [InlineData(0, "Name_0_1_2")]
-        [InlineData(1, "_1_2")]
-        [InlineData(2, "_2")]
+        [InlineData(1, "Name_1_2")]
+        [InlineData(2, "Name_2")]
         public void ShouldApplyChangesMadeByTheMigrationMethods(int configVersion, string expectedName)
         {
             var configData = CreateConfigurationData(configVersion);
@@ -183,9 +183,14 @@ namespace Weingartner.Json.Migration.Spec
             [DataMember]
             public string Name { get; private set; }
 
+            public FixtureData()
+            {
+                Name = "Name";
+            }
+
             private static JObject Migrate_1(JObject data, JsonSerializer serializer)
             {
-                data["Name"] = "Name_0";
+                data["Name"] += "_0";
                 return data;
             }
 
