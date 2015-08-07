@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace Weingartner.Json.Migration.Roslyn
+{
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    public class DataContractAnalyzer : DiagnosticAnalyzer
+    {
+        private const string DiagnosticId = "DataContractAnalyzer";
+        private static readonly LocalizableString Title = "Migratable type should have `DataContract` and `DataMember` attributes";
+        private static readonly LocalizableString MessageFormat = "Type '{0}' is migratable but is missing either `DataContract` or `DataMember` attributes.";
+        private const string Category = "DataMigration";
+
+        private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, true);
+
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+
+        public override void Initialize(AnalysisContext context)
+        {
+            context.RegisterCompilationStartAction(OnCompilationStart);
+        }
+
+        private static void OnCompilationStart(CompilationStartAnalysisContext context)
+        {
+            var migratableAttributeType = context.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
+            var dataContractAttributeType = context.Compilation.GetTypeByMetadataName(Constants.DataContractAttributeMetadataName);
+            var dataMemberAttributeType = context.Compilation.GetTypeByMetadataName(Constants.DataMemberAttributeMetadataName);
+            if (migratableAttributeType != null)
+            {
+                context.RegisterSyntaxNodeAction(nodeContext => AnalyzeCall(nodeContext, migratableAttributeType, dataContractAttributeType, dataMemberAttributeType), SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration);
+            }
+        }
+
+        private static void AnalyzeCall(SyntaxNodeAnalysisContext context, ISymbol migratableAttributeType, ISymbol dataContractAttributeType, ISymbol dataMemberAttributeType)
+        {
+            var typeDecl = (TypeDeclarationSyntax)context.Node;
+            var semanticModel = context.SemanticModel;
+            var ct = context.CancellationToken;
+
+            var isMigratable = MigrationHashHelper.HasAttribute(typeDecl, migratableAttributeType, semanticModel, ct);
+            var isDataContract = MigrationHashHelper.HasAttribute(typeDecl, dataContractAttributeType, semanticModel, ct);
+            var hasDataMember = typeDecl.DescendantNodes().OfType<PropertyDeclarationSyntax>()
+                .Any(propDecl => MigrationHashHelper.HasAttribute(propDecl, dataMemberAttributeType, semanticModel, ct));
+            
+            if (isMigratable && (!isDataContract || !hasDataMember))
+            {
+                var diagnostic = Diagnostic.Create(Rule, typeDecl.GetLocation(), typeDecl.Identifier.ToString());
+                context.ReportDiagnostic(diagnostic);
+            }
+        }
+    }
+}

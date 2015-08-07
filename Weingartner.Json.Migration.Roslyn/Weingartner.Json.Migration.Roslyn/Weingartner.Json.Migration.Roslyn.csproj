@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="CodeFixProvider.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContractAnalyzer.cs" />
     <Compile Include="MigrationHashAnalyzer.cs" />
     <Compile Include="MigrationHashHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
