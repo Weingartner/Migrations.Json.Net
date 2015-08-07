@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using Weingartner.Json.Migration;
 
@@ -21,6 +22,7 @@ namespace TestHelper
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
+        private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a").Location);
         private static readonly MetadataReference MigrationReference = MetadataReference.CreateFromFile(typeof(MigratableAttribute).Assembly.Location);
         private static readonly MetadataReference SerializationReference = MetadataReference.CreateFromFile(typeof(DataMemberAttribute).Assembly.Location);
 
@@ -157,6 +159,7 @@ namespace TestHelper
                 .AddMetadataReference(projectId, SystemCoreReference)
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
                 .AddMetadataReference(projectId, CodeAnalysisReference)
+                .AddMetadataReference(projectId, SystemRuntimeReference)
                 .AddMetadataReference(projectId, MigrationReference)
                 .AddMetadataReference(projectId, SerializationReference);
 

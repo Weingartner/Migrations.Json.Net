@@ -24,9 +24,9 @@ namespace Weingartner.Json.Migration.Roslyn
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MigrationHashAnalyzer : DiagnosticAnalyzer
     {
-        internal const string DiagnosticId = "MigrationHashAnalyzer";
+        public const string DiagnosticId = "MigrationHashAnalyzer";
         private static readonly LocalizableString Title = "Should have correct migration hash";
-        private static readonly LocalizableString MessageFormat = "Expected migration hash of type '{0}' to be '{1}'.";
+        public static readonly LocalizableString MessageFormat = "Expected migration hash of type '{0}' to be '{1}'.";
 
         private static readonly LocalizableString Description = "An incorrect migration hash is a hint that you may have forgotten to add a migration. " +
                                                                 "The hash is calculated from all properties with a `DataMember` attribute " +
@@ -61,9 +61,10 @@ namespace Weingartner.Json.Migration.Roslyn
         {
             var ct = context.CancellationToken;
             var typeDeclaration = (TypeDeclarationSyntax) context.Node;
-            var attributeHash = GetAttributeHash(context.SemanticModel, migratableAttributeType, typeDeclaration, ct);
-            if (attributeHash == null) return;
+            var attribute = MigrationHashHelper.GetAttribute(typeDeclaration, migratableAttributeType, context.SemanticModel, ct);
+            if (attribute == null) return;
 
+            var attributeHash = GetAttributeHash(attribute, context.SemanticModel, ct);
             var computedHash = MigrationHashHelper.GetMigrationHashFromType(typeDeclaration, ct, context.SemanticModel, dataMemberAttributeType);
 
             if (attributeHash != computedHash)
@@ -73,10 +74,8 @@ namespace Weingartner.Json.Migration.Roslyn
             }
         }
 
-        private static string GetAttributeHash(SemanticModel semanticModel, ISymbol migratableAttributeType, TypeDeclarationSyntax typeDeclaration, CancellationToken ct)
+        private static string GetAttributeHash(AttributeSyntax attribute, SemanticModel semanticModel, CancellationToken ct)
         {
-            var attribute = MigrationHashHelper.GetAttribute(typeDeclaration, migratableAttributeType, semanticModel, ct);
-
             var hashNode = attribute?.ArgumentList?.Arguments.FirstOrDefault();
             if (hashNode == null) return null;
 
