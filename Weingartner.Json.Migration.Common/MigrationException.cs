@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Weingartner.Json.Migration
+namespace Weingartner.Json.Migration.Common
 {
     public class MigrationException : Exception
     {

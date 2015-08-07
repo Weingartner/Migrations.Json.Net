@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Threading;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {

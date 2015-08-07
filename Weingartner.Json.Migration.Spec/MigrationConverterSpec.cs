@@ -3,7 +3,6 @@ using System.Linq;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Weingartner.Json.Migration.Common;
 using Xunit;
 
 namespace Weingartner.Json.Migration.Spec

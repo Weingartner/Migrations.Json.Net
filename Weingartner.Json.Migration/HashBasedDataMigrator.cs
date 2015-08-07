@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
-using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {
@@ -34,14 +33,11 @@ namespace Weingartner.Json.Migration
 
             var version = _VersionExtractor.GetVersion(serializedData);
 
-            var migrationMethodCandidates = VersionMemberName
-                .GetMigrationMethodCandidates(unserializedDataType)
+            var allMigrationMethods = VersionMemberName
+                .GetAndVerifyMigrationMethods(unserializedDataType)
                 .ToList();
 
-            if(migrationMethodCandidates.Count == 0)
-                return serializedData;
-
-            var maxSupportedVersion = migrationMethodCandidates.Last().Version;
+            var maxSupportedVersion = allMigrationMethods.LastOrDefault()?.ToVersion ?? 0;
 
             if ( version > maxSupportedVersion )
             {
@@ -51,12 +47,13 @@ namespace Weingartner.Json.Migration
                                                       " Please update your installation with a newwer version.");
             }
 
-            var migrationMethods = migrationMethodCandidates
-                .SkipWhile(m => m.Version <= version)
+            var migrationMethods = allMigrationMethods
+                .SkipWhile(m => m.ToVersion <= version)
                 .ToList();
             
             serializedData = migrationMethods
-                .Aggregate(serializedData, (data, method) => ExecuteMigration(method.Method, data, serializer));
+                .Select(m => unserializedDataType.GetTypeInfo().GetDeclaredMethod(m.Name))
+                .Aggregate(serializedData, (data, method) => ExecuteMigration(method, data, serializer));
 
             _VersionExtractor.SetVersion(serializedData, maxSupportedVersion);
 
