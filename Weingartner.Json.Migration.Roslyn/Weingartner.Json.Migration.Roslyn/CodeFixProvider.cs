@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -15,15 +16,12 @@ using Microsoft.CodeAnalysis.Text;
 
 namespace Weingartner.Json.Migration.Roslyn
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(WeingartnerJsonMigrationRoslynCodeFixProvider)), Shared]
-    public class WeingartnerJsonMigrationRoslynCodeFixProvider : CodeFixProvider
+    [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MigrationHashAnalyzerCodeFixProvider)), Shared]
+    public class MigrationHashAnalyzerCodeFixProvider : CodeFixProvider
     {
-        private const string title = "Replace hash";
+        private const string Title = "Correct migration hash";
 
-        public sealed override ImmutableArray<string> FixableDiagnosticIds
-        {
-            get { return ImmutableArray.Create(WeingartnerJsonMigrationRoslynAnalyzer.DiagnosticId); }
-        }
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(MigrationHashAnalyzer.DiagnosticId);
 
         public sealed override FixAllProvider GetFixAllProvider()
         {
@@ -43,49 +41,36 @@ namespace Weingartner.Json.Migration.Roslyn
             // Register a code action that will invoke the fix.
             context.RegisterCodeFix(
                 CodeAction.Create(
-                    title: title,
-                    createChangedSolution: c => FixMigrationHash(context.Document, declaration, c),
-                    equivalenceKey: title),
+                    title: Title,
+                    createChangedDocument: c => FixMigrationHash(context.Document, declaration, c),
+                    equivalenceKey: Title),
                 diagnostic);
         }
 
-        private async Task<Solution> FixMigrationHash(Document document, TypeDeclarationSyntax typeDecl, CancellationToken cancellationToken)
+        private static async Task<Document> FixMigrationHash(Document document, TypeDeclarationSyntax typeDecl, CancellationToken ct)
         {
-            var migrationHashCalculated = WeingartnerJsonMigrationRoslynAnalyzer.GetMigrationHashFromType(typeDecl);
+            var semanticModel = await document.GetSemanticModelAsync(ct);
+            var dataMemberAttributeType =
+                semanticModel.Compilation.GetTypeByMetadataName(Constants.DataMemberAttributeMetadataName);
+            var migratableAttributeType =
+                semanticModel.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
 
-            var node = CreateMigratableAttribute(migrationHashCalculated);
+            var migrationHashCalculated = MigrationHashHelper.GetMigrationHashFromType(typeDecl, ct, semanticModel, dataMemberAttributeType);
 
-            var attr = WeingartnerJsonMigrationRoslynAnalyzer
-                .MigratableAttributes(typeDecl)
-                .First();
+            var node = CreateMigratableAttribute(migratableAttributeType, migrationHashCalculated);
 
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var attr = MigrationHashHelper.GetAttribute(typeDecl, migratableAttributeType, semanticModel, ct);
+
+            var root = await document.GetSyntaxRootAsync(ct);
             var newRoot = root.ReplaceNode(attr, node);
-            return document.WithSyntaxRoot(newRoot).Project.Solution;
+            return document.WithSyntaxRoot(newRoot);
         }
 
-        private AttributeSyntax CreateMigratableAttribute(string migrationHashCalculated)
+        private static AttributeSyntax CreateMigratableAttribute(ISymbol migratableAttributeType, string migrationHashCalculated)
         {
-            return SyntaxFactory.Attribute(
-                                        SyntaxFactory.IdentifierName(
-                                            @"Migratable"))
-                                    .WithArgumentList(
-                                        SyntaxFactory.AttributeArgumentList(
-                                            SyntaxFactory.SingletonSeparatedList<AttributeArgumentSyntax>(
-                                                SyntaxFactory.AttributeArgument(
-                                                    SyntaxFactory.LiteralExpression(
-                                                        SyntaxKind.StringLiteralExpression,
-                                                        SyntaxFactory.Literal(
-                                                            SyntaxFactory.TriviaList(),
-                                                            $@"""{migrationHashCalculated}""",
-                                                            $@"""{migrationHashCalculated}""",
-                                                            SyntaxFactory.TriviaList())))))
-                                        .WithOpenParenToken(
-                                            SyntaxFactory.Token(
-                                                SyntaxKind.OpenParenToken))
-                                        .WithCloseParenToken(
-                                            SyntaxFactory.Token(
-                                                SyntaxKind.CloseParenToken)));
+            return SyntaxFactory
+                .Attribute(SyntaxFactory.IdentifierName(Regex.Replace(migratableAttributeType.Name, "Attribute$", "")))
+                .WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($@"(""{migrationHashCalculated}"")"));
         }
     }
 }
