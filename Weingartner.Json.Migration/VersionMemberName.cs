@@ -31,28 +31,11 @@ namespace Weingartner.Json.Migration
 
         private static IReadOnlyList<MigrationMethod> ParseMigrationMethods(IEnumerable<MethodInfo> methods)
         {
-            var migrationMethods = methods
+            return methods
                 .Select(GetMigrationMethod)
                 .Where(x => x != null)
                 .OrderBy(m => m.ToVersion)
                 .ToList();
-
-            if (migrationMethods.Count == 0)
-                return migrationMethods;
-
-            var firstVersion = migrationMethods[0];
-            if (firstVersion.ToVersion != 1)
-                throw new MigrationException($"Migrations must start with '{MigrationMethod.NamePrefix}1. but starts with '{firstVersion.Name}");
-
-            var isNonConsecutive = migrationMethods
-                .Select((i, j) => i.ToVersion - j)
-                .Distinct()
-                .Skip(1)
-                .Any();
-            if (isNonConsecutive)
-                throw new MigrationException($"Migrations must be consecutive but got versions {string.Join(", ", migrationMethods.Select(m => m.ToVersion))}");
-
-            return migrationMethods;
         }
 
         public static MigrationMethod GetMigrationMethod(MethodInfo method)
@@ -79,25 +62,23 @@ namespace Weingartner.Json.Migration
 
         public static IEnumerable<MigrationMethod> GetAndVerifyMigrationMethods(Type type)
         {
-            var migrationMethodVerifier = new MigrationMethodVerifier(IsSuperType);
+            var migrationMethodVerifier = new MigrationMethodVerifier(CanAssign);
 
             var migrationMethods = ParseMigrationMethods(type.GetTypeInfo().DeclaredMethods);
-
-            migrationMethods
-                .Select(x => new { MigrationMethod = x, x.ReturnType })
-                .StartWith(new { MigrationMethod = (MigrationMethod) null, ReturnType = (SimpleType) null })
-                .Buffer(2, 1)
-                .Where(l => l.Count == 2)
-                .ForEach(l => migrationMethodVerifier.VerifyMigrationMethodSignature(l[1].MigrationMethod, l[0].ReturnType));
+            var invalidMethod = migrationMethodVerifier.VerifyMigrationMethods(migrationMethods);
+            foreach (var method in invalidMethod)
+            {
+                method.ThrowIfInvalid();
+            }
 
             return migrationMethods;
         }
 
-        public static bool IsSuperType(SimpleType baseType, SimpleType derivedType)
+        public static bool CanAssign(SimpleType srcType, SimpleType targetType)
         {
-            var baseTypeInfo = Type.GetType(baseType.AssemblyQualifiedName).GetTypeInfo();
-            var derivedTypeInfo = Type.GetType(derivedType.AssemblyQualifiedName).GetTypeInfo();
-            return baseTypeInfo.IsAssignableFrom(derivedTypeInfo);
+            var srcTypeInfo = Type.GetType(srcType.AssemblyQualifiedName).GetTypeInfo();
+            var targetTypeInfo = Type.GetType(targetType.AssemblyQualifiedName).GetTypeInfo();
+            return targetTypeInfo.IsAssignableFrom(srcTypeInfo);
         }
     }
 }

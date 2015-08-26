@@ -40,8 +40,9 @@ namespace Weingartner.Json.Migration.Spec
         public void VerifyMigrationMethodShouldWork()
         {
             var method = typeof (TypeWithMigrationMethod0).GetMethod("Migrate_0", BindingFlags.NonPublic | BindingFlags.Static);
-            new MigrationMethodVerifier(VersionMemberName.IsSuperType)
+            var verificationResult = new MigrationMethodVerifier(VersionMemberName.CanAssign)
                 .VerifyMigrationMethodSignature(VersionMemberName.GetMigrationMethod(method), null);
+            verificationResult.Should().Be(VerificationResultEnum.Ok);
         }
     }
 
