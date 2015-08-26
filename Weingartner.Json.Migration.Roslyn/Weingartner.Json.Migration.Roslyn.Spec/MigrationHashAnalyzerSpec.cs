@@ -1,16 +1,16 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Globalization;
 using TestHelper;
+using Xunit;
 
 namespace Weingartner.Json.Migration.Roslyn.Test
 {
-    [TestClass]
-    public class AnalyserSpec : CodeFixVerifier
+    public class MigrationHashAnalyzerSpec : CodeFixVerifier
     {
-        [TestMethod]
+        [Fact]
         public void ShouldNotCreateDiagnosticIfTypeIsNotMigratable()
         {
             var source = @"
@@ -23,33 +23,55 @@ class TypeName
             VerifyCSharpDiagnostic(source);
         }
 
-        [TestMethod]
+        [Fact]
         public void ShouldCreateDiagnosticIfNoHashIsSpecified()
         {
             var source = @"
 using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
 
 [Migratable("""")]
+[DataContract]
 class TypeName
 {
+    [DataMember]
+    public int A { get; set; }
 }";
             var expected = new DiagnosticResult
             {
                 Id = MigrationHashAnalyzer.DiagnosticId,
-                Message = string.Format(MigrationHashAnalyzer.MessageFormat.ToString(CultureInfo.InvariantCulture), "TypeName", "23"),
+                Message = string.Format(MigrationHashAnalyzer.MessageFormat.ToString(CultureInfo.InvariantCulture), "TypeName", "758832573"),
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                     new[] {
-                            new DiagnosticResultLocation("Test0.cs", 4, 7)
+                            new DiagnosticResultLocation("Test0.cs", 5, 7)
                         }
             };
 
             VerifyCSharpDiagnostic(source, expected);
         }
 
+        [Fact]
+        public void ShouldNotCreateDiagnosticIfCorrectHashIsSpecified()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""758832573"")]
+[DataContract]
+class TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+}";
+
+            VerifyCSharpDiagnostic(source);
+        }
+
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new MigrationHashAnalyzerCodeFixProvider();
+            throw new NotImplementedException();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()

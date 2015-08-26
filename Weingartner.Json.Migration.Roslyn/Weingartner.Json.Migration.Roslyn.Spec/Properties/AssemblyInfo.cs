@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Weingartner.Json.Migration.Roslyn.Test")]
+[assembly: AssemblyTitle("Weingartner.Json.Migration.Roslyn.Spec")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Hewlett-Packard Company")]
-[assembly: AssemblyProduct("Weingartner.Json.Migration.Roslyn.Test")]
+[assembly: AssemblyProduct("Weingartner.Json.Migration.Roslyn.Spec")]
 [assembly: AssemblyCopyright("Copyright © Hewlett-Packard Company 2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

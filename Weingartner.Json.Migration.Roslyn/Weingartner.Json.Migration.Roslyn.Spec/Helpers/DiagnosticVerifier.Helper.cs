@@ -25,6 +25,7 @@ namespace TestHelper
         private static readonly MetadataReference SystemRuntimeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Runtime, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a").Location);
         private static readonly MetadataReference MigrationReference = MetadataReference.CreateFromFile(typeof(MigratableAttribute).Assembly.Location);
         private static readonly MetadataReference SerializationReference = MetadataReference.CreateFromFile(typeof(DataMemberAttribute).Assembly.Location);
+        private static readonly MetadataReference JsonNetReference = MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonConvert).Assembly.Location);
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -161,7 +162,8 @@ namespace TestHelper
                 .AddMetadataReference(projectId, CodeAnalysisReference)
                 .AddMetadataReference(projectId, SystemRuntimeReference)
                 .AddMetadataReference(projectId, MigrationReference)
-                .AddMetadataReference(projectId, SerializationReference);
+                .AddMetadataReference(projectId, SerializationReference)
+                .AddMetadataReference(projectId, JsonNetReference);
 
             int count = 0;
             foreach (var source in sources)
