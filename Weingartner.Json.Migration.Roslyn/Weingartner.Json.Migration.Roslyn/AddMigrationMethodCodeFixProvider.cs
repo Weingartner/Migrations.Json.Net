@@ -82,6 +82,7 @@ namespace Weingartner.Json.Migration.Roslyn
             var methodDecl =
                 $"private static JToken Migrate_{toVersion}" +
                 $"({dataArgumentTypeName} data, JsonSerializer serializer) {{\r\n" +
+                "throw new System.NotImplementedException();\r\n" +
                 "return data;\r\n" +
                 "}";
 
