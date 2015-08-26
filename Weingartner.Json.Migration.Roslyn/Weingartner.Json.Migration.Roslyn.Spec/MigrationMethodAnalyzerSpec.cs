@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using TestHelper;
 using Xunit;
 
-namespace Weingartner.Json.Migration.Roslyn.Test
+namespace Weingartner.Json.Migration.Roslyn.Spec
 {
     public class MigrationMethodAnalyzerSpec : CodeFixVerifier
     {

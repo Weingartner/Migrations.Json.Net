@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Globalization;
 using TestHelper;
 using Xunit;
 
-namespace Weingartner.Json.Migration.Roslyn.Test
+namespace Weingartner.Json.Migration.Roslyn.Spec
 {
     public class MigrationHashAnalyzerSpec : CodeFixVerifier
     {
