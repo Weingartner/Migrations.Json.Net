@@ -22,6 +22,8 @@
         </dependencies>
     </metadata>
     <files>
+        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.Common.dll" target="lib\net45" />
+        <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.Common.pdb" target="lib\net45" />
         <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.dll" target="lib\net45" />
         <file src="..\Weingartner.Json.Migration\bin\Release\Weingartner.Json.Migration.pdb" target="lib\net45" />
     </files>
