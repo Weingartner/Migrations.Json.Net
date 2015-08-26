@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -13,14 +10,14 @@ namespace Weingartner.Json.Migration.Roslyn
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class DataContractAnalyzer : DiagnosticAnalyzer
     {
-        private const string DiagnosticId = "DataContractAnalyzer";
+        public const string DiagnosticId = "DataContractAnalyzer";
         private static readonly LocalizableString Title = "Migratable type should have `DataContract` and `DataMember` attributes";
-        private static readonly LocalizableString MessageFormat = "Type '{0}' is migratable but is missing either `DataContract` or `DataMember` attributes.";
+        public static readonly LocalizableString MessageFormat = "Type '{0}' is migratable but is missing either `DataContract` or `DataMember` attributes.";
         private const string Category = "DataMigration";
 
-        private static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, true);
+        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, true);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -45,15 +42,19 @@ namespace Weingartner.Json.Migration.Roslyn
             var ct = context.CancellationToken;
 
             var isMigratable = MigrationHashHelper.HasAttribute(typeDecl, migratableAttributeType, semanticModel, ct);
-            var isDataContract = MigrationHashHelper.HasAttribute(typeDecl, dataContractAttributeType, semanticModel, ct);
-            var hasDataMember = typeDecl.DescendantNodes().OfType<PropertyDeclarationSyntax>()
-                .Any(propDecl => MigrationHashHelper.HasAttribute(propDecl, dataMemberAttributeType, semanticModel, ct));
-            
-            if (isMigratable && (!isDataContract || !hasDataMember))
+            if (!isMigratable) return;
+
+            if (dataContractAttributeType != null && dataMemberAttributeType != null)
             {
-                var diagnostic = Diagnostic.Create(Rule, typeDecl.GetLocation(), typeDecl.Identifier.ToString());
-                context.ReportDiagnostic(diagnostic);
+                var isDataContract = MigrationHashHelper.HasAttribute(typeDecl, dataContractAttributeType, semanticModel, ct);
+                var hasDataMember = typeDecl.DescendantNodes().OfType<PropertyDeclarationSyntax>()
+                    .Any(propDecl => MigrationHashHelper.HasAttribute(propDecl, dataMemberAttributeType, semanticModel, ct));
+
+                if (isDataContract && hasDataMember) return;
             }
+
+            var diagnostic = Diagnostic.Create(Rule, typeDecl.GetLocation(), typeDecl.Identifier.ToString());
+            context.ReportDiagnostic(diagnostic);
         }
     }
 }
