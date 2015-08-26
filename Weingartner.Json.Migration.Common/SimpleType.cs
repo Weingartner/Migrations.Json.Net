@@ -14,6 +14,6 @@ namespace Weingartner.Json.Migration.Common
         public string FullName { get; }
         public AssemblyName AssemblyName { get; }
         public string AssemblyQualifiedName => $"{FullName}, {AssemblyName}";
-        public object Name => FullName.Substring(FullName.LastIndexOf(".", StringComparison.Ordinal) + 1);
+        public string Name => FullName.Substring(FullName.LastIndexOf(".", StringComparison.Ordinal) + 1);
     }
 }

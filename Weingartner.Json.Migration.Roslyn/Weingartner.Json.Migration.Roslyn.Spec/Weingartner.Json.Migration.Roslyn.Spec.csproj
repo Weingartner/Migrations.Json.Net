@@ -133,6 +133,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj">
+      <Project>{0D86E99D-BCEA-458B-8D72-1B25DA48174A}</Project>
+      <Name>Weingartner.Json.Migration.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Weingartner.Json.Migration\Weingartner.Json.Migration.csproj">
       <Project>{A3C46398-1E1D-4261-97F0-487D7FFAC49C}</Project>
       <Name>Weingartner.Json.Migration</Name>

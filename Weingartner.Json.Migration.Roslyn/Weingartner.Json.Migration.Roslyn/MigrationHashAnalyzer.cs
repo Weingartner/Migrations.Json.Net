@@ -43,7 +43,7 @@ namespace Weingartner.Json.Migration.Roslyn
             context.RegisterCompilationStartAction(OnCompilationStart);
         }
 
-        private void OnCompilationStart(CompilationStartAnalysisContext context)
+        private static void OnCompilationStart(CompilationStartAnalysisContext context)
         {
             var migratableAttributeType = context.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
             var dataMemberAttributeType = context.Compilation.GetTypeByMetadataName(Constants.DataMemberAttributeMetadataName);
@@ -52,10 +52,6 @@ namespace Weingartner.Json.Migration.Roslyn
                 context.RegisterSyntaxNodeAction(nodeContext => AnalyzeCall(nodeContext, migratableAttributeType, dataMemberAttributeType), SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration);
             }
         }
-
-        // TODO create diagnostic if dataContractAttributeType is null
-        // TODO create diagnostic if dataMemberAttributeType is null
-        // TODO create diagnostic if dataContractAttribute is not set
 
         private static void AnalyzeCall(SyntaxNodeAnalysisContext context, ISymbol migratableAttributeType, ISymbol dataMemberAttributeType)
         {

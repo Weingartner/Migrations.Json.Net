@@ -37,6 +37,7 @@
     <Compile Include="DataContractAnalyzer.cs" />
     <Compile Include="MigrationHashAnalyzer.cs" />
     <Compile Include="MigrationHashHelper.cs" />
+    <Compile Include="MigrationMethodAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -113,6 +114,12 @@
       <HintPath>..\..\packages\System.Reflection.Metadata.1.0.21\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
       <Private>False</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj">
+      <Project>{0D86E99D-BCEA-458B-8D72-1B25DA48174A}</Project>
+      <Name>Weingartner.Json.Migration.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\v4.6\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
