@@ -1,9 +1,13 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration.Roslyn
 {
@@ -66,6 +70,55 @@ namespace Weingartner.Json.Migration.Roslyn
                     var typeSymbol = ctorSymbol?.ContainingSymbol;
                     return typeSymbol?.Equals(attributeType) ?? false;
                 });
+        }
+
+        public static IReadOnlyList<MigrationMethod> GetMigrationMethods(ITypeSymbol typeSymbol)
+        {
+            return typeSymbol.GetMembers()
+                .OfType<IMethodSymbol>()
+                .Select(m =>
+                {
+                    var declaringType = new SimpleType(m.ContainingType.ToString(),
+                        new AssemblyName(m.ContainingType.ContainingAssembly.ToString()));
+                    var parameters = m.Parameters
+                        .Select(p =>
+                        {
+                            var parameterType = new SimpleType(p.Type.ToString(),
+                                new AssemblyName(p.Type.ContainingAssembly.ToString()));
+                            return new MethodParameter(parameterType);
+                        })
+                        .ToList();
+                    var returnType = new SimpleType(m.ReturnType.ToString(),
+                        new AssemblyName(m.ReturnType.ContainingAssembly.ToString()));
+                    return MigrationMethod.TryParse(declaringType, parameters, returnType, m.Name);
+                })
+                .Where(m => m != null)
+                .OrderBy(m => m.ToVersion)
+                .ToList();
+        }
+
+        public static TypeDeclarationSyntax UpdateMigrationHash(TypeDeclarationSyntax typeDecl, CancellationToken ct,
+            SemanticModel semanticModel)
+        {
+            var dataMemberAttributeType =
+                semanticModel.Compilation.GetTypeByMetadataName(Constants.DataMemberAttributeMetadataName);
+            var migratableAttributeType =
+                semanticModel.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
+
+            var migrationHashCalculated = GetMigrationHashFromType(typeDecl, ct, semanticModel,
+                dataMemberAttributeType);
+
+            var node = CreateMigratableAttribute(migratableAttributeType, migrationHashCalculated);
+
+            var attr = GetAttribute(typeDecl, migratableAttributeType, semanticModel, ct);
+            return typeDecl.ReplaceNode(attr, node);
+        }
+
+        private static AttributeSyntax CreateMigratableAttribute(ISymbol migratableAttributeType, string migrationHashCalculated)
+        {
+            return SyntaxFactory
+                .Attribute(SyntaxFactory.IdentifierName(Regex.Replace(migratableAttributeType.Name, "Attribute$", "")))
+                .WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($@"(""{migrationHashCalculated}"")"));
         }
     }
 }

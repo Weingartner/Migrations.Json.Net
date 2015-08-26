@@ -32,7 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CodeFixProvider.cs" />
+    <Compile Include="CorrectMigrationHashCodeFixProvider.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DataContractAnalyzer.cs" />
     <Compile Include="MigrationHashAnalyzer.cs" />

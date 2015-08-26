@@ -50,27 +50,11 @@ namespace Weingartner.Json.Migration.Roslyn
         private static async Task<Document> FixMigrationHash(Document document, TypeDeclarationSyntax typeDecl, CancellationToken ct)
         {
             var semanticModel = await document.GetSemanticModelAsync(ct);
-            var dataMemberAttributeType =
-                semanticModel.Compilation.GetTypeByMetadataName(Constants.DataMemberAttributeMetadataName);
-            var migratableAttributeType =
-                semanticModel.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
-
-            var migrationHashCalculated = MigrationHashHelper.GetMigrationHashFromType(typeDecl, ct, semanticModel, dataMemberAttributeType);
-
-            var node = CreateMigratableAttribute(migratableAttributeType, migrationHashCalculated);
-
-            var attr = MigrationHashHelper.GetAttribute(typeDecl, migratableAttributeType, semanticModel, ct);
+            var newTypeDecl = MigrationHashHelper.UpdateMigrationHash(typeDecl, ct, semanticModel);
 
             var root = await document.GetSyntaxRootAsync(ct);
-            var newRoot = root.ReplaceNode(attr, node);
+            var newRoot = root.ReplaceNode(typeDecl, newTypeDecl);
             return document.WithSyntaxRoot(newRoot);
-        }
-
-        private static AttributeSyntax CreateMigratableAttribute(ISymbol migratableAttributeType, string migrationHashCalculated)
-        {
-            return SyntaxFactory
-                .Attribute(SyntaxFactory.IdentifierName(Regex.Replace(migratableAttributeType.Name, "Attribute$", "")))
-                .WithArgumentList(SyntaxFactory.ParseAttributeArgumentList($@"(""{migrationHashCalculated}"")"));
         }
     }
 }
