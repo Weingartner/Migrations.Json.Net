@@ -18,15 +18,20 @@ namespace Weingartner.Json.Migration
             _Inner = inner;
         }
 
-        public JToken TryMigrate(JToken serializedData, Type unserializedDataType, JsonSerializer serializer)
+        public Tuple<JToken,bool> TryMigrate(JToken serializedData, Type unserializedDataType, JsonSerializer serializer)
         {
             var migratedData = _Inner.TryMigrate(serializedData, unserializedDataType, serializer);
             if (!IsVerifying)
             {
                 try
                 {
-                    IsVerifying = true;
-                    VerifyMigration(migratedData, unserializedDataType, serializer);
+                    // Only verify if a migration took place. 
+                    // Otherwise assume the data is ok ( verification is slow )
+                    if (migratedData.Item2)
+                    {
+                        IsVerifying = true;
+                        VerifyMigration(migratedData.Item1, unserializedDataType, serializer);
+                    }
                 }
                 finally
                 {

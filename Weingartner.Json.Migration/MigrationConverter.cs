@@ -41,7 +41,7 @@ namespace Weingartner.Json.Migration
             try
             {
                 _MigratedTypes.Value[objectType] = true;
-                return serializer.Deserialize(migratedData.CreateReader(), objectType);
+                return serializer.Deserialize(migratedData.Item1.CreateReader(), objectType);
             }
             finally
             {

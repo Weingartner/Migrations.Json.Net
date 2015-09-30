@@ -30,7 +30,8 @@ namespace Weingartner.Json.Migration.Spec
             var sut = CreateMigrator();
             var result = sut.TryMigrate(configData, typeof(FixtureData), Serializer);
 
-            result["Name"].Value<string>().Should().Be(expectedName);
+            result.Item2.Should().BeTrue();
+            result.Item1["Name"].Value<string>().Should().Be(expectedName);
         }
 
         [Fact]
@@ -41,7 +42,7 @@ namespace Weingartner.Json.Migration.Spec
             var sut = CreateMigrator();
             var result = sut.TryMigrate(configData, typeof(FixtureData2), Serializer);
 
-            result.Should().BeOfType<JObject>();
+            result.Item1.Should().BeOfType<JObject>();
         }
 
         [Fact]
@@ -52,7 +53,8 @@ namespace Weingartner.Json.Migration.Spec
             var sut = CreateMigrator();
             var result = sut.TryMigrate(configData, typeof(FixtureData), Serializer);
 
-            result[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
+            result.Item2.Should().BeTrue();
+            result.Item1[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
         }
 
         [Fact]
@@ -101,7 +103,8 @@ namespace Weingartner.Json.Migration.Spec
 
             var sut = CreateMigrator();
             var result = sut.TryMigrate(configData, typeof(NotMigratableData), Serializer);
-            result.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
+            result.Item2.Should().BeFalse();
+            result.Item1.Should().Match((JToken p) => JToken.DeepEquals(p, origConfigData));
         }
 
         [Fact]
@@ -121,8 +124,9 @@ namespace Weingartner.Json.Migration.Spec
 
             var sut = CreateMigrator();
             var result = sut.TryMigrate(configData, typeof (ArrayFixtureData), Serializer);
-            result["Name"].ToString().Should().Be("Brad");
-            result["Data"].ToList().Should().BeEquivalentTo(ints.Select(i=>JToken.FromObject(i)));
+            result.Item2.Should().BeTrue();
+            result.Item1["Name"].ToString().Should().Be("Brad");
+            result.Item1["Data"].ToList().Should().BeEquivalentTo(ints.Select(i=>JToken.FromObject(i)));
         }
 
         // ReSharper disable UnusedMember.Local

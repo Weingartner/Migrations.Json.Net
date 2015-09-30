@@ -22,13 +22,13 @@ namespace Weingartner.Json.Migration
         /// <param name="unserializedDataType"></param>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        public TSerializedData TryMigrate(TSerializedData serializedData, Type unserializedDataType, JsonSerializer serializer)
+        public Tuple<TSerializedData,bool> TryMigrate(TSerializedData serializedData, Type unserializedDataType, JsonSerializer serializer)
         {
             if (serializedData == null) throw new ArgumentNullException(nameof(serializedData));
             if (unserializedDataType == null) throw new ArgumentNullException(nameof(unserializedDataType));
 
             var migrationSettings = unserializedDataType.GetTypeInfo().GetCustomAttribute<MigratableAttribute>();
-            if (migrationSettings == null) return serializedData;
+            if (migrationSettings == null) return Tuple.Create(serializedData, false);
 
 
             var version = _VersionExtractor.GetVersion(serializedData);
@@ -50,6 +50,8 @@ namespace Weingartner.Json.Migration
             var migrationMethods = allMigrationMethods
                 .SkipWhile(m => m.ToVersion <= version)
                 .ToList();
+
+            var migrated = migrationMethods.Count > 0;
             
             serializedData = migrationMethods
                 .Select(m => unserializedDataType.GetTypeInfo().GetDeclaredMethod(m.Name))
@@ -57,7 +59,7 @@ namespace Weingartner.Json.Migration
 
             _VersionExtractor.SetVersion(serializedData, maxSupportedVersion);
 
-            return serializedData;
+            return Tuple.Create(serializedData, migrated);
         }
 
         protected TSerializedData ExecuteMigration(MethodInfo method, TSerializedData data, JsonSerializer serializer)
