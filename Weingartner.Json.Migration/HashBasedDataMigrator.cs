@@ -15,6 +15,8 @@ namespace Weingartner.Json.Migration
             _VersionExtractor = versionExtractor;
         }
 
+
+
         /// <summary>
         /// Try to migrate the serialized data to a newer version using migration methods from type unserializedDataType.
         /// </summary>
@@ -27,7 +29,7 @@ namespace Weingartner.Json.Migration
             if (serializedData == null) throw new ArgumentNullException(nameof(serializedData));
             if (unserializedDataType == null) throw new ArgumentNullException(nameof(unserializedDataType));
 
-            var migrationSettings = unserializedDataType.GetTypeInfo().GetCustomAttribute<MigratableAttribute>();
+            var migrationSettings = unserializedDataType.GetCustomAttribute<MigratableAttribute>();
             if (migrationSettings == null) return Tuple.Create(serializedData, false);
 
 
@@ -54,7 +56,7 @@ namespace Weingartner.Json.Migration
             var migrated = migrationMethods.Count > 0;
             
             serializedData = migrationMethods
-                .Select(m => unserializedDataType.GetTypeInfo().GetDeclaredMethod(m.Name))
+                .Select(m => unserializedDataType.GetDeclaredMethod(m.Name))
                 .Aggregate(serializedData, (data, method) => ExecuteMigration(method, data, serializer));
 
             _VersionExtractor.SetVersion(serializedData, maxSupportedVersion);

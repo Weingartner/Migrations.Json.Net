@@ -18,7 +18,7 @@ namespace Weingartner.Json.Migration.Common
             _CanAssign = canAssign;
         }
 
-        public IEnumerable<VerificationResult> VerifyMigrationMethods(IReadOnlyList<MigrationMethod> migrationMethods)
+        public IEnumerable<VerificationResult> VerifyMigrationMethods(IList<MigrationMethod> migrationMethods)
         {
             var firstVersion = migrationMethods.FirstOrDefault()?.ToVersion ?? 1;
             if (firstVersion != 1)

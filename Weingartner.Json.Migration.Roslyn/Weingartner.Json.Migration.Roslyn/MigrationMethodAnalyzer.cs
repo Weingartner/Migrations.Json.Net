@@ -46,7 +46,7 @@ namespace Weingartner.Json.Migration.Roslyn
 
             var typeSymbol = context.SemanticModel.GetDeclaredSymbol(typeDeclaration, ct);
             var verifier = new MigrationMethodVerifier(CanAssign(context));
-            var migrationMethods = MigrationHashHelper.GetMigrationMethods(typeSymbol);
+            var migrationMethods = MigrationHashHelper.GetMigrationMethods(typeSymbol).ToList();
 
             var invalidMethods = verifier.VerifyMigrationMethods(migrationMethods)
                 .Where(x => x.Result != VerificationResultEnum.Ok);

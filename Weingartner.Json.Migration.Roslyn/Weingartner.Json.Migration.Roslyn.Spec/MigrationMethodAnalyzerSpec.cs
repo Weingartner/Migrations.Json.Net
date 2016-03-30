@@ -33,7 +33,7 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private JToken Migrate_2(JToken data, JsonSerializer serializer) { }
+    private JToken Migrate_2(JToken data, JsonSerializer serializer) { return data; }
 }";
             
             var expected = new DiagnosticResult

@@ -19,6 +19,8 @@ namespace TestHelper
     public abstract partial class DiagnosticVerifier
     {
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+        //private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(Assembly.Load("mscorlib, Version=2.0.5.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e, Retargetable=Yes").Location);
+        private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(typeof(System.Uri).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
@@ -157,6 +159,7 @@ namespace TestHelper
                 .CurrentSolution
                 .AddProject(projectId, TestProjectName, TestProjectName, language)
                 .AddMetadataReference(projectId, CorlibReference)
+                .AddMetadataReference(projectId, SystemReference)
                 .AddMetadataReference(projectId, SystemCoreReference)
                 .AddMetadataReference(projectId, CSharpSymbolsReference)
                 .AddMetadataReference(projectId, CodeAnalysisReference)
@@ -164,6 +167,12 @@ namespace TestHelper
                 .AddMetadataReference(projectId, MigrationReference)
                 .AddMetadataReference(projectId, SerializationReference)
                 .AddMetadataReference(projectId, JsonNetReference);
+            var compilationOptions = solution
+                .GetProject(projectId)
+                .CompilationOptions
+                .WithOutputKind(OutputKind.DynamicallyLinkedLibrary);
+            solution = solution
+                .WithProjectCompilationOptions(projectId, compilationOptions);
 
             int count = 0;
             foreach (var source in sources)
