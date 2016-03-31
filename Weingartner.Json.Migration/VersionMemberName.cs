@@ -29,7 +29,7 @@ namespace Weingartner.Json.Migration
                 .Max();
         }
 
-        private static IList<MigrationMethod> ParseMigrationMethods(IEnumerable<MethodInfo> methods)
+        private static IReadOnlyList<MigrationMethod> ParseMigrationMethods(IEnumerable<MethodInfo> methods)
         {
             return methods
                 .Select(GetMigrationMethod)
@@ -50,21 +50,21 @@ namespace Weingartner.Json.Migration
 
         private static string GetTypeName(Type type)
         {
-            return type.IsGenericType
+            return type.GetTypeInfo().IsGenericType
                 ? type.GetGenericTypeDefinition().FullName
-                : type.FullName;
+                : type.GetTypeInfo().FullName;
         }
 
         private static AssemblyName GetAssemblyName(Type type)
         {
-            return new AssemblyName(type.Assembly.FullName);
+            return type.GetTypeInfo().Assembly.GetName();
         }
 
         public static IEnumerable<MigrationMethod> GetAndVerifyMigrationMethods(Type type)
         {
             var migrationMethodVerifier = new MigrationMethodVerifier(CanAssign);
 
-            var migrationMethods = ParseMigrationMethods(type.GetDeclaredMethods());
+            var migrationMethods = ParseMigrationMethods(type.GetTypeInfo().DeclaredMethods);
             var invalidMethod = migrationMethodVerifier.VerifyMigrationMethods(migrationMethods);
             foreach (var method in invalidMethod)
             {
@@ -76,8 +76,8 @@ namespace Weingartner.Json.Migration
 
         public static bool CanAssign(SimpleType srcType, SimpleType targetType)
         {
-            var srcTypeInfo = Type.GetType(srcType.AssemblyQualifiedName);
-            var targetTypeInfo = Type.GetType(targetType.AssemblyQualifiedName);
+            var srcTypeInfo = Type.GetType(srcType.AssemblyQualifiedName).GetTypeInfo();
+            var targetTypeInfo = Type.GetType(targetType.AssemblyQualifiedName).GetTypeInfo();
             return targetTypeInfo.IsAssignableFrom(srcTypeInfo);
         }
     }

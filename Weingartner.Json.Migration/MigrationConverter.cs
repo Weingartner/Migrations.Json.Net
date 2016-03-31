@@ -29,7 +29,7 @@ namespace Weingartner.Json.Migration
         public override bool CanConvert(Type objectType)
         {
             var isMigrated = GetOrDefault(_MigratedTypes.Value, objectType, false);
-            var isMigratable = objectType.GetCustomAttribute<MigratableAttribute>() != null;
+            var isMigratable = objectType.GetTypeInfo().GetCustomAttribute<MigratableAttribute>() != null;
             return !isMigrated && isMigratable;
         }
 

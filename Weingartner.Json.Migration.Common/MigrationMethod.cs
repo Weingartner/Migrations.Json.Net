@@ -8,7 +8,7 @@ namespace Weingartner.Json.Migration.Common
         public const string NamePrefix = "Migrate_";
         private static readonly Regex MigrationMethodPattern = new Regex($@"^{NamePrefix}(?<toVersion>\d+)$");
 
-        public static MigrationMethod TryParse(SimpleType declaringType, IList<MethodParameter> parameters,
+        public static MigrationMethod TryParse(SimpleType declaringType, IReadOnlyList<MethodParameter> parameters,
             SimpleType returnType, string name)
         {
             var match = MigrationMethodPattern.Match(name);
@@ -18,7 +18,7 @@ namespace Weingartner.Json.Migration.Common
             return new MigrationMethod(declaringType, parameters, returnType, toVersion);
         }
 
-        private MigrationMethod(SimpleType declaringType, IList<MethodParameter> parameters,
+        private MigrationMethod(SimpleType declaringType, IReadOnlyList<MethodParameter> parameters,
             SimpleType returnType, int toVersion)
         {
             Parameters = parameters;
@@ -29,7 +29,7 @@ namespace Weingartner.Json.Migration.Common
 
         public SimpleType ReturnType { get; }
         public int ToVersion { get; }
-        public IList<MethodParameter> Parameters { get; }
+        public IReadOnlyList<MethodParameter> Parameters { get; }
         public SimpleType DeclaringType { get; }
         public string Name => NamePrefix + ToVersion;
         public string FullName => $"{DeclaringType.Name}.{NamePrefix}{ToVersion}";
