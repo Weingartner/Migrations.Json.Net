@@ -8,7 +8,9 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using FluentAssertions;
 using Weingartner.Json.Migration;
+using Xunit;
 
 namespace TestHelper
 {
@@ -182,7 +184,10 @@ namespace TestHelper
                 solution = solution.AddDocument(documentId, newFileName, SourceText.From(source));
                 count++;
             }
-            return solution.GetProject(projectId);
+            var project = solution.GetProject(projectId);
+            var diangostics = project.GetCompilationAsync().Result.GetDiagnostics();
+            diangostics.Should().BeEmpty();
+            return project;
         }
         #endregion
     }

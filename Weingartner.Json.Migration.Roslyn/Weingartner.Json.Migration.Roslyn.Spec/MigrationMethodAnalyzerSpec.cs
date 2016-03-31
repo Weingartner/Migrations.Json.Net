@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Newtonsoft.Json.Linq;
 using TestHelper;
 using Weingartner.Json.Migration.Common;
 using Xunit;
@@ -58,10 +59,10 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private JToken Migrate_1(JToken data, JsonSerializer serializer) { }
-    private JToken Migrate_3(JToken data, JsonSerializer serializer) { }
-    private JToken Migrate_4(JToken data, JsonSerializer serializer) { }
-    private JToken Migrate_6(JToken data, JsonSerializer serializer) { }
+    private JToken Migrate_1(JToken data, JsonSerializer serializer) { return data; }
+    private JToken Migrate_3(JToken data, JsonSerializer serializer) { return data; }
+    private JToken Migrate_4(JToken data, JsonSerializer serializer) { return data; }
+    private JToken Migrate_6(JToken data, JsonSerializer serializer) { return data; }
 }";
 
             var expected = new[] {
@@ -95,7 +96,7 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private JToken Migrate_1(string data, JsonSerializer serializer) { }
+    private JToken Migrate_1(string data, JsonSerializer serializer) { return data; }
 }";
 
             var expected = new DiagnosticResult
@@ -120,8 +121,8 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private JToken Migrate_1(JToken data) { }
-    private JToken Migrate_2(JToken data, JsonSerializer serializer, object additionalData) { }
+    private JToken Migrate_1(JToken data) { return data; }
+    private JToken Migrate_2(JToken data, JsonSerializer serializer, object additionalData) { return data; }
 }";
 
             var expected = new[] {
@@ -155,11 +156,10 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private JObject Migrate_1(JToken data, JsonSerializer serializer) { }
-    private JToken Migrate_2(JArray data, JsonSerializer serializer) { }
-    private JToken Migrate_3(JObject data, JsonSerializer serializer) { }
+    private JObject Migrate_1(JToken data, JsonSerializer serializer) { return (JObject)data; }
+    private JToken Migrate_2(JArray data, JsonSerializer serializer) { return data; }
+    private JToken Migrate_3(JObject data, JsonSerializer serializer) { return data; }
 }";
-
             var expected = new[] {
                 new DiagnosticResult
                 {
@@ -185,13 +185,12 @@ class TypeName
         {
             var source = @"
 using Weingartner.Json.Migration;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 [Migratable("""")]
 class TypeName
 {
-    private JToken Migrate_1(JToken data, string serializer) { }
+    private JToken Migrate_1(JToken data, string serializer) { return data; }
 }";
 
             var expected = new DiagnosticResult
@@ -199,7 +198,7 @@ class TypeName
                 Id = MigrationMethodAnalyzer.DiagnosticId,
                 Message = string.Format(MigrationMethodAnalyzer.MessageFormat.ToString(CultureInfo.InvariantCulture), "Migrate_1", "TypeName", VerificationResultEnum.SecondArgumentMustBeAssignableToJsonSerializer),
                 Severity = DiagnosticSeverity.Error,
-                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 9, 20) }
+                Locations = new[] { new DiagnosticResultLocation("Test0.cs", 8, 20) }
             };
 
             VerifyCSharpDiagnostic(source, expected);
@@ -216,7 +215,7 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private string Migrate_1(JToken data, JsonSerializer serializer) { }
+    private string Migrate_1(JToken data, JsonSerializer serializer) { return """"; }
 }";
 
             var expected = new DiagnosticResult
@@ -241,13 +240,13 @@ using Newtonsoft.Json.Linq;
 [Migratable("""")]
 class TypeName
 {
-    private JArray Migrate_1(JObject data, JsonSerializer serializer) { }
-    private JObject Migrate_2(JArray data, JsonSerializer serializer) { }
-    private JToken Migrate_3(JObject data, JsonSerializer serializer) { }
-    private JToken Migrate_4(JToken data, JsonSerializer serializer) { }
-    private JObject Migrate_5(JToken data, JsonSerializer serializer) { }
-    private JObject Migrate_6(JObject data, JsonSerializer serializer) { }
-    private JToken Migrate_7(JToken data, JsonSerializer serializer) { }
+    private JArray Migrate_1(JObject data, JsonSerializer serializer) { return new JArray(data); }
+    private JObject Migrate_2(JArray data, JsonSerializer serializer) { return new JObject { { ""data"", data } }; }
+    private JToken Migrate_3(JObject data, JsonSerializer serializer) { return data; }
+    private JToken Migrate_4(JToken data, JsonSerializer serializer) { return data; }
+    private JObject Migrate_5(JToken data, JsonSerializer serializer) { return (JObject)data; }
+    private JObject Migrate_6(JObject data, JsonSerializer serializer) { return (JObject)data; }
+    private JToken Migrate_7(JToken data, JsonSerializer serializer) { return data; }
 }";
 
             VerifyCSharpDiagnostic(source);
