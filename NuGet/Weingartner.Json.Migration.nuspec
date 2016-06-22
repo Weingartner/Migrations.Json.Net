@@ -14,10 +14,10 @@
         <copyright>Weingartner Maschinenbau GmbH 2014</copyright>
         <dependencies>
             <group targetFramework=".NETFramework4.5">
-                <dependency id="Newtonsoft.Json" version="6.0.0" />
+                <dependency id="Newtonsoft.Json" version="8.0.0" />
             </group>
             <group>
-                <dependency id="Weingartner.Json.Migration.Analyzer" />
+                <dependency id="Weingartner.Json.Migration.Analyzer" version="0.8.6" />
             </group>
         </dependencies>
     </metadata>
