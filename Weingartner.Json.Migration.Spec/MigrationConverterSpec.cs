@@ -67,6 +67,16 @@ namespace Weingartner.Json.Migration.Spec
             result.Neighbors.Last().Color.Should().Be("Color 3 Migrated");
         }
 
+        [Fact]
+        public void ShouldReuseExistingValues()
+        {
+            var settings = GetSerializerSettings();
+            var target = new Person("Joe", new Address("Street 1"));
+            var source = JsonConvert.SerializeObject(new Person("Joe", new Address("Street 2")), settings);
+            JsonConvert.PopulateObject(source, target, settings);
+            target.Address.Street.Should().Be("Street 2");
+        }
+
         private static JsonSerializerSettings GetSerializerSettings()
         {
             var settings = new JsonSerializerSettings();
@@ -129,7 +139,7 @@ namespace Weingartner.Json.Migration.Spec
         [Migratable("")]
         private class Address
         {
-            public string Street { get; }
+            public string Street { get; set; }
 
             public Address(string street)
             {
