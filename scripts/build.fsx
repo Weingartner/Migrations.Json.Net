@@ -1,10 +1,9 @@
 #I @"..\BuildTools\scripts"
 #r @"..\lib\Fake\tools\FakeLib.dll"
-#load @"GitVersion.fsx"
 
 open Fake
 open Fake.MSBuildHelper
-open Fake.XUnit2Helper
+open Fake.Testing
 
 let nugetApiKey = getBuildParam "NuGetApiKey"
 let outputPath = @".\artifacts" |> FullName
@@ -13,6 +12,9 @@ let buildOutputPath = @"bin\Release"
 Target "Clean" (fun _ ->
     CleanDir outputPath
 )
+
+Target "RestoreDependencies" <| fun () ->
+    RestorePackages()
 
 Target "BuildSolution" (fun () ->
     let slnPath = @".\Weingartner.Json.Migration.sln"
@@ -39,7 +41,7 @@ Target "RunTests" (fun () ->
     let setParams (p: XUnit2Params) =
         { p with
             ToolPath = @"BuildTools\lib\xunit.runner.console\tools\xunit.console.exe"
-            Parallel = ParallelOption.All
+            Parallel = ParallelMode.All
             ErrorLevel = Error
         }
     !! @"**\bin\Release\*.Spec.dll"
@@ -47,20 +49,13 @@ Target "RunTests" (fun () ->
 )
 
 Target "CreateAndPublishNuGetPackage" (fun () ->
-    let setParams (p: NuGetParams) =
-        { p with
-            ToolPath = @"BuildTools\lib\NuGet.CommandLine\tools\NuGet.exe"
-//            Title = "Migrations.Json.Net"
-            Version = GitVersion.Vars.NuGetVersion
-            OutputPath = outputPath
-            Publish = false 
-        }
-    NuGet setParams @"NuGet\Weingartner.Json.Migration.nuspec"
+    !! "Weingartner.Json.Migration.*.nupkg"
+    |> SetBaseDir ("Weingartner.Json.Migration.NuGet" @@ buildOutputPath)
+    |> CopyFiles outputPath
 
-    !! "*.nupkg"
-    |> SetBaseDir (@"Weingartner.Json.Migration.Roslyn" @@ "Weingartner.Json.Migration.Roslyn" @@ buildOutputPath)
-    |> Seq.maxBy System.IO.File.GetCreationTimeUtc
-    |> CopyFile outputPath
+    !! "Weingartner.Json.Migration.Analyzer.*.nupkg"
+    |> SetBaseDir ("Weingartner.Json.Migration.Roslyn.NuGet" @@ buildOutputPath)
+    |> CopyFiles outputPath
 )
 
 Target "Default" DoNothing
@@ -68,6 +63,7 @@ Target "Default" DoNothing
 "Default" <== [ "CreateAndPublishNuGetPackage" ]
 "CreateAndPublishNuGetPackage" <== [ "RunTests" ]
 "RunTests" <== [ "BuildSolution" ]
-"BuildSolution" <== [ "Clean" ]
+"BuildSolution" <== [ "RestoreDependencies" ]
+"RestoreDependencies" <== [ "Clean" ]
 
 RunTargetOrDefault "Default"

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>91e0597b-41dd-4010-ac3a-6b665313456b</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == ''">$(SolutionDir)packages\</NuGetPackageRoot>
+    <NuGetVersion Condition="'$(GitVersion_NuGetVersionV2)' == ''">0.0.1</NuGetVersion>
+    <NuGetVersion Condition="'$(GitVersion_NuGetVersionV2)' != ''">$(GitVersion_NuGetVersionV2)</NuGetVersion>
+  </PropertyGroup>
+  <Import Project="$(NuGetPackageRoot)NuProj.*\tools\NuProj.props" />
+  <PropertyGroup Label="Configuration">
+    <Id>Weingartner.Json.Migration.Analyzer</Id>
+    <Version>$(NuGetVersion)</Version>
+    <Title>Weingartner.Json.Migration.Analyzer</Title>
+    <Authors>Weingartner Maschinenbau GmbH</Authors>
+    <Owners>Weingartner Maschinenbau GmbH</Owners>
+    <Summary>Helps migrating serialized data.</Summary>
+    <Description>Provides a type that can generate a hash out of a types properties and uses this hash to determine whether serialized data should be migrated. If the data should be migrated it calls user-defined migration methods which do the migration. A Roslyn analyzer is used to check if a type has changed at design-time.</Description>
+    <ReleaseNotes>
+    </ReleaseNotes>
+    <ProjectUrl>https://github.com/Weingartner/Migrations.Json.Net</ProjectUrl>
+    <LicenseUrl>http://opensource.org/licenses/MIT</LicenseUrl>
+    <Copyright>Copyright © Weingartner Maschinenbau GmbH</Copyright>
+    <Tags>
+    </Tags>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <Content Include="tools\install.ps1" />
+    <Content Include="tools\uninstall.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Weingartner.Json.Migration.NuGet\Weingartner.Json.Migration.NuGet.nuproj" />
+    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.csproj">
+      <PackageDirectory>Analyzers</PackageDirectory>
+      <TargetSubdirectory>cs</TargetSubdirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(NuGetPackageRoot)NuProj.*\tools\NuProj.targets" />
+</Project>
