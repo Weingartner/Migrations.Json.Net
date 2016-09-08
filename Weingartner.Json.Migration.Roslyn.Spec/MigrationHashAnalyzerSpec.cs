@@ -52,6 +52,35 @@ class TypeName
         }
 
         [Fact]
+        public void ShouldCreateDiagnosticIfNoHashIsSpecified2()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable("""")]
+[DataContract]
+class TypeName
+{
+    [DataMember] private readonly int A;
+
+    public TypeName(int a) { A = a; }
+}";
+            var expected = new DiagnosticResult
+            {
+                Id = MigrationHashAnalyzer.DiagnosticId,
+                Message = string.Format(MigrationHashAnalyzer.MessageFormat.ToString(CultureInfo.InvariantCulture), "TypeName", "758832573"),
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                        new DiagnosticResultLocation("Test0.cs", 5, 7)
+                    }
+            };
+
+            VerifyCSharpDiagnostic(source, expected);
+        }
+
+        [Fact]
         public void ShouldNotCreateDiagnosticIfCorrectHashIsSpecified()
         {
             var source = @"

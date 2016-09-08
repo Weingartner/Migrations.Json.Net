@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec
 {
-    public class DataContractAnalyserSpec : CodeFixVerifier
+    public class DataContractAnalyzerSpec : CodeFixVerifier
     {
         [Fact]
         public void ShouldNotCreateDiagnosticIfTypeIsNotMigratable()
@@ -72,6 +72,40 @@ class TypeName
             };
 
             VerifyCSharpDiagnostic(source, expected);
+        }
+
+        [Fact]
+        public void ShouldNotCreateDiagnosticIfMigratableTypeHasDataMemberField()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable("""")]
+[DataContract]
+class TypeName
+{
+    [DataMember] private readonly int A;
+
+    public TypeName(int a) { A = a; }
+}";
+            VerifyCSharpDiagnostic(source);
+        }
+
+        [Fact]
+        public void ShouldNotCreateDiagnosticIfMigratableTypeHasDataMemberProperty()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable("""")]
+[DataContract]
+class TypeName
+{
+    [DataMember] public int A { get; set; }
+}";
+            VerifyCSharpDiagnostic(source);
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()

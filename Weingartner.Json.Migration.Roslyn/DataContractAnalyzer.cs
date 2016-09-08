@@ -47,8 +47,7 @@ namespace Weingartner.Json.Migration.Roslyn
             if (dataContractAttributeType != null && dataMemberAttributeType != null)
             {
                 var isDataContract = MigrationHashHelper.HasAttribute(typeDecl, dataContractAttributeType, semanticModel, ct);
-                var hasDataMember = typeDecl.DescendantNodes().OfType<PropertyDeclarationSyntax>()
-                    .Any(propDecl => MigrationHashHelper.HasAttribute(propDecl, dataMemberAttributeType, semanticModel, ct));
+                var hasDataMember = MigrationHashHelper.GetDataMembers(typeDecl, ct, semanticModel, dataMemberAttributeType).Any();
 
                 if (isDataContract && hasDataMember) return;
             }
