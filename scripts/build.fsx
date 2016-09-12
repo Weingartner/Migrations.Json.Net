@@ -1,5 +1,5 @@
-#I @"..\BuildTools\scripts"
-#r @"..\lib\Fake\tools\FakeLib.dll"
+#I @"lib"
+#r @"Fake\tools\FakeLib.dll"
 
 open Fake
 open Fake.MSBuildHelper
