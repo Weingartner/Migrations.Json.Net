@@ -40,7 +40,7 @@ Target "BuildSolution" (fun () ->
 Target "RunTests" (fun () ->
     let setParams (p: XUnit2Params) =
         { p with
-            ToolPath = @"BuildTools\lib\xunit.runner.console\tools\xunit.console.exe"
+            ToolPath = @"scripts\lib\xunit.runner.console\tools\xunit.console.exe"
             Parallel = ParallelMode.All
             ErrorLevel = Error
         }
