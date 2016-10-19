@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,23 +16,6 @@ namespace Weingartner.Json.Migration.Spec
             VersionMemberName.GetCurrentVersion(typeof (TypeWithNoMigrationMethod)).Should().Be(0);
             VersionMemberName.GetCurrentVersion(typeof (TypeWithOneMigrationMethod)).Should().Be(1);
             VersionMemberName.GetCurrentVersion(typeof (TypeWithTwoMigrationMethods)).Should().Be(2);
-        }
-
-        [Fact]
-        public void ShouldThrowWhenVersionNumberIsNotConsecutive()
-        {
-            new Action(() => VersionMemberName.GetCurrentVersion(typeof (TypeWithUnconsecutiveMigrationMethods)))
-                .ShouldThrow<MigrationException>();
-        }
-
-        [Fact]
-        public void ShouldThrowWhenFirstVersionNumberIsNotOne()
-        {
-            new Action(() => VersionMemberName.GetCurrentVersion(typeof(TypeWithMigrationMethod0)))
-                .ShouldThrow<MigrationException>();
-
-            new Action(() => VersionMemberName.GetCurrentVersion(typeof(TypeWithMigrationMethod2)))
-                .ShouldThrow<MigrationException>();
         }
 
         [Fact]

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
+using Weingartner.Json.Migration.Common;
 
 namespace Weingartner.Json.Migration
 {
@@ -34,7 +35,7 @@ namespace Weingartner.Json.Migration
             var version = _VersionExtractor.GetVersion(serializedData);
 
             var allMigrationMethods = VersionMemberName
-                .GetAndVerifyMigrationMethods(unserializedDataType)
+                .GetMigrationMethods(unserializedDataType)
                 .ToList();
 
             var maxSupportedVersion = allMigrationMethods.LastOrDefault()?.ToVersion ?? 0;
@@ -52,10 +53,28 @@ namespace Weingartner.Json.Migration
                 .ToList();
 
             var migrated = migrationMethods.Count > 0;
-            
-            serializedData = migrationMethods
-                .Select(m => unserializedDataType.GetTypeInfo().GetDeclaredMethod(m.Name))
-                .Aggregate(serializedData, (data, method) => ExecuteMigration(method, data, serializer));
+
+            try
+            {
+                serializedData = migrationMethods
+                    .Select(m => unserializedDataType.GetTypeInfo().GetDeclaredMethod(m.Name))
+                    .Aggregate(serializedData,
+                        (data, method) => ExecuteMigration(method, data, serializer));
+            }
+            catch
+            {
+                var migrationMethodVerifier = new MigrationMethodVerifier(VersionMemberName.CanAssign);
+
+                var invalidMethod = migrationMethodVerifier.VerifyMigrationMethods(migrationMethods);
+                foreach (var method in invalidMethod)
+                {
+                    method.ThrowIfInvalid();
+                }
+
+                // Exception doesn't come from invalid migration methods -> rethrow
+
+                throw;
+            }
 
             _VersionExtractor.SetVersion(serializedData, maxSupportedVersion);
 

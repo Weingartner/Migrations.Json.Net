@@ -23,13 +23,18 @@ namespace Weingartner.Json.Migration
 
         public static int GetCurrentVersion(Type type)
         {
-            return GetAndVerifyMigrationMethods(type)
+            return GetMigrationMethods(type)
                 .Select(v => v.ToVersion)
                 .Concat(new[] { 0 })
                 .Max();
         }
 
-        private static IReadOnlyList<MigrationMethod> ParseMigrationMethods(IEnumerable<MethodInfo> methods)
+        public static IEnumerable<MigrationMethod> GetMigrationMethods(Type type)
+        {
+            return GetMigrationMethods(type.GetTypeInfo().DeclaredMethods);
+        }
+
+        private static IReadOnlyList<MigrationMethod> GetMigrationMethods(IEnumerable<MethodInfo> methods)
         {
             return methods
                 .Select(GetMigrationMethod)
@@ -58,20 +63,6 @@ namespace Weingartner.Json.Migration
         private static AssemblyName GetAssemblyName(Type type)
         {
             return type.GetTypeInfo().Assembly.GetName();
-        }
-
-        public static IEnumerable<MigrationMethod> GetAndVerifyMigrationMethods(Type type)
-        {
-            var migrationMethodVerifier = new MigrationMethodVerifier(CanAssign);
-
-            var migrationMethods = ParseMigrationMethods(type.GetTypeInfo().DeclaredMethods);
-            var invalidMethod = migrationMethodVerifier.VerifyMigrationMethods(migrationMethods);
-            foreach (var method in invalidMethod)
-            {
-                method.ThrowIfInvalid();
-            }
-
-            return migrationMethods;
         }
 
         public static bool CanAssign(SimpleType srcType, SimpleType targetType)
