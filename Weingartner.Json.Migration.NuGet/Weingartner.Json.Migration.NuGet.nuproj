@@ -23,8 +23,9 @@
     <NuGetPackageRoot Condition="'$(NuGetPackageRoot)' == ''">$(SolutionDir)packages\</NuGetPackageRoot>
     <NuGetVersion Condition="'$(GitVersion_NuGetVersionV2)' == ''">0.0.1</NuGetVersion>
     <NuGetVersion Condition="'$(GitVersion_NuGetVersionV2)' != ''">$(GitVersion_NuGetVersionV2)</NuGetVersion>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
   </PropertyGroup>
-  <Import Project="$(NuGetPackageRoot)NuProj.*\tools\NuProj.props" />
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
   <PropertyGroup Label="Configuration">
     <Id>Weingartner.Json.Migration</Id>
     <Version>$(NuGetVersion)</Version>
@@ -41,5 +42,5 @@
     <Tags>
     </Tags>
   </PropertyGroup>
-  <Import Project="$(NuGetPackageRoot)NuProj.*\tools\NuProj.targets" />
+  <Import Project="$(NuProjPath)\NuProj.targets" />
 </Project>
