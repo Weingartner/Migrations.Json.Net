@@ -4,17 +4,19 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace Weingartner.Json.Migration.Common
 {
     public class MigrationMethodVerifier
     {
         private readonly Func<SimpleType, SimpleType, bool> _CanAssign;
-        internal static readonly SimpleType JTokenType = new SimpleType("Newtonsoft.Json.Linq.JToken", new AssemblyName("Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"));
-        internal static readonly SimpleType JsonSerializerType = new SimpleType("Newtonsoft.Json.JsonSerializer", new AssemblyName("Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed"));
+        internal static readonly SimpleType JTokenType = new SimpleType("Newtonsoft.Json.Linq.JToken",typeof(JToken).GetTypeInfo().Assembly.GetName());
+        internal static readonly SimpleType JsonSerializerType = new SimpleType("Newtonsoft.Json.JsonSerializer", typeof(JToken).GetTypeInfo().Assembly.GetName());
 
         public MigrationMethodVerifier(Func<SimpleType, SimpleType, bool> canAssign)
         {
+            typeof(JToken).GetTypeInfo().Assembly.GetName();
             _CanAssign = canAssign;
         }
 
