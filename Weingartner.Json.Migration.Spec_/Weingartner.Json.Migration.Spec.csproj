@@ -9,7 +9,9 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="4.19.2" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="NETStandard.Library" Version="1.6.1" />
   </ItemGroup>
 
   <ItemGroup>

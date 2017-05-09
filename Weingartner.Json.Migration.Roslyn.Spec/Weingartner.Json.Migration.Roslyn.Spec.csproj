@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{8AB34F16-FBB3-4FDD-B956-84C4E0E2F933}</ProjectGuid>
+    <ProjectGuid>{34BF0AB4-8C34-4876-A2E3-20FAA72BD74A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Weingartner.Json.Migration.Roslyn.Spec</RootNamespace>
@@ -13,8 +12,8 @@
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +23,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,7 +31,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -46,22 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MigrationHashHelperSpec.cs" />
-    <Compile Include="MigrationMethodAnalyzerSpec.cs" />
-    <Compile Include="MigrationHashAnalyzerSpec.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="DataContractAnalyzerSpec.cs" />
-    <Compile Include="Verifiers\CodeFixVerifier.cs" />
-    <Compile Include="Verifiers\DiagnosticVerifier.cs" />
     <Compile Include="Helpers\CodeFixVerifier.Helper.cs" />
     <Compile Include="Helpers\DiagnosticResult.cs" />
     <Compile Include="Helpers\DiagnosticVerifier.Helper.cs" />
+    <Compile Include="MigrationHashAnalyzerSpec.cs" />
+    <Compile Include="MigrationHashHelperSpec.cs" />
+    <Compile Include="MigrationMethodAnalyzerSpec.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <Compile Include="Verifiers\CodeFixVerifier.cs" />
+    <Compile Include="Verifiers\DiagnosticVerifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FluentAssertions">
@@ -69,6 +61,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis">
       <Version>2.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.IO.FileSystem">
+      <Version>4.3.0</Version>
     </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.2.0</Version>
@@ -80,7 +75,7 @@
       <Name>Weingartner.Json.Migration.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn_\Weingartner.Json.Migration.Roslyn.csproj">
-      <Project>{630BAC68-A278-4BCE-ABF1-6C864B141AA0}</Project>
+      <Project>{630bac68-a278-4bce-abf1-6c864b141aa0}</Project>
       <Name>Weingartner.Json.Migration.Roslyn</Name>
     </ProjectReference>
     <ProjectReference Include="..\Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj">
@@ -89,11 +84,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
