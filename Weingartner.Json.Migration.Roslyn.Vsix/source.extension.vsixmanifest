@@ -18,4 +18,7 @@
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="Weingartner.Json.Migration.Roslyn" Path="|Weingartner.Json.Migration.Roslyn|"/>
     <Asset Type="Microsoft.VisualStudio.Analyzer" d:Source="Project" d:ProjectName="Weingartner.Json.Migration.Roslyn" Path="|Weingartner.Json.Migration.Roslyn|"/>
   </Assets>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.Roslyn.LanguageServices" Version="[15.0.26208.0,16.0)" DisplayName="C# and Visual Basic" />
+  </Prerequisites>
 </PackageManifest>
