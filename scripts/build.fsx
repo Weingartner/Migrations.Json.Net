@@ -42,28 +42,66 @@ Target "RunTests" (fun () ->
         { p with
             ToolPath = __SOURCE_DIRECTORY__ @@ @"lib\xunit.runner.console\tools\xunit.console.exe"
             Parallel = ParallelMode.All
-            ErrorLevel = Error
+            ErrorLevel = TestRunnerErrorLevel.Error
         }
     !! @"**\bin\Release\*.Spec.dll"
     |> xUnit2 setParams
 )
 
-Target "CreateAndPublishNuGetPackage" (fun () ->
-    !! "Weingartner.Json.Migration.*.nupkg"
-    |> SetBaseDir ("Weingartner.Json.Migration.NuGet" @@ buildOutputPath)
-    |> CopyFiles outputPath
+let nugetVersion = if buildVersion = "LocalBuild" then ( environVarOrFail "GitVersion_SemVer" ) else buildVersion
 
-    !! "Weingartner.Json.Migration.Analyzer.*.nupkg"
-    |> SetBaseDir ("Weingartner.Json.Migration.Roslyn.NuGet" @@ buildOutputPath)
-    |> CopyFiles outputPath
+Target "NugetMigration" (fun()->
+
+    let buildDir = "Weingartner.Json.Migration_" @@ buildOutputPath
+
+    NuGet (fun p -> 
+    {p with
+        Authors = ["Weingartner Machinenbau GMBH"]
+        Project = "Weingartner.Json.Migration"
+        Description = "Assists in migrating serialized JSON.Net objects"
+        OutputPath = "./artifacts"
+        Dependencies = 
+            [ "Newtonsoft.Json", "10.0"]
+        Files = [ ("Weingartner*.dll", Some "lib/net45", None )]
+        Summary = "Assists in migrating serialized JSON.Net objects"
+        Version = nugetVersion 
+        WorkingDir = buildDir
+        AccessKey = nugetApiKey
+        Publish = false }) 
+        "./base.nuspec"
 )
+
+Target "NugetAnalyzer" (fun()->
+
+    let buildDir = "Weingartner.Json.Migration.Roslyn_" @@ buildOutputPath
+
+    NuGet (fun p -> 
+    {p with
+        Authors = ["Weingartner Machinenbau GMBH"]
+        Project = "Weingartner.Json.Migration.Analyzer"
+        Description = "Assists in migrating serialized JSON.Net objects"
+        OutputPath = "./artifacts"
+        Dependencies = 
+            [ "Weingartner.Json.Migration", nugetVersion
+              "Newtonsoft.Json", "10.0"
+            ]
+        Summary = "Assists in migrating serialized JSON.Net objects"
+        Version = nugetVersion
+        AccessKey = nugetApiKey
+        WorkingDir = buildDir
+        Files = [ ( "Weingartner.Json.Migration.Roslyn.dll", Some "analyzers/dotnet/cs", Some "**/Microsoft.*;**/System.*") 
+                  ( "tools/**/*.*", None, None)
+                ]
+        Publish = false }) 
+        "./base.nuspec"
+)
+
+Target "NugetPack" DoNothing
+
+"NugetPack" <== [ "BuildSolution"; "NugetMigration"; "NugetAnalyzer" ] 
 
 Target "Default" DoNothing
 
-"Default" <== [ "CreateAndPublishNuGetPackage" ]
-"CreateAndPublishNuGetPackage" <== [ "RunTests" ]
-"RunTests" <== [ "BuildSolution" ]
-"BuildSolution" <== [ "RestoreDependencies" ]
-"RestoreDependencies" <== [ "Clean" ]
+"Default" <== [ "Clean"; "RestoreDependencies"; "BuildSolution"; "NugetPack"; "RunTests" ]
 
 RunTargetOrDefault "Default"
