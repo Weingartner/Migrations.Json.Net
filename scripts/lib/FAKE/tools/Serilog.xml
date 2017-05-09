@@ -71,6 +71,24 @@
             <returns>Configuration object allowing method chaining.</returns>
             <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         </member>
+        <member name="T:Serilog.Configuration.LoggerSettingsConfiguration">
+            <summary>
+            Allows additional setting sources to drive the logger configuration.
+            </summary>
+        </member>
+        <member name="M:Serilog.Configuration.LoggerSettingsConfiguration.Settings(Serilog.Configuration.ILoggerSettings)">
+            <summary>
+            Apply external settings to the logger configuration.
+            </summary>
+            <returns>Configuration object allowing method chaining.</returns>
+        </member>
+        <member name="M:Serilog.Configuration.LoggerSettingsConfiguration.KeyValuePairs(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Apply settings specified in the Serilog key-value setting format to the logger configuration.
+            </summary>
+            <param name="settings">A list of key-value pairs describing logger settings.</param>
+            <returns>Configuration object allowing method chaining.</returns>
+        </member>
         <member name="T:Serilog.Configuration.LoggerFilterConfiguration">
             <summary>
             Controls filter configuration.
@@ -192,24 +210,6 @@
             occurs.
             </summary>
         </member>
-        <member name="T:Serilog.Configuration.LoggerSettingsConfiguration">
-            <summary>
-            Allows additional setting sources to drive the logger configuration.
-            </summary>
-        </member>
-        <member name="M:Serilog.Configuration.LoggerSettingsConfiguration.Settings(Serilog.Configuration.ILoggerSettings)">
-            <summary>
-            Apply external settings to the logger configuration.
-            </summary>
-            <returns>Configuration object allowing method chaining.</returns>
-        </member>
-        <member name="M:Serilog.Configuration.LoggerSettingsConfiguration.KeyValuePairs(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
-            <summary>
-            Apply settings specified in the Serilog key-value setting format to the logger configuration.
-            </summary>
-            <param name="settings">A list of key-value pairs describing logger settings.</param>
-            <returns>Configuration object allowing method chaining.</returns>
-        </member>
         <member name="T:Serilog.Configuration.LoggerSinkConfiguration">
             <summary>
             Controls sink configuration.
@@ -280,6 +280,24 @@
             events passed through the sink.</param>
             <returns>Configuration object allowing method chaining.</returns>
         </member>
+        <member name="T:Serilog.Core.LoggingLevelSwitch">
+            <summary>
+            Dynamically controls logging level.
+            </summary>
+        </member>
+        <member name="M:Serilog.Core.LoggingLevelSwitch.#ctor(Serilog.Events.LogEventLevel)">
+            <summary>
+            Create a <see cref="T:Serilog.Core.LoggingLevelSwitch"/> at the initial
+            minimum level.
+            </summary>
+            <param name="initialMinimumLevel">The initial level to which the switch is set.</param>
+        </member>
+        <member name="P:Serilog.Core.LoggingLevelSwitch.MinimumLevel">
+            <summary>
+            The current minimum level, below which no events
+            should be generated.
+            </summary>
+        </member>
         <member name="T:Serilog.Core.Constants">
             <summary>
             Constants used in the core logging pipeline and associated types.
@@ -331,24 +349,6 @@
             <param name="propertyValueFactory">Recursively apply policies to convert additional values.</param>
             <param name="result">The converted value, or null.</param>
             <returns>True if the value could be converted under this policy.</returns>
-        </member>
-        <member name="T:Serilog.Core.LoggingLevelSwitch">
-            <summary>
-            Dynamically controls logging level.
-            </summary>
-        </member>
-        <member name="M:Serilog.Core.LoggingLevelSwitch.#ctor(Serilog.Events.LogEventLevel)">
-            <summary>
-            Create a <see cref="T:Serilog.Core.LoggingLevelSwitch"/> at the initial
-            minimum level.
-            </summary>
-            <param name="initialMinimumLevel">The initial level to which the switch is set.</param>
-        </member>
-        <member name="P:Serilog.Core.LoggingLevelSwitch.MinimumLevel">
-            <summary>
-            The current minimum level, below which no events
-            should be generated.
-            </summary>
         </member>
         <member name="T:Serilog.Core.MessageTemplateFormatMethodAttribute">
             <summary>
@@ -476,6 +476,41 @@
             <param name="logEvent">The log event to enrich.</param>
             <param name="propertyFactory">Factory for creating new properties to add to the event.</param>
         </member>
+        <member name="T:Serilog.Debugging.LoggingFailedException">
+            <summary>
+            May be thrown by log event sinks when a failure occurs. Should not be used in cases
+            where the exception would propagate out to callers.
+            </summary>
+        </member>
+        <member name="M:Serilog.Debugging.LoggingFailedException.#ctor(System.String)">
+            <summary>
+            Construct a <see cref="T:Serilog.Debugging.LoggingFailedException"/> to communicate a logging failure.
+            </summary>
+            <param name="message">A message describing the logging failure.</param>
+        </member>
+        <member name="T:Serilog.Debugging.SelfLog">
+            <summary>
+            A simple source of information generated by Serilog itself,
+            for example when exceptions are thrown and caught internally.
+            </summary>
+        </member>
+        <member name="P:Serilog.Debugging.SelfLog.Out">
+            <summary>
+            The output mechanism for self-log events.
+            </summary>
+            <example>
+            SelfLog.Out = Console.Error;
+            </example>
+        </member>
+        <member name="M:Serilog.Debugging.SelfLog.WriteLine(System.String,System.Object,System.Object,System.Object)">
+            <summary>
+            Write a message to the self-log.
+            </summary>
+            <param name="format">Standard .NET format string containing the message.</param>
+            <param name="arg0">First argument, if supplied.</param>
+            <param name="arg1">Second argument, if supplied.</param>
+            <param name="arg2">Third argument, if supplied.</param>
+        </member>
         <member name="T:Serilog.Events.DictionaryValue">
             <summary>
             A value represented as a mapping from keys to values.
@@ -557,7 +592,7 @@
             The tokens parsed from the template.
             </summary>
         </member>
-        <member name="M:Serilog.Events.MessageTemplate.Render(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IFormatProvider)">
+        <member name="M:Serilog.Events.MessageTemplate.Render(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IFormatProvider)">
             <summary>
             Convert the message template into a textual message, given the
             properties matching the tokens in the message template.
@@ -568,7 +603,7 @@
             properties are mismatched with the template, the template will be
             returned with incomplete substitution.</returns>
         </member>
-        <member name="M:Serilog.Events.MessageTemplate.Render(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
+        <member name="M:Serilog.Events.MessageTemplate.Render(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
             <summary>
             Convert the message template into a textual message, given the
             properties matching the tokens in the message template.
@@ -1040,22 +1075,22 @@
             <param name="type">The type of values, which <paramref name="writer" /> handles.</param>
             <param name="writer">The function, which writes the values.</param>
         </member>
-        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteRenderings(System.Linq.IGrouping{System.String,Serilog.Parsing.PropertyToken}[],System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
+        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteRenderings(System.Linq.IGrouping{System.String,Serilog.Parsing.PropertyToken}[],System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
             <summary>
             Writes out individual renderings of attached properties
             </summary>
         </member>
-        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteRenderingsValues(System.Linq.IGrouping{System.String,Serilog.Parsing.PropertyToken}[],System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
+        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteRenderingsValues(System.Linq.IGrouping{System.String,Serilog.Parsing.PropertyToken}[],System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
             <summary>
             Writes out the values of individual renderings of attached properties
             </summary>
         </member>
-        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteProperties(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
+        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteProperties(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
             <summary>
             Writes out the attached properties
             </summary>
         </member>
-        <member name="M:Serilog.Formatting.Json.JsonFormatter.WritePropertiesValues(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
+        <member name="M:Serilog.Formatting.Json.JsonFormatter.WritePropertiesValues(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
             <summary>
             Writes out the attached properties values
             </summary>
@@ -1095,7 +1130,7 @@
             Writes out a sequence property
             </summary>
         </member>
-        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteDictionary(System.Collections.Generic.IDictionary{Serilog.Events.ScalarValue,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
+        <member name="M:Serilog.Formatting.Json.JsonFormatter.WriteDictionary(System.Collections.Generic.IReadOnlyDictionary{Serilog.Events.ScalarValue,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter)">
             <summary>
             Writes out a dictionary 
             </summary>
@@ -1128,29 +1163,6 @@
             represented in the message template.</param>
             <returns>A list of properties; if the template is malformed then
             this will be empty.</returns>
-        </member>
-        <member name="T:Serilog.Debugging.SelfLog">
-            <summary>
-            A simple source of information generated by Serilog itself,
-            for example when exceptions are thrown and caught internally.
-            </summary>
-        </member>
-        <member name="P:Serilog.Debugging.SelfLog.Out">
-            <summary>
-            The output mechanism for self-log events.
-            </summary>
-            <example>
-            SelfLog.Out = Console.Error;
-            </example>
-        </member>
-        <member name="M:Serilog.Debugging.SelfLog.WriteLine(System.String,System.Object,System.Object,System.Object)">
-            <summary>
-            Write a message to the self-log.
-            </summary>
-            <param name="format">Standard .NET format string containing the message.</param>
-            <param name="arg0">First argument, if supplied.</param>
-            <param name="arg1">Second argument, if supplied.</param>
-            <param name="arg2">Third argument, if supplied.</param>
         </member>
         <member name="T:Serilog.ILogger">
             <summary>
@@ -2128,7 +2140,7 @@
             The token's length.
             </summary>
         </member>
-        <member name="M:Serilog.Parsing.PropertyToken.Render(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
+        <member name="M:Serilog.Parsing.PropertyToken.Render(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
             <summary>
             Render the token to the output.
             </summary>
@@ -2216,7 +2228,7 @@
             The token's length.
             </summary>
         </member>
-        <member name="M:Serilog.Parsing.MessageTemplateToken.Render(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
+        <member name="M:Serilog.Parsing.MessageTemplateToken.Render(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
             <summary>
             Render the token to the output.
             </summary>
@@ -2258,7 +2270,7 @@
             The token's length.
             </summary>
         </member>
-        <member name="M:Serilog.Parsing.TextToken.Render(System.Collections.Generic.IDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
+        <member name="M:Serilog.Parsing.TextToken.Render(System.Collections.Generic.IReadOnlyDictionary{System.String,Serilog.Events.LogEventPropertyValue},System.IO.TextWriter,System.IFormatProvider)">
             <summary>
             Render the token to the output.
             </summary>
@@ -2345,16 +2357,6 @@
             <remarks>To free resources held by sinks ahead of program shutdown,
             the returned logger may be cast to <see cref="T:System.IDisposable"/> and
             disposed.</remarks>
-        </member>
-        <member name="T:Serilog.Settings.KeyValuePairs.ParameterInfoExtensions">
-            <summary>
-            Backport of .Net 4.5 features
-            </summary>
-        </member>
-        <member name="T:Serilog.Settings.KeyValuePairs.TypeExtensions">
-            <summary>
-            Backport of .Net 4.5 TypeInfo concept
-            </summary>
         </member>
     </members>
 </doc>

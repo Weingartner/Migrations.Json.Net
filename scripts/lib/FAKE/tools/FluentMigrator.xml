@@ -39,17 +39,12 @@
             Annotates migrations that should always be executed at a specified stage.
             </summary>
             <remarks>
-            Migration annotated with <see cref="T:FluentMigrator.MaintenanceAttribute"/> will be always executed
+            Migration annotated with <see cref="T:FluentMigrator.MaintenanceAttribute" /> will be always executed
             when migrating the database to the latest version. The execution stage in which it would 
-            be executed is defined by <see cref="P:FluentMigrator.MaintenanceAttribute.Stage"/>. The transaction behavior can also be defined
+            be executed is defined by <see cref="P:FluentMigrator.MaintenanceAttribute.Stage" />. The transaction behavior can also be defined
             with the <see cref="P:FluentMigrator.MaintenanceAttribute.TransactionBehavior"/>, which if not specified defaults to the default 
             transaction behavior.
             </remarks>
-        </member>
-        <member name="T:FluentMigrator.Builders.IColumnExpressionBuilder">
-            <summary>
-            Describes common attributes for expression builders which have a current table/column.
-            </summary>
         </member>
         <member name="M:FluentMigrator.Builders.Alter.Table.IAlterTableColumnOptionOrAddColumnOrAlterColumnSyntax.SetExistingRowsTo(System.Object)">
             <summary>
@@ -71,14 +66,36 @@
             Initializes a new instance of the <see cref="T:CreateConstraintExpressionBuilder"/> class.
             </summary>
         </member>
+        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.Index(System.String)">
+            <summary>
+            Deletes an index
+            </summary>
+            <param name="indexName">the name of the index</param>
+            <returns></returns>
+        </member>
+        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.Index">
+            <summary>
+            Deletes an index, based on the naming convention in effect
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.PrimaryKey(System.String)">
+            <summary>
+            Deletes a named Primary Key from a table
+            </summary>
+            <param name="primaryKeyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.UniqueConstraint(System.String)">
+            <summary>
+            Deletes a named Unique Constraint From a table
+            </summary>
+            <param name="constraintName"></param>
+            <returns></returns>
+        </member>
         <member name="T:FluentMigrator.Builders.IfDatabase.IfDatabaseExpressionRoot">
             <summary>
             Allows for conditional inclusion of expresions based on the migration context
-            </summary>
-        </member>
-        <member name="T:FluentMigrator.Builders.IfDatabase.IIfDatabaseExpressionRoot">
-            <summary>
-            Defines fluent expressions that can be conditionally executed
             </summary>
         </member>
         <member name="F:FluentMigrator.Builders.IfDatabase.IfDatabaseExpressionRoot._context">
@@ -94,14 +111,6 @@
             <remarks>If the database type does not apply then a <seealso cref="T:FluentMigrator.Builders.IfDatabase.NullIfDatabaseProcessor"/> will be used as a container to void any fluent expressions that would have been executed</remarks>
             <param name="context">The context to add expressions to if the database type applies</param>
             <param name="databaseType">The database type that the expressions relate to</param>
-        </member>
-        <member name="M:FluentMigrator.Builders.IfDatabase.IfDatabaseExpressionRoot.DatabaseTypeApplies(FluentMigrator.Infrastructure.IMigrationContext,System.String[])">
-            <summary>
-            Checks if the database type matches the name of the context migration processor
-            </summary>
-            <param name="context">The context to evaluate</param>
-            <param name="databaseType">The type to be checked</param>
-            <returns><c>True</c> if the database type applies, <c>False</c> if not</returns>
         </member>
         <member name="P:FluentMigrator.Builders.IfDatabase.IfDatabaseExpressionRoot.Alter">
             <summary>
@@ -138,23 +147,29 @@
             Update an existing row
             </summary>
         </member>
+        <member name="M:FluentMigrator.Builders.IfDatabase.IfDatabaseExpressionRoot.DatabaseTypeApplies(FluentMigrator.Infrastructure.IMigrationContext,System.String[])">
+            <summary>
+            Checks if the database type matches the name of the context migration processor
+            </summary>
+            <param name="context">The context to evaluate</param>
+            <param name="databaseType">The type to be checked</param>
+            <returns><c>True</c> if the database type applies, <c>False</c> if not</returns>
+        </member>
+        <member name="T:FluentMigrator.Builders.IfDatabase.IIfDatabaseExpressionRoot">
+            <summary>
+            Defines fluent expressions that can be conditionally executed
+            </summary>
+        </member>
         <member name="T:FluentMigrator.Builders.IfDatabase.NullIfDatabaseProcessor">
             <summary>
             Provides a null implmentation of a procesor that does not do any work
             </summary>
         </member>
-        <member name="T:FluentMigrator.ExplicitUnicodeString">
+        <member name="T:FluentMigrator.Builders.IColumnExpressionBuilder">
             <summary>
-            Insert text with unicode data. Primarily for Sql Server, it prefixes the string with 'N
+            Describes common attributes for expression builders which have a current table/column.
             </summary>
         </member>
-        <member name="M:FluentMigrator.ExplicitUnicodeString.#ctor(System.String)">
-            <summary>
-            Insert text with unicode data. Primarily for Sql Server, it prefixes the string with 'N
-            </summary>
-            <param name="text">Unicode string</param>
-        </member>
-        <!-- Badly formed XML comment ignored for member "T:FluentMigrator.Helpers.LazyLoader`1" -->
         <member name="T:FluentMigrator.Builders.ColumnExpressionBuilderHelper">
             <summary>
             This class provides a common location for logic pertaining to setting and maintaining 
@@ -164,6 +179,12 @@
             This is a support class for the migrator framework and is not intended for external use.
             TODO: make this internal, and the change assmebly info so InternalsVisibleTo is set for the test assemblies.
             </remarks>
+        </member>
+        <member name="T:FluentMigrator.Builders.ColumnExpressionBuilderHelper.ExistingRowsData">
+            <summary>
+            For each distinct column which has an existing row default, an instance of this
+            will be stored in the _expressionsByColumn.
+            </summary>
         </member>
         <member name="M:FluentMigrator.Builders.ColumnExpressionBuilderHelper.#ctor">
             <summary>
@@ -182,15 +203,30 @@
             call SetNullable to create the expression, and will then set the column IsNullable to false.
             </summary>
         </member>
-        <member name="T:FluentMigrator.Builders.ColumnExpressionBuilderHelper.ExistingRowsData">
+        <member name="T:FluentMigrator.ExplicitUnicodeString">
             <summary>
-            For each distinct column which has an existing row default, an instance of this
-            will be stored in the _expressionsByColumn.
+            Insert text with unicode data. Primarily for Sql Server, it prefixes the string with 'N
+            </summary>
+        </member>
+        <member name="M:FluentMigrator.ExplicitUnicodeString.#ctor(System.String)">
+            <summary>
+            Insert text with unicode data. Primarily for Sql Server, it prefixes the string with 'N
+            </summary>
+            <param name="text">Unicode string</param>
+        </member>
+        <member name="T:FluentMigrator.Helpers.LazyLoader`1">
+            <summary>
+            A pre-.NET4 Lazy{T} implementation
             </summary>
         </member>
         <member name="T:FluentMigrator.Infrastructure.IAssemblyCollection">
             <summary>
             A bundle of one or more Assembly instances
+            </summary>
+        </member>
+        <member name="P:FluentMigrator.Infrastructure.IAssemblyCollection.Assemblies">
+            <summary>
+            The Assemblies contained in this collection
             </summary>
         </member>
         <member name="M:FluentMigrator.Infrastructure.IAssemblyCollection.GetExportedTypes">
@@ -207,11 +243,6 @@
             </summary>
             <returns>An array of value pairs of resource name plus assembly.</returns>
         </member>
-        <member name="P:FluentMigrator.Infrastructure.IAssemblyCollection.Assemblies">
-            <summary>
-            The Assemblies contained in this collection
-            </summary>
-        </member>
         <member name="T:FluentMigrator.Infrastructure.ManifestResourceNameWithAssembly">
             <summary>
             Combines a ManifestResourceName with the assembly it belongs to
@@ -227,6 +258,17 @@
             This adapter wraps a migration into a MigrationInfo instance, used to keep IMigration backwards compatible with new IMigrationInfo.
             </summary>
         </member>
+        <member name="P:FluentMigrator.Infrastructure.IMigrationContext.ApplicationContext">
+            <summary>The arbitrary application context passed to the task runner.</summary>
+        </member>
+        <member name="P:FluentMigrator.Infrastructure.MigrationContext.ApplicationContext">
+            <summary>The arbitrary application context passed to the task runner.</summary>
+        </member>
+        <member name="P:FluentMigrator.Infrastructure.MigrationContext.Connection">
+            <summary>
+            Connection String from the runner.
+            </summary>
+        </member>
         <member name="M:FluentMigrator.Expressions.CreateConstraintExpression.#ctor(FluentMigrator.Model.ConstraintType)">
             <summary>
             Initializes a new instance of the <see cref="T:CreateConstraintExpression"/> class.
@@ -236,9 +278,6 @@
             <summary>
             Initializes a new instance of the <see cref="T:DeleteConstraintExpression"/> class.
             </summary>
-        </member>
-        <member name="P:FluentMigrator.IMigration.ApplicationContext">
-            <summary>The arbitrary application context passed to the task runner.</summary>
         </member>
         <member name="P:FluentMigrator.MigrationBase.ApplicationContext">
             <summary>The arbitrary application context passed to the task runner.</summary>
@@ -365,16 +404,6 @@
             A migration will not use a transaction.
             </summary>
         </member>
-        <member name="P:FluentMigrator.VersionTableInfo.IVersionTableMetaData.ApplicationContext">
-            <summary>
-            Provides access to <code>ApplicationContext</code> object.
-            </summary>
-            <remarks>
-            ApplicationContext value is set by FluentMigrator immediately after instantiation of a class 
-            implementing <code>IVersionTableMetaData</code> and before any of properties of <code>IVersionTableMetaData</code>
-            is called. Properties can use <code>ApplicationContext</code> value to implement context-depending logic.
-            </remarks>
-        </member>
         <member name="P:FluentMigrator.VersionTableInfo.DefaultVersionTableMetaData.ApplicationContext">
             <summary>
             Provides access to <code>ApplicationContext</code> object.
@@ -385,43 +414,18 @@
             is called. Properties can use <code>ApplicationContext</code> value to implement context-depending logic.
             </remarks>
         </member>
-        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.Index(System.String)">
+        <member name="P:FluentMigrator.VersionTableInfo.IVersionTableMetaData.ApplicationContext">
             <summary>
-            Deletes an index
+            Provides access to <code>ApplicationContext</code> object.
             </summary>
-            <param name="indexName">the name of the index</param>
-            <returns></returns>
+            <remarks>
+            ApplicationContext value is set by FluentMigrator immediately after instantiation of a class 
+            implementing <code>IVersionTableMetaData</code> and before any of properties of <code>IVersionTableMetaData</code>
+            is called. Properties can use <code>ApplicationContext</code> value to implement context-depending logic.
+            </remarks>
         </member>
-        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.Index">
-            <summary>
-            Deletes an index, based on the naming convention in effect
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.PrimaryKey(System.String)">
-            <summary>
-            Deletes a named Primary Key from a table
-            </summary>
-            <param name="primaryKeyName"></param>
-            <returns></returns>
-        </member>
-        <member name="M:FluentMigrator.Builders.Delete.IDeleteExpressionRoot.UniqueConstraint(System.String)">
-            <summary>
-            Deletes a named Unique Constraint From a table
-            </summary>
-            <param name="constraintName"></param>
-            <returns></returns>
-        </member>
-        <member name="P:FluentMigrator.Infrastructure.IMigrationContext.ApplicationContext">
+        <member name="P:FluentMigrator.IMigration.ApplicationContext">
             <summary>The arbitrary application context passed to the task runner.</summary>
-        </member>
-        <member name="P:FluentMigrator.Infrastructure.MigrationContext.ApplicationContext">
-            <summary>The arbitrary application context passed to the task runner.</summary>
-        </member>
-        <member name="P:FluentMigrator.Infrastructure.MigrationContext.Connection">
-            <summary>
-            Connection String from the runner.
-            </summary>
         </member>
     </members>
 </doc>

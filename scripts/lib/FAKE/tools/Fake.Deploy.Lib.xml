@@ -2,106 +2,29 @@
 <doc>
 <assembly><name>Fake.Deploy.Lib</name></assembly>
 <members>
-<member name="T:Fake.FakeDeployAgentHelper.DeploymentResponse">
+<member name="M:Fake.Json.tryDeserialize``1(System.String)">
 <summary>
- Deployment result type.
+ Tryes to deserialize a text into a object of type &apos;a and returns either instance of &apos;a or parsing error
 </summary>
 </member>
-<member name="T:Fake.FakeDeployAgentHelper.Response">
+<member name="M:Fake.Json.deserializeFile``1">
 <summary>
- A http response type.
+ Deserializes a file into a object of type &apos;a
 </summary>
 </member>
-<member name="T:Fake.FakeDeployAgentHelper.AuthToken">
+<member name="M:Fake.Json.deserialize``1(System.String)">
 <summary>
- Authentication token received from a successful login
+ Deserializes a text into a object of type &apos;a
 </summary>
 </member>
-<member name="M:Fake.FakeDeployAgentHelper.RollbackPackage(System.String,System.String,System.String)">
+<member name="M:Fake.Json.serialize``1(``0)">
 <summary>
- Performs a rollback of the given app at the given URL and handles the response.
+ Serializes a object to json
 </summary>
 </member>
-<member name="M:Fake.FakeDeployAgentHelper.DeployPackage(System.String,System.String)">
+<member name="T:Fake.Json">
 <summary>
- Posts a deployment package to the given URL and handles the response.
- Deprecated, use DeployPackage
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.DeployPackageWithArgs(System.String,System.String,System.String[])">
-<summary>
- Posts a deployment package to the given URL, executes the script inside it with given arguments and handles the response.
- Deprecated, use DeployPackage
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.deployPackage(Microsoft.FSharp.Core.FSharpFunc{Fake.FakeDeployAgentHelper.Deployment,Fake.FakeDeployAgentHelper.Deployment})">
-<summary>
- Posts a deployment package to the given URL, executes the script inside it with given arguments and handles the response.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.postDeploymentPackage(System.String,System.String,System.String[])">
-<summary>
- Posts a deployment package to the given URL.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.getAllReleases(System.String)">
-<summary>
- Returns all releases from the given server.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.getAllReleasesFor(System.String,System.String)">
-<summary>
- Returns all releases of the given app from the given server.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.getActiveReleasesFor(System.String,System.String)">
-<summary>
- Returns the active release of the given app from the given server.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.getAllActiveReleases(System.String)">
-<summary>
- Returns all active releases from the given server.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.rollbackTo(System.String,System.String,System.String)">
-<summary>
- Performs a rollback of the given app on the server.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.getReleasesFor(System.String,System.String,System.String)">
-<summary>
- Returns all releases of the given app from the given server.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.authenticate(System.String,System.String,System.String,System.String)">
-<summary>
- Authenticate against the given server with the given userId and private key
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.put(System.String,System.Byte[])">
-<summary>
- Puts the given body to the given URL.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.post(System.String,System.String,System.String[])">
-<summary>
- Posts the given file to the given URL.
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.processResponse(System.Byte[])">
-<summary>
- sends the given body using the given action (POST or PUT) to the given url
-</summary>
-</member>
-<member name="M:Fake.FakeDeployAgentHelper.get``1(System.TimeSpan,Microsoft.FSharp.Core.FSharpFunc{System.String,``0},System.String)">
-<summary>
- Gets the http response from the given URL and runs it with the given function.
-</summary>
-</member>
-<member name="T:Fake.FakeDeployAgentHelper">
-<summary>
- Contains a http helper functions for FAKE.Deploy.
+ Contains extensions for Newtonsoft.Json. **Don&apos;t use it directly. It&apos;s likely to be changed in further versions.**
 </summary>
 </member>
 <member name="T:Fake.HttpListenerHelper.Listener">
@@ -199,24 +122,116 @@
  Contains basic HTTP listener functions for FAKE.Deploy.
 </summary>
 </member>
-<member name="M:Fake.Json.deserializeFile``1">
+<member name="T:Fake.FakeDeployAgentHelper.DeploymentResponse">
 <summary>
- Deserializes a file into a object of type &apos;a
+ Deployment result type.
 </summary>
 </member>
-<member name="M:Fake.Json.deserialize``1(System.String)">
+<member name="T:Fake.FakeDeployAgentHelper.Response">
 <summary>
- Deserializes a text into a object of type &apos;a
+ A http response type.
 </summary>
 </member>
-<member name="M:Fake.Json.serialize``1(``0)">
+<member name="T:Fake.FakeDeployAgentHelper.AuthToken">
 <summary>
- Serializes a object to json
+ Authentication token received from a successful login
 </summary>
 </member>
-<member name="T:Fake.Json">
+<member name="M:Fake.FakeDeployAgentHelper.RollbackPackage(System.String,System.String,System.String)">
 <summary>
- Contains extensions for Newtonsoft.Json. **Don&apos;t use it directly. It&apos;s likely to be changed in further versions.**
+ Performs a rollback of the given app at the given URL and handles the response.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.DeployPackage(System.String,System.String)">
+<summary>
+ Posts a deployment package to the given URL and handles the response.
+ Deprecated, use DeployPackage
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.DeployPackageWithArgs(System.String,System.String,System.String[])">
+<summary>
+ Posts a deployment package to the given URL, executes the script inside it with given arguments and handles the response.
+ Deprecated, use DeployPackage
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.deployPackage(Microsoft.FSharp.Core.FSharpFunc{Fake.FakeDeployAgentHelper.Deployment,Fake.FakeDeployAgentHelper.Deployment})">
+<summary>
+ Posts a deployment package to the given URL, executes the script inside it with given arguments and handles the response.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.postDeploymentPackage(System.String,System.String,System.String[])">
+<summary>
+ Posts a deployment package to the given URL.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.getAllReleases(System.String)">
+<summary>
+ Returns all releases from the given server.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.getAllReleasesFor(System.String,System.String)">
+<summary>
+ Returns all releases of the given app from the given server.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.getActiveReleasesFor(System.String,System.String)">
+<summary>
+ Returns the active release of the given app from the given server.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.getAllActiveReleases(System.String)">
+<summary>
+ Returns all active releases from the given server.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.rollbackTo(System.String,System.String,System.String)">
+<summary>
+ Performs a rollback of the given app on the server.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.getReleasesFor(System.String,System.String,System.String)">
+<summary>
+ Returns all releases of the given app from the given server.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.authenticate(System.String,System.String,System.String,System.String)">
+<summary>
+ Authenticate against the given server with the given userId and private key
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.put(System.String,System.Byte[])">
+<summary>
+ Puts the given body to the given URL.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.post(System.String,System.String,System.String[])">
+<summary>
+ Posts the given file to the given URL.
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.processResponse(System.Byte[])">
+<summary>
+ parses response body
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.uploadFile(System.String,System.String,System.String[],System.TimeSpan)">
+<summary>
+ POSTs the given file to the given url
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.uploadData(System.String,System.Byte[],System.TimeSpan)">
+<summary>
+ PUTS the given body to the given url
+</summary>
+</member>
+<member name="M:Fake.FakeDeployAgentHelper.get``1(System.TimeSpan,Microsoft.FSharp.Core.FSharpFunc{System.String,Microsoft.FSharp.Core.FSharpChoice{``0,System.Exception}},System.String)">
+<summary>
+ Gets the http response from the given URL and runs it with the given function.
+</summary>
+</member>
+<member name="T:Fake.FakeDeployAgentHelper">
+<summary>
+ Contains a http helper functions for FAKE.Deploy.
 </summary>
 </member>
 </members>

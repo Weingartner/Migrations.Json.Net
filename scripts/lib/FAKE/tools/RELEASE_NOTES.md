@@ -1,6 +1,139 @@
-#### 4.39.1 - 05.09.2016
-* USABILITY: Check for npm on path variable in NpmHelper on Windows - https://github.com/fsharp/FAKE/pull/1371
+#### 4.61.1 - 04.05.2017
+* BUGFIX: Stop AzureHelper throwing exceptions unnecessarily - https://github.com/fsharp/FAKE/pull/1542
+
+#### 4.61.0 - 02.05.2017
+* BUGFIX: msbuild is no longer being used on mono < 5.0.0.0 instead of xbuild - https://github.com/fsharp/FAKE/pull/1540
+
+#### 4.60.0 - 27.04.2017
+* Add support for NUnit3 --params parameter - https://github.com/fsharp/FAKE/pull/1532
+* New StyleCode helper - https://github.com/fsharp/FAKE/pull/1526
+* BUGFIX: Fixed FtpHelper.isFolderPresent - https://github.com/fsharp/FAKE/pull/1529
+* BUGFIX: Fixed NuGet key leak if publish fails - https://github.com/fsharp/FAKE/pull/1530
+* BUGFIX: Disable caching for now - mono 5 bug - https://github.com/fsharp/FAKE/pull/1535, https://github.com/fsharp/FAKE/pull/1536
+
+#### 4.59.0 - 27.04.2017
+* BUGFIX: Upgraded FSharp.Core and FSharp.Compiler.Service to support mono 5 - https://github.com/fsharp/FAKE/pull/1534
+* BUGFIX: Fixed Expecto TeamCity adapter - https://github.com/fsharp/FAKE/pull/1520
+* Added installer for dotnet SDK
+* Revert single thread build order change - https://github.com/fsharp/FAKE/pull/1516
+
+#### 4.58.0 - 09.04.2017
+* Added helper for Office 365 / MS Teams Notifications - https://github.com/fsharp/FAKE/pull/1501
+* Added options for better TC reporting of npm tasks - https://github.com/fsharp/FAKE/pull/1510
+* Added a way to set the --trace parameter on the NUnit3 command line - https://github.com/fsharp/FAKE/pull/1513
+* Add version-option to NugetUpdate in order to support explicit versions - https://github.com/fsharp/FAKE/pull/1514
+* Make exit code accessible - https://github.com/fsharp/FAKE/pull/1502
+* Additional Environment Vars for Appveyor - https://github.com/fsharp/FAKE/pull/1497
+* BUGFIX: TeamCityHelper report build status incorrect string - https://github.com/fsharp/FAKE/pull/1503
+* BUGFIX: Fixed Azure Storage Emulator path and arguments - https://github.com/fsharp/FAKE/pull/1499
+* USABILITY: Improved log integration with AppVeyor - https://github.com/fsharp/FAKE/pull/1490
+* USABILITY: Report target name if duplicate target is detected - https://github.com/fsharp/FAKE/pull/1506
+
+#### 4.57.3 - 29.03.2017
+* Run parallel targets just in time - https://github.com/fsharp/FAKE/pull/1396
+
+#### 4.56.0 - 17.03.2017
+* Yarn-Helper - https://github.com/fsharp/FAKE/pull/1494
+* Add F# 4.1 directory path to FSIHelper paths
+
+#### 4.55.0 - 13.03.2017
+* HockeyApp - create version and upload build to a specific version - https://github.com/fsharp/FAKE/pull/1487
+
+#### 4.54.0 - 13.03.2017
+* Unix msbuild probing enhancements - https://github.com/fsharp/FAKE/pull/1488
+
+#### 4.53.0 - 12.03.2017
+* New change log helper - https://github.com/fsharp/FAKE/pull/1467
+* New output parameter to Dotnet BuildParams - https://github.com/fsharp/FAKE/pull/1481
+* Added MSBuild location for VS2017 Build Tools - https://github.com/fsharp/FAKE/pull/1484
+* BUGFIX: Fixed bug in getLastNuGetVersion when result is in JSON - https://github.com/fsharp/FAKE/pull/1482
+
+#### 4.52.0 - 01.03.2017
+* Implement --dotGraph command line option - https://github.com/fsharp/FAKE/pull/1469
+* USABILITY: Improve error handling on SqlPackage - https://github.com/fsharp/FAKE/pull/1476
+* USABILITY: Don't fail on git file status detection
+
+#### 4.51.0 - 28.02.2017
+* Teamcity build parameters - https://github.com/fsharp/FAKE/pull/1475
+* Added updating of build details to AppVeyor - https://github.com/fsharp/FAKE/pull/1473
+* New Expecto --parallel-workers and --summary-location parameters - https://github.com/fsharp/FAKE/pull/1450
+* BREAKING: Git: recognize renamed (and other status) files - https://github.com/fsharp/FAKE/pull/1472
+* BUGFIX: Using correct CLI parameter for silent xUnit output - https://github.com/fsharp/FAKE/pull/1464
+
+#### 4.50.1 - 20.02.2017
+* BUGFIX: Use sequenced parameter for expecto
+
+#### 4.50.0 - 17.01.2017
+* Visual Studio aware msbuild selection - https://github.com/fsharp/FAKE/pull/1453
+
+#### 4.49.0 - 15.01.2017
+* MSBuild 15.0/VS 2017RC support - https://github.com/fsharp/FAKE/pull/1442
+
+#### 4.48.0 - 05.01.2017
+* Add DisableParallel to dotnet restore params - https://github.com/fsharp/FAKE/pull/1443
+* Added Expecto.CustomArgs property for new cli arguments - https://github.com/fsharp/FAKE/pull/1441
+* New Expecto --verion parameter
+* New Expecto --fail-on-focused-tests parameter
+* New Expecto --summary parameter
+* USABILITY: More verbose kill of processes
+
+#### 4.47.0 - 17.12.2016
+* New Expecto helper - https://github.com/fsharp/FAKE/pull/1435
+* Displas original server response when failing to parse JSON in Fake.Deploy - https://github.com/fsharp/FAKE/pull/1432
+* Added SQLCMD variable support - https://github.com/fsharp/FAKE/pull/1434
+* USABILITY: Improve error logging in GitVersionHelper - https://github.com/fsharp/FAKE/pull/1429
+
+#### 4.46.0 - 03.12.2016
+* Decorated all *Params helper records with [<CLIMutable>] for C# access - https://github.com/fsharp/FAKE/pull/1428
+* Added credentials parameter to ApplicationPoolConfig in IISHelper - https://github.com/fsharp/FAKE/pull/1425
+* BUGFIX: Added a delay to prevent object disposed exceptions from process on macosx - https://github.com/fsharp/FAKE/pull/1426
+* BUGFIX: Added try catch block to ignore error from setting console encoding - https://github.com/fsharp/FAKE/pull/1422
+* BUGFIX: Disable NodeReuse for MSBuild on Jenkins too - https://github.com/fsharp/FAKE/pull/1418
+
+#### 4.45.1 - 05.11.2016
+* BREAKING CHANGE: Remove old DotNet helper and cleanup DotNetCli helper
+* BUGFIX: Worked around breaking change in NuGet 3.5 - https://github.com/fsharp/FAKE/issues/1415
+* BUGFIX: Added logic to allow parsing of git branch names which track - https://github.com/fsharp/FAKE/pull/1417
+* BUGFIX: Set Console.OutputEncoding <- System.Text.Encoding.UTF8 - https://github.com/fsharp/FAKE/pull/1414
+* REVERT: Enable ServiceConfig element configuration in WixHelper - https://github.com/fsharp/FAKE/pull/1412
+
+#### 4.44.0 - 03.11.2016
+* Enable ServiceConfig element configuration in WixHelper - https://github.com/fsharp/FAKE/pull/1412
+* BUGFIX: Moved process stdout encoding out of is silent check - https://github.com/fsharp/FAKE/pull/1414 
+
+#### 4.43.0 - 30.10.2016
+* Better tracing of tasks in TeamCity - https://github.com/fsharp/FAKE/pull/1408
+* BUGFIX: getBranchName works language independent - https://github.com/fsharp/FAKE/pull/1409
+* Add support for the pin-project-references switch to PaketHelper - https://github.com/fsharp/FAKE/pull/1410
+
+#### 4.42.0 - 25.10.2016
+* Add option to emit SuppressMessage Attributes - https://github.com/fsharp/FAKE/pull/1406
+* Add language in NuGetParams - https://github.com/fsharp/FAKE/pull/1407
+* Change order of Dynamics NAV process killing 
+* New SSH helper - https://github.com/fsharp/FAKE/pull/1405 
+* BUGFIX: FAKE should work with old and new commit messages
+* BUGFIX: Fixed bug in assembly info variable name suffixes - https://github.com/fsharp/FAKE/pull/1404
+* BUGFIX: Make FAKE fail on failing git push
+* BUGFIX: When generating AssemblyMetadata_XYZ for AssemblyInfo, pass just value - https://github.com/fsharp/FAKE/pull/1399
+* BUGFIX: Fixed AssemblyVersion bug - https://github.com/fsharp/FAKE/pull/1397
+* BUGFIX: Fixing the famous chinese FAKE bug
+
+#### 4.41.1 - 06.10.2016
+* Add all assembly metadata to AssemblyVersionInformation typehttps://github.com/fsharp/FAKE/pull/1392
+* Allow additional properties to be specified when running the SQL dacpac tooling - https://github.com/fsharp/FAKE/pull/1386
+* Support for dotnet publish
+* BUGFIX: wixHelper AllowDowngrades - https://github.com/fsharp/FAKE/pull/1389
+* REVERT: Use nuget instead of referenced dlls. Fix SQL Server version issue - https://github.com/fsharp/FAKE/pull/1377
+
+#### 4.40.0 - 19.09.2016
+* Allow to pass parameter to SonarQube end - https://github.com/fsharp/FAKE/pull/1381
 * New helper: Search for files with a given pattern also in subdirectories - https://github.com/fsharp/FAKE/pull/1354
+* Adds comment on top of auto-generated AssemblyInfo.fs files - https://github.com/fsharp/FAKE/pull/1373
+* Use nuget instead of referenced dlls. Fix SQL Server version issue - https://github.com/fsharp/FAKE/pull/1377
+* BUGFIX: NuGetVersion: adds application/xml to request accept header - https://github.com/fsharp/FAKE/pull/1383
+* BUGFIX: Replace process cache with safe alternative - https://github.com/fsharp/FAKE/pull/1378
+* BUGFIX: Call 'traceEndTask' in the finally block of a try-finally, so that it is always closed, even if the task throws an exception. https://github.com/fsharp/FAKE/pull/1379
+* USABILITY: Check for npm on path variable in NpmHelper on Windows - https://github.com/fsharp/FAKE/pull/1371
 
 #### 4.39.0 - 25.08.2016
 * Added Checksum[64][Type] in ChocoHelper - https://github.com/fsharp/FAKE/pull/1367
