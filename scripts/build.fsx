@@ -14,6 +14,24 @@ Target "Clean" (fun _ ->
 )
 
 Target "RestoreDependencies" <| fun () ->
+    DotNetCli.Restore <| (fun p -> 
+        {
+         p with 
+            Project = "Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj" 
+            NoCache = true
+        })
+    DotNetCli.Restore <| (fun p -> 
+        {
+         p with 
+            Project = "Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj" 
+            NoCache = true
+        })
+    DotNetCli.Restore <| (fun p -> 
+        {
+         p with 
+            Project = "Weingartner.Json.Migration.Spec_\Weingartner.Json.Migration.Spec.csproj" 
+            NoCache = true
+        })
     RestorePackages()
 
 Target "BuildSolution" (fun () ->
@@ -97,11 +115,16 @@ Target "NugetAnalyzer" (fun()->
 )
 
 Target "NugetPack" DoNothing
-
-"NugetPack" <== [ "BuildSolution"; "NugetMigration"; "NugetAnalyzer" ] 
-
 Target "Default" DoNothing
 
-"Default" <== [ "Clean"; "RestoreDependencies"; "BuildSolution"; "NugetPack"; "RunTests" ]
+"NugetMigration" <== [ "BuildSolution" ]
+"NugetAnalyzer" <== [ "BuildSolution" ]
+"NugetPack" <== [ "NugetMigration"; "NugetAnalyzer" ] 
+"BuildSolution" <== [ "RestoreDependencies" ]
+"NugetPack" <== [ "BuildSolution" ]
+"RunTests" <== [ "BuildSolution" ]
+
+"Default" <== [ "Clean"; "NugetPack"; "RunTests" ]
+
 
 RunTargetOrDefault "Default"
