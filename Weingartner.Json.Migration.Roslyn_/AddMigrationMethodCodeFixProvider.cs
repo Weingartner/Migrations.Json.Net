@@ -1,6 +1,8 @@
 ﻿using System.Composition;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
@@ -10,6 +12,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Simplification;
+using Document = Microsoft.CodeAnalysis.Document;
+using Formatter = Microsoft.CodeAnalysis.Formatting.Formatter;
 
 namespace Weingartner.Json.Migration.Roslyn
 {

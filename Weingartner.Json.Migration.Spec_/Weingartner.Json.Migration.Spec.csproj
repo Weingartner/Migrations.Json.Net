@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <RootNamespace>Weingartner.Json.Migration.Spec</RootNamespace>
+    <AssemblyName>Weingartner.Json.Migration.Spec</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.17.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj" />
+    <ProjectReference Include="..\Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj" />
+  </ItemGroup>
+
+</Project>

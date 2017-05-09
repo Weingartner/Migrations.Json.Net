@@ -6,6 +6,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Weingartner.Json.Migration.Common;
+using Weingartner.Json.Migration;
 using Xunit;
 
 namespace Weingartner.Json.Migration.Spec
@@ -54,7 +55,7 @@ namespace Weingartner.Json.Migration.Spec
             var result = sut.TryMigrate(configData, typeof(FixtureData), Serializer);
 
             result.Item2.Should().BeTrue();
-            result.Item1[VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
+            result.Item1[Weingartner.Json.Migration.VersionMemberName.VersionPropertyName].Value<int>().Should().Be(3);
         }
 
         [Fact]

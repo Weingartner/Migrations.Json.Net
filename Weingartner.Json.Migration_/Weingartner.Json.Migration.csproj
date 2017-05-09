@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <RootNamespace>Weingartner.Json.Migration</RootNamespace>
+    <AssemblyName>Weingartner.Json.Migration</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj" />
+  </ItemGroup>
+
+</Project>
