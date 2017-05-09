@@ -7,10 +7,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Runtime.Serialization;
-using FluentAssertions;
 using Weingartner.Json.Migration;
 using Xunit;
+using FluentAssertions;
+using Document = Microsoft.CodeAnalysis.Document;
 
 namespace TestHelper
 {

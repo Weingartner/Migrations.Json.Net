@@ -4,7 +4,9 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Simplification;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading;
+using Document = Microsoft.CodeAnalysis.Document;
 
 namespace TestHelper
 {

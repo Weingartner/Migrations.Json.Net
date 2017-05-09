@@ -61,26 +61,32 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Common\Weingartner.Json.Migration.Common.csproj">
-      <Project>{0D86E99D-BCEA-458B-8D72-1B25DA48174A}</Project>
-      <Name>Weingartner.Json.Migration.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weingartner.Json.Migration\Weingartner.Json.Migration.csproj">
-      <Project>{A3C46398-1E1D-4261-97F0-487D7FFAC49C}</Project>
-      <Name>Weingartner.Json.Migration</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.csproj">
-      <Project>{74477EA1-B8DC-4527-8457-6048316341AF}</Project>
-      <Name>Weingartner.Json.Migration.Roslyn</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FluentAssertions">
+      <Version>4.19.2</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis">
+      <Version>2.1.0</Version>
+    </PackageReference>
     <PackageReference Include="xunit">
       <Version>2.2.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj">
+      <Project>{58041fbc-eaad-44c1-92ab-6d3e74fbe6d2}</Project>
+      <Name>Weingartner.Json.Migration.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn_\Weingartner.Json.Migration.Roslyn.csproj">
+      <Project>{630BAC68-A278-4BCE-ABF1-6C864B141AA0}</Project>
+      <Name>Weingartner.Json.Migration.Roslyn</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj">
+      <Project>{567ecd20-eb97-4a30-a5b2-0889d1609491}</Project>
+      <Name>Weingartner.Json.Migration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
