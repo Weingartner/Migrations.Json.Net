@@ -13,10 +13,11 @@ Target "Clean" (fun _ ->
     CleanDir outputPath
 )
 
-Target "RestoreDependencies" <| fun () ->
-    RestoreMSSolutionPackages (fun p->p) "Weingartner.Json.Migration.sln"
 
 Target "BuildSolution" (fun () ->
+
+    RestoreMSSolutionPackages (fun p->p) "Weingartner.Json.Migration.sln"
+
     let slnPath = @".\Weingartner.Json.Migration.sln"
     let setParams defaults = {
         defaults with
@@ -105,7 +106,6 @@ Target "Default" DoNothing
 "NugetMigration" <== [ "BuildSolution" ]
 "NugetAnalyzer" <== [ "BuildSolution" ]
 "NugetPack" <== [ "NugetMigration"; "NugetAnalyzer" ] 
-"BuildSolution" <== [ "RestoreDependencies" ]
 "NugetPack" <== [ "BuildSolution" ]
 "RunTests" <== [ "BuildSolution" ]
 
