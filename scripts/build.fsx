@@ -14,25 +14,7 @@ Target "Clean" (fun _ ->
 )
 
 Target "RestoreDependencies" <| fun () ->
-    DotNetCli.Restore <| (fun p -> 
-        {
-         p with 
-            Project = "Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj" 
-            NoCache = true
-        })
-    DotNetCli.Restore <| (fun p -> 
-        {
-         p with 
-            Project = "Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj" 
-            NoCache = true
-        })
-    DotNetCli.Restore <| (fun p -> 
-        {
-         p with 
-            Project = "Weingartner.Json.Migration.Spec_\Weingartner.Json.Migration.Spec.csproj" 
-            NoCache = true
-        })
-    RestorePackages()
+    RestoreMSSolutionPackages (fun p->p) "Weingartner.Json.Migration.sln"
 
 Target "BuildSolution" (fun () ->
     let slnPath = @".\Weingartner.Json.Migration.sln"
