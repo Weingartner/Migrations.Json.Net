@@ -96,17 +96,29 @@ namespace Weingartner.Json.Migration.Common
             Result = result;
         }
 
-        public void ThrowIfInvalid()
+        /// <summary>
+        /// If the migration method is invalid then throw and attach the optional
+        /// inner exception. If the migration method is valid then just return.
+        /// </summary>
+        /// <param name="e"></param>
+        public void ThrowIfInvalid(Exception e=null)
         {
             Debug.Assert(Method.DeclaringType != null, "method.DeclaringType != null");
+
+            void Throw(string msg)
+            {
+                if(e!=null)
+                    throw new MigrationException(msg, e);
+                throw new MigrationException(msg);
+            }
 
             if (Result == VerificationResultEnum.Ok) return;
 
             if (Result == VerificationResultEnum.DoesntStartWithOne)
-                throw new MigrationException($"Migrations of type '{Method.DeclaringType.FullName}' must start with '{MigrationMethod.NamePrefix}1.");
+                Throw($"Migrations of type '{Method.DeclaringType.FullName}' must start with '{MigrationMethod.NamePrefix}1.");
 
             if (Result == VerificationResultEnum.IsNotConsecutive)
-                throw new MigrationException($"Migrations of type '{Method.DeclaringType.FullName}' must be consecutive.");
+                Throw($"Migrations of type '{Method.DeclaringType.FullName}' must be consecutive.");
 
             if (Result != VerificationResultEnum.Ok)
             {
@@ -116,7 +128,7 @@ namespace Weingartner.Json.Migration.Common
                 var jsonSerializer = MigrationMethodVerifier.JsonSerializerType.Name;
                 var argumentType = _ExpectedDataArgumentType?.Name ?? MigrationMethodVerifier.JTokenType.Name;
                 builder.AppendLine($"private static {jtoken} {Method.Name}({argumentType} data, {jsonSerializer} serializer)");
-                throw new MigrationException(builder.ToString());
+                Throw(builder.ToString());
             }
         }
     }

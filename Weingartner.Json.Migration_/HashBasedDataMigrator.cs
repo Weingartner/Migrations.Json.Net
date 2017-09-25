@@ -61,18 +61,17 @@ namespace Weingartner.Json.Migration
                     .Aggregate(serializedData,
                         (data, method) => ExecuteMigration(method, data, serializer));
             }
-            catch
+            catch(Exception e)
             {
                 var migrationMethodVerifier = new MigrationMethodVerifier(VersionMemberName.CanAssign);
 
-                var invalidMethod = migrationMethodVerifier.VerifyMigrationMethods(migrationMethods);
+                var invalidMethod = migrationMethodVerifier.VerifyMigrationMethods(allMigrationMethods);
                 foreach (var method in invalidMethod)
                 {
-                    method.ThrowIfInvalid();
+                    method.ThrowIfInvalid(e);
                 }
 
                 // Exception doesn't come from invalid migration methods -> rethrow
-
                 throw;
             }
 
