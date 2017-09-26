@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn.Vsix", "Weingartner.Json.Migration.Roslyn.Vsix\Weingartner.Json.Migration.Roslyn.Vsix.csproj", "{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration", "Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj", "{567ECD20-EB97-4A30-A5B2-0889D1609491}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration", "Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj", "{567ECD20-EB97-4A30-A5B2-0889D1609491}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Common", "Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj", "{58041FBC-EAAD-44C1-92AB-6D3E74FBE6D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration.Common", "Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj", "{58041FBC-EAAD-44C1-92AB-6D3E74FBE6D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn", "Weingartner.Json.Migration.Roslyn_\Weingartner.Json.Migration.Roslyn.csproj", "{630BAC68-A278-4BCE-ABF1-6C864B141AA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration.Roslyn", "Weingartner.Json.Migration.Roslyn_\Weingartner.Json.Migration.Roslyn.csproj", "{630BAC68-A278-4BCE-ABF1-6C864B141AA0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F53CBCC1-FBB0-462C-8935-0B853362A8AD}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		scripts\build.fsx = scripts\build.fsx
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn.Spec", "Weingartner.Json.Migration.Roslyn.Spec\Weingartner.Json.Migration.Roslyn.Spec.csproj", "{34BF0AB4-8C34-4876-A2E3-20FAA72BD74A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration.Roslyn.Spec", "Weingartner.Json.Migration.Roslyn.Spec\Weingartner.Json.Migration.Roslyn.Spec.csproj", "{34BF0AB4-8C34-4876-A2E3-20FAA72BD74A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Spec", "Weingartner.Json.Migration.Spec\Weingartner.Json.Migration.Spec.csproj", "{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}"
 EndProject
@@ -54,5 +54,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F17857EC-72DD-4007-8A57-3740BF6160FE}
 	EndGlobalSection
 EndGlobal
