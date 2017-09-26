@@ -66,7 +66,7 @@ Target "NugetMigration" (fun()->
         OutputPath = "./artifacts"
         Dependencies = 
             [ "Newtonsoft.Json", "10.0"]
-        Files = [ ("Weingartner*.dll", Some "lib/net45", None )]
+        Files = [ ("Weingartner*.dll", Some "lib/netstandard2.0", None )]
         Summary = "Assists in migrating serialized JSON.Net objects"
         Version = nugetVersion 
         WorkingDir = buildDir
