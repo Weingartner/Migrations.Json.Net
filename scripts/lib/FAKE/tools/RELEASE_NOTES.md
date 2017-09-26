@@ -1,3 +1,29 @@
+#### 4.63.2 - 11.09.2017
+* Update PaketHelper to use new-style arguments - https://github.com/fsharp/FAKE/pull/1628
+
+#### 4.63.1 - 11.09.2017
+* Download .NET SDK to temp path
+
+#### 4.63.0 - 27.07.2017
+* Disable MSBuild NodeReuse by default - https://github.com/fsharp/FAKE/pull/1600
+
+#### 4.62.6 - 26.07.2017
+* Support for Microsoft Dynamics NAV 2017
+
+#### 4.62.5 - 15.07.2017
+* Allow to download SDK from release page
+
+#### 4.62.1 - 29.06.2017
+* Allow to set process encoding and fix issues with node tools - https://github.com/fsharp/FAKE/pull/1606
+
+#### 4.61.3 - 26.05.2017
+* Fix msbuild 15 resolution - fixes https://github.com/fsprojects/Paket/issues/2345
+* Upgrade assembly binding redirect for FluentMigrator - https://github.com/fsharp/FAKE/pull/1558
+
+#### 4.61.2 - 11.05.2017
+* Allow to specify the default NuGet source - https://github.com/fsharp/FAKE/pull/1551
+* Add support for custom NuGet symbol feed during push https://github.com/fsharp/FAKE/pull/1549
+
 #### 4.61.1 - 04.05.2017
 * BUGFIX: Stop AzureHelper throwing exceptions unnecessarily - https://github.com/fsharp/FAKE/pull/1542
 

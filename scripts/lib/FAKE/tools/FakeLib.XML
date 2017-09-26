@@ -2558,6 +2558,18 @@
  [omit]
 </summary>
 </member>
+<member name="P:Fake.ProcessHelper.ProcessEncoding">
+<summary>
+ The ProcessHelper will start all processes with this encoding if AlwaysSetProcessEncoding is set to true.
+ If AlwaysSetProcessEncoding is set to false (default) only mono processes will be changed.
+</summary>
+</member>
+<member name="P:Fake.ProcessHelper.AlwaysSetProcessEncoding">
+<summary>
+ If set to true the ProcessHelper will start all processes with a custom ProcessEncoding.
+ If set to false (default) only mono processes will be changed.
+</summary>
+</member>
 <member name="T:Fake.ProcessHelper">
 <summary>
  Contains functions which can be used to start other tools.
@@ -5886,7 +5898,7 @@
  Tries to detect the right version of MSBuild.
    - On all OS&apos;s, we check a `MSBuild` environment variable which is either
      * a direct path to a file to use, or
-     * a directory that contains a file called 
+     * a directory that contains a file called
          * `msbuild` on non-Windows systems with mono &gt;= 5.0.0.0, or
          * `xbuild` on non-Windows systems with mono &lt; 5.0.0.0,
          * `MSBuild.exe` on Windows systems, or
@@ -5903,6 +5915,7 @@
 <member name="P:Fake.MSBuildHelper.monoVersionToUseMSBuildOn">
 <summary>
  Versions of Mono prior to this one have faulty implementations of MSBuild
+ NOTE: in System.Version 5.0 &gt;= 5.0.0.0 is false while 5.0.0.0 &gt;= 5.0 is true...
 </summary>
 </member>
 <member name="T:Fake.MSBuildHelper.BuildException">
