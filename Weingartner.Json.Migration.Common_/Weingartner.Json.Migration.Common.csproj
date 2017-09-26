@@ -2,12 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Weingartner.Json.Migration.Common</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="NETStandard.Library" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
