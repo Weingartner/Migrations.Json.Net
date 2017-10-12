@@ -5,4 +5,5 @@ $pkg="$csprojdir\artifacts\Weingartner.Json.Migration.$version.nupkg"
 dotnet pack -o ./artifacts  --configuration Release /p:Version=$version $csproj
 Write-Host $pkg
 invoke-item $pkg
-#dotnet nuget push $pkg
+cp $pkg ../Nuget
+dotnet nuget push $pkg
