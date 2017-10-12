@@ -14,5 +14,10 @@
       <InProject>false</InProject>
       <Visible>false</Visible>
     </Content>
+    <Content Include="$(WJM_RoslynBinDirectory)\Newtonsoft*.dll" 
+             PackagePath="$(WJM_AnalyzerFolder)">
+      <InProject>false</InProject>
+      <Visible>false</Visible>
+    </Content>
   </ItemGroup>
 </Project>
