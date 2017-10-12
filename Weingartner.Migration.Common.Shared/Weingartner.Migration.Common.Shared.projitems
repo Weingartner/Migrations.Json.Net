@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>d1ebb04a-a30b-43a6-a1a7-945bcfdf8ef0</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Weingartner.Migration.Common.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)MethodParameter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MigratableAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MigrationException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MigrationMethod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MigrationMethodVerifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimpleType.cs" />
+  </ItemGroup>
+</Project>

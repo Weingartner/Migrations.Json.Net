@@ -4,14 +4,19 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Weingartner.Json.Migration</RootNamespace>
     <AssemblyName>Weingartner.Json.Migration</AssemblyName>
+    <PackageId>Weingartner.Json.Migration</PackageId>
   </PropertyGroup>
+
+
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Common_\Weingartner.Json.Migration.Common.csproj" />
-  </ItemGroup>
 
+
+  <Import Project="..\Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems" Label="Shared" />
+
+
+  <Import Project="nuget.targets" />
 </Project>

@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <WJM>Weingartner.Json.Migration</WJM>
+    <WJM_RoslynProjectDirectory>$(MSBuildProjectDirectory)\..\$(WJM).Roslyn_</WJM_RoslynProjectDirectory>
+    <WJM_RoslynBinDirectory>$(WJM_RoslynProjectDirectory)\bin\$(Configuration)\net461</WJM_RoslynBinDirectory>
+    <WJM_AnalyzerFolder>analyzers\dotnet\cs</WJM_AnalyzerFolder>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="tools\*">
+      <PackagePath>tools</PackagePath>
+    </Content>
+    <Content Include="$(WJM_RoslynBinDirectory)\*.dll" Exclude="$(WJM_RoslynBinDirectory)\System*.dll" PackagePath="$(WJM_AnalyzerFolder)">
+      <InProject>false</InProject>
+      <Visible>false</Visible>
+    </Content>
+    <Content Remove="$(WJM_RoslynBinDirectory)\Microsoft.CodeAnalysis*.dll" />
+  </ItemGroup>
+</Project>
