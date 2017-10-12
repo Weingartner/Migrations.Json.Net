@@ -9,10 +9,10 @@
     <Content Include="tools\*">
       <PackagePath>tools</PackagePath>
     </Content>
-    <Content Include="$(WJM_RoslynBinDirectory)\*.dll" Exclude="$(WJM_RoslynBinDirectory)\System*.dll" PackagePath="$(WJM_AnalyzerFolder)">
+    <Content Include="$(WJM_RoslynBinDirectory)\Weingartner*.dll" 
+             PackagePath="$(WJM_AnalyzerFolder)">
       <InProject>false</InProject>
       <Visible>false</Visible>
     </Content>
-    <Content Remove="$(WJM_RoslynBinDirectory)\Microsoft.CodeAnalysis*.dll" />
   </ItemGroup>
 </Project>
