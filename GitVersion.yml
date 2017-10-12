@@ -1,5 +1,5 @@
-branches:
-  master:
-    mode: ContinuousDelivery
+mode: ContinuousDeployment
+next-version: 311.0.0
+branches: {}
 ignore:
   sha: []
