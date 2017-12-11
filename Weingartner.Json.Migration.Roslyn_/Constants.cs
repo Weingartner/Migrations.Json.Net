@@ -1,5 +1,6 @@
 ﻿namespace Weingartner.Json.Migration.Roslyn
 {
+
     public static class Constants
     {
         public const string MigratableAttributeMetadataName = "Weingartner.Json.Migration.MigratableAttribute";
