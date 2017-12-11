@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Weingartner.Json.Migration.Roslyn</PackageId>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>analyzers\dotnet\cs</ContentTargetFolders>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.3.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="2.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <Content Include="$(OutputPath)\Weingartner.Json.Migration.Roslyn.dll" PackagePath="$(ContentTargetFolders)" />
   </ItemGroup>
