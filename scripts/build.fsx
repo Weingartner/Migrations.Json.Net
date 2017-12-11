@@ -44,7 +44,7 @@ let xunit_folder = "xunit.runner.console."  + xunit_version
 Target "RunTests" (fun () ->
     let setParams (p: XUnit2Params) =
         { p with
-            ToolPath = __SOURCE_DIRECTORY__ @@ "lib" @@  xunit_folder @@ @"tools\xunit.console.exe"
+            ToolPath = __SOURCE_DIRECTORY__ @@ "lib" @@  xunit_folder @@ @"tools\net452\xunit.console.exe"
             Parallel = ParallelMode.All
             ErrorLevel = TestRunnerErrorLevel.Error
         }
