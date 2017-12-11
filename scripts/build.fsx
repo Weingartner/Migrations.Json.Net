@@ -4,6 +4,7 @@
 open Fake
 open Fake.MSBuildHelper
 open Fake.Testing
+open Fake.DotNetCli
 
 let nugetApiKey = getBuildParam "NuGetApiKey"
 let outputPath = @".\artifacts" |> FullName
@@ -38,18 +39,12 @@ Target "BuildSolution" (fun () ->
     build setParams slnPath
 )
 
-let xunit_version = "2.3.1"
-let xunit_folder = "xunit.runner.console."  + xunit_version
-
 Target "RunTests" (fun () ->
-    let setParams (p: XUnit2Params) =
-        { p with
-            ToolPath = __SOURCE_DIRECTORY__ @@ "lib" @@  xunit_folder @@ @"tools\net452\xunit.console.exe"
-            Parallel = ParallelMode.All
-            ErrorLevel = TestRunnerErrorLevel.Error
-        }
-    !! @"**\bin\Release\*.Spec.dll"
-    |> xUnit2 setParams
+    
+    let projects = !! @"**\*.Spec.csproj"
+    for project in projects do
+        let setParams (p: TestParams) = { p with Project = project }
+        (DotNetCli.Test setParams)
 )
 
 let nugetVersion = if buildVersion = "LocalBuild" then ( environVarOrFail "GitVersion_SemVer" ) else buildVersion
