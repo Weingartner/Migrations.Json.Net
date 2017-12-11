@@ -5,6 +5,8 @@ using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.Specialized;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Metadata;
@@ -13,6 +15,7 @@ using Weingartner.Json.Migration;
 using Xunit;
 using FluentAssertions;
 using Document = Microsoft.CodeAnalysis.Document;
+using System.Security.Cryptography;
 
 namespace TestHelper
 {
@@ -32,6 +35,12 @@ namespace TestHelper
         private static readonly MetadataReference MigrationReference = MetadataReference.CreateFromFile(typeof(MigratableAttribute).Assembly.Location);
         private static readonly MetadataReference SerializationReference = MetadataReference.CreateFromFile(typeof(DataMemberAttribute).Assembly.Location);
         private static readonly MetadataReference JsonNetReference = MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonConvert).Assembly.Location);
+        private static readonly MetadataReference CryptoAlgoReference = MetadataReference.CreateFromFile(typeof(IncrementalHash).Assembly.Location);
+        //private static readonly MetadataReference SystemDynamicRuntimeReference = MetadataReference.CreateFromFile(typeof(IDynamicMetaObjectProvider).Assembly.Location);
+        private static readonly MetadataReference SystemDynamicRuntimeReference = MetadataReference.CreateFromFile(Assembly.Load("System.Dynamic.RunTime, Version=4.0.10.0").Location);
+        private static readonly MetadataReference SystemLinqExpressionsReference = MetadataReference.CreateFromFile(typeof(System.Linq.Expressions.BinaryExpression).Assembly.Location);
+        private static readonly MetadataReference SystemObjectModelReference = MetadataReference.CreateFromFile(typeof(INotifyCollectionChanged).Assembly.Location);
+
 
         internal static string DefaultFilePathPrefix = "Test";
         internal static string CSharpDefaultFileExt = "cs";
@@ -170,7 +179,11 @@ namespace TestHelper
                 .AddMetadataReference(projectId, SystemRuntimeReference)
                 .AddMetadataReference(projectId, MigrationReference)
                 .AddMetadataReference(projectId, SerializationReference)
+                .AddMetadataReference(projectId, CryptoAlgoReference)
+                .AddMetadataReference(projectId, SystemDynamicRuntimeReference)
+                .AddMetadataReference(projectId, SystemLinqExpressionsReference)
                 .AddMetadataReference(projectId, NetStandard)
+                .AddMetadataReference(projectId, SystemObjectModelReference)
                 .AddMetadataReference(projectId, JsonNetReference);
             var compilationOptions = solution
                 .GetProject(projectId)
@@ -188,7 +201,12 @@ namespace TestHelper
                 count++;
             }
             var project = solution.GetProject(projectId);
-            var diangostics = project.GetCompilationAsync().Result.GetDiagnostics();
+
+            var ignore =
+                "Assuming assembly reference 'System.Linq.Expressions, Version=4.0.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' used by 'Newtonsoft.Json' matches identity 'System.Linq.Expressions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a' of 'System.Linq.Expressions', you may need to supply runtime policy";
+
+            var diangostics = project.GetCompilationAsync().Result.GetDiagnostics().Where(d=>!d.GetMessage().Contains(ignore));
+
             diangostics.Should().BeEmpty();
             return project;
         }
