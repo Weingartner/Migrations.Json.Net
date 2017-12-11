@@ -38,7 +38,7 @@ Target "BuildSolution" (fun () ->
     build setParams slnPath
 )
 
-let xunit_version = "2.2.0"
+let xunit_version = "2.3.1"
 let xunit_folder = "xunit.runner.console."  + xunit_version
 
 Target "RunTests" (fun () ->
