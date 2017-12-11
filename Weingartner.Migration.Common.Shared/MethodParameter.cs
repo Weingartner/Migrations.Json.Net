@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-
-namespace Weingartner.Json.Migration.Common
+﻿namespace Weingartner.Json.Migration.Common
 {
     public class MethodParameter
     {

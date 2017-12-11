@@ -4,12 +4,13 @@ using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using TestHelper;
+using Weingartner.Json.Migration.Roslyn.Spec.Helpers;
 using Xunit;
+using CodeFixVerifier = Weingartner.Json.Migration.Roslyn.Spec.Helpers.CodeFixVerifier;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec
 {
-    public class MigrationHashAnalyzerSpec : CodeFixVerifier
+    public class MigrationHashAnalyzerSpec : Helpers.CodeFixVerifier
     {
         [Fact]
         public void ShouldNotCreateDiagnosticIfTypeIsNotMigratable()
