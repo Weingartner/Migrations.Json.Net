@@ -35,7 +35,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Weingartner.Json.Migration.Roslyn</RootNamespace>
-    <AssemblyName>Weingartner.Json.Migration.Roslyn</AssemblyName>
+    <AssemblyName>Weingartner.Json.Migration.Roslyn.Vsix</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>false</IncludeAssemblyInVSIXContainer>
