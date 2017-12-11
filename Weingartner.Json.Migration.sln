@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn_.Vsix", "Weingartner.Json.Migration.Roslyn.Vsix\Weingartner.Json.Migration.Roslyn_.Vsix.csproj", "{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn_Vsix.Vsix", "Weingartner.Json.Migration.Roslyn.Vsix\Weingartner.Json.Migration.Roslyn_Vsix.Vsix.csproj", "{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration", "Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj", "{567ECD20-EB97-4A30-A5B2-0889D1609491}"
 EndProject
