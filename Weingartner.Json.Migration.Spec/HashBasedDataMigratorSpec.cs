@@ -65,14 +65,14 @@ namespace Weingartner.Json.Migration.Spec
             ((JObject)configData).Remove(VersionMemberName.VersionPropertyName);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), Serializer)).ShouldNotThrow();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), Serializer)).Should().NotThrow();
         }
 
         [Fact]
         public void ShouldThrowIfConfigurationDataIsNull()
         {
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(null, typeof(FixtureData), Serializer)).ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(null, typeof(FixtureData), Serializer)).Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationData(0);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, null, Serializer)).ShouldThrow<ArgumentNullException>();
+            new Action(() => sut.TryMigrate(configData, null, Serializer)).Should().Throw<ArgumentNullException>();
         }
 
         [Theory]
@@ -92,7 +92,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = new JObject {[VersionMemberName.VersionPropertyName] = 0};
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, configType, Serializer)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(configData, configType, Serializer)).Should().Throw<MigrationException>();
         }
 
 
@@ -114,7 +114,7 @@ namespace Weingartner.Json.Migration.Spec
             var configData = CreateConfigurationFromObject(new FixtureData(), FixtureData._version + 1);
 
             var sut = CreateMigrator();
-            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), Serializer)).ShouldThrow<DataVersionTooHighException>();
+            new Action(() => sut.TryMigrate(configData, typeof(FixtureData), Serializer)).Should().Throw<DataVersionTooHighException>();
         }
 
         [Fact]

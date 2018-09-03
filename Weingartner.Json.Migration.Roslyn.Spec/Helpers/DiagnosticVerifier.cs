@@ -14,6 +14,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
 using Document = Microsoft.CodeAnalysis.Document;
+using System.ComponentModel;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
 {
@@ -99,7 +100,6 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
                     }
                 }
             }
-
             var results = SortDiagnostics(diagnostics);
             diagnostics.Clear();
             return results;

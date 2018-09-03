@@ -26,7 +26,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).Should().Throw<MigrationException>();
         }
 
         [Theory]
@@ -37,7 +37,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).Should().Throw<MigrationException>();
         }
 
         [Theory]
@@ -49,7 +49,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JToken.Parse(jsonData);
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).Should().NotThrow<MigrationException>();
         }
 
         [Theory]
@@ -65,7 +65,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = new JObject();
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, type, _Serializer)).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, type, _Serializer)).Should().NotThrow<MigrationException>();
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace Weingartner.Json.Migration.Spec
             }
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, typeof(Address), _Serializer)).ShouldNotThrow<MigrationException>();
+            new Action(() => sut.TryMigrate(obj, typeof(Address), _Serializer)).Should().NotThrow<MigrationException>();
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace Weingartner.Json.Migration.Spec
             var obj = JValue.CreateNull();
             var sut = GetVerifyingMigrator();
 
-            new Action(() => sut.TryMigrate(obj, typeof(Address), _Serializer)).ShouldNotThrow<Exception>();
+            new Action(() => sut.TryMigrate(obj, typeof(Address), _Serializer)).Should().NotThrow<Exception>();
         }
 
         private static IMigrateData<JToken> GetVerifyingMigrator()

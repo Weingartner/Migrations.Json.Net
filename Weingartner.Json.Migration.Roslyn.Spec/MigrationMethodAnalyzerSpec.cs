@@ -4,10 +4,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using Weingartner.Json.Migration.Common;
 using Weingartner.Json.Migration.Roslyn.Spec.Helpers;
 using Xunit;
 using CodeFixVerifier = Weingartner.Json.Migration.Roslyn.Spec.Helpers.CodeFixVerifier;
+using System.ComponentModel;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec
 {
@@ -242,12 +244,6 @@ using Newtonsoft.Json.Linq;
 class TypeName
 {
     private JArray Migrate_1(JObject data, JsonSerializer serializer) { return new JArray(data); }
-    private JObject Migrate_2(JArray data, JsonSerializer serializer) { return new JObject { { ""data"", data } }; }
-    private JToken Migrate_3(JObject data, JsonSerializer serializer) { return data; }
-    private JToken Migrate_4(JToken data, JsonSerializer serializer) { return data; }
-    private JObject Migrate_5(JToken data, JsonSerializer serializer) { return (JObject)data; }
-    private JObject Migrate_6(JObject data, JsonSerializer serializer) { return (JObject)data; }
-    private JToken Migrate_7(JToken data, JsonSerializer serializer) { return data; }
 }";
 
             VerifyCSharpDiagnostic(source);
