@@ -18,6 +18,8 @@ namespace Weingartner.Json.Migration
         public void SetVersion(JToken data, int version)
         {
             if (!(data is JObject)) return;
+            if (data.First.ToString().Contains("$ref"))
+                return;
             data[VersionMemberName.VersionPropertyName] = version;
         }
     }
