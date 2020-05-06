@@ -60,7 +60,7 @@ Target "NugetMigration" (fun()->
         Description = "Assists in migrating serialized JSON.Net objects"
         OutputPath = "./artifacts"
         Dependencies = 
-            [ "Newtonsoft.Json", "12.0"]
+            [ "Newtonsoft.Json", "12.0.3"]
         Files = [ ("Weingartner*.dll", Some "lib/netstandard2.0", None )]
         Summary = "Assists in migrating serialized JSON.Net objects"
         Version = nugetVersion 
@@ -82,7 +82,7 @@ Target "NugetAnalyzer" (fun()->
         OutputPath = "./artifacts"
         Dependencies = 
             [ "Weingartner.Json.Migration", nugetVersion
-              "Newtonsoft.Json", "12.0"
+              "Newtonsoft.Json", "12.0.3"
             ]
         Summary = "Assists in migrating serialized JSON.Net objects"
         Version = nugetVersion
