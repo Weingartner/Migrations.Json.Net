@@ -17,7 +17,7 @@ Target "Clean" (fun _ ->
 
 Target "BuildSolution" (fun () ->
 
-    RestoreMSSolutionPackages (fun p->p) "Weingartner.Json.Migration.sln"
+    //RestoreMSSolutionPackages (fun p->p) "Weingartner.Json.Migration.sln"
 
     let slnPath = @".\Weingartner.Json.Migration.sln"
     let setParams defaults = {

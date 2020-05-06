@@ -68,6 +68,13 @@
 <member name="P:Microsoft.FSharp.Collections.FSharpMap`2.Count">
  <summary>The number of bindings in the map.</summary>
 </member>
+<member name="M:Microsoft.FSharp.Collections.FSharpMap`2.TryGetValue(`0,Microsoft.FSharp.Core.byref{`1,Microsoft.FSharp.Core.ByRefKinds.InOut})">
+ <summary>Lookup an element in the map, assigning to <c>value</c> if the element is in the domain 
+ of the map and returning <c>false</c> if not.</summary>
+ <param name="key">The input key.</param>
+ <param name="value">A reference to the output value.</param>
+ <returns><c>true</c> if the value is present, <c>false</c> if not.</returns>
+</member>
 <member name="M:Microsoft.FSharp.Collections.FSharpMap`2.TryFind(`0)">
  <summary>Lookup an element in the map, returning a <c>Some</c> value if the element is in the domain 
  of the map and <c>None</c> if not.</summary>
@@ -182,7 +189,7 @@
 
  All members of this class are thread-safe and may be used concurrently from multiple threads.</remarks>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Get``1(``0[0:,0:],System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Get``1(``0[0:, 0:],System.Int32,System.Int32)">
  <summary>Fetches an element from a 2D array. You can also use the syntax <c>array.[index1,index2]</c>.</summary>
 
  <param name="array">The input array.</param>
@@ -192,7 +199,7 @@
  <returns>The value of the array at the given index.</returns>
  <exception cref="System.ArgumentException">Thrown when the indices are negative or exceed the bounds of the array.</exception>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Set``1(``0[0:,0:],System.Int32,System.Int32,``0)">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Set``1(``0[0:, 0:],System.Int32,System.Int32,``0)">
  <summary>Sets the value of an element in an array. You can also use the syntax <c>array.[index1,index2] &lt;- value</c>.</summary>
 
  <param name="array">The input array.</param>
@@ -201,7 +208,7 @@
  <param name="value">The value to set in the array.</param>
  <exception cref="System.ArgumentException">Thrown when the indices are negative or exceed the bounds of the array.</exception> 
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Rebase``1(``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Rebase``1(``0[0:, 0:])">
  <summary>Builds a new array whose elements are the same as the input array but
  where a non-zero-based input array generates a corresponding zero-based 
  output array.</summary>
@@ -210,7 +217,7 @@
 
  <returns>The zero-based output array.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.MapIndexed``2(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,``1}}},``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.MapIndexed``2(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,``1}}},``0[0:, 0:])">
  <summary>Builds a new array whose elements are the results of applying the given function
  to each of the elements of the array. The integer indices passed to the
  function indicates the element being transformed.</summary>
@@ -224,7 +231,7 @@
 
  <returns>An array whose elements have been transformed by the given mapping.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0[0:, 0:])">
  <summary>Builds a new array whose elements are the results of applying the given function
  to each of the elements of the array.</summary>
 
@@ -236,28 +243,28 @@
 
  <returns>An array whose elements have been transformed by the given mapping.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Length2``1(``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Length2``1(``0[0:, 0:])">
  <summary>Returns the length of an array in the second dimension.</summary>
 
  <param name="array">The input array.</param>
 
  <returns>The length of the array in the second dimension.</returns>  
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Length1``1(``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Length1``1(``0[0:, 0:])">
  <summary>Returns the length of an array in the first dimension.</summary>
 
  <param name="array">The input array.</param>
 
  <returns>The length of the array in the first dimension.</returns>  
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.IterateIndexed``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit}}},``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.IterateIndexed``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit}}},``0[0:, 0:])">
  <summary>Applies the given function to each element of the array.  The integer indices passed to the
  function indicates the index of element.</summary>
 
  <param name="action">A function to apply to each element of the array with the indices available as an argument.</param>
  <param name="array">The input array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Iterate``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Iterate``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},``0[0:, 0:])">
  <summary>Applies the given function to each element of the array.</summary>
 
  <param name="action">A function to apply to each element of the array.</param>
@@ -327,7 +334,7 @@
  <returns>The generated array.</returns>
  <exception cref="System.ArgumentException">Thrown when either of the lengths is negative.</exception>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.CopyTo``1(``0[0:,0:],System.Int32,System.Int32,``0[0:,0:],System.Int32,System.Int32,System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.CopyTo``1(``0[0:, 0:],System.Int32,System.Int32,``0[0:, 0:],System.Int32,System.Int32,System.Int32,System.Int32)">
  <summary>Reads a range of elements from the first array and write them into the second.</summary>
 
  <param name="source">The source array.</param>
@@ -341,7 +348,7 @@
  <exception cref="System.ArgumentException">Thrown when any of the indices are negative or if either of
  the counts are larger than the dimensions of the array allow.</exception>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Copy``1(``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Copy``1(``0[0:, 0:])">
  <summary>Builds a new array whose elements are the same as the input array.</summary>
 
  <remarks>For non-zero-based arrays the basing on an input array will be propagated to the output
@@ -351,14 +358,14 @@
 
  <returns>A copy of the input array.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Base2``1(``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Base2``1(``0[0:, 0:])">
  <summary>Fetches the base-index for the second dimension of the array.</summary>
 
  <param name="array">The input array.</param>
 
  <returns>The base-index of the second dimension of the array.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array2DModule.Base1``1(``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array2DModule.Base1``1(``0[0:, 0:])">
  <summary>Fetches the base-index for the first dimension of the array.</summary>
 
  <param name="array">The input array.</param>
@@ -474,6 +481,15 @@
 
  <returns>The result sequence.</returns>
 
+ <exception cref="System.ArgumentNullException">Thrown when the input sequence is null.</exception>
+</member>
+<member name="M:Microsoft.FSharp.Collections.SeqModule.Transpose``2(System.Collections.Generic.IEnumerable{``0})">
+ <summary>Returns the transpose of the given sequence of sequences.</summary>
+ <remarks>This function returns a sequence that digests the whole initial sequence as soon as
+ that sequence is iterated. As a result this function should not be used with
+ large or infinite sequences.</remarks>
+ <param name="source">The input sequence.</param>
+ <returns>The transposed sequence.</returns>
  <exception cref="System.ArgumentNullException">Thrown when the input sequence is null.</exception>
 </member>
 <member name="M:Microsoft.FSharp.Collections.SeqModule.TryPick``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpOption{``1}},System.Collections.Generic.IEnumerable{``0})">
@@ -1105,6 +1121,15 @@
 
  <exception cref="System.ArgumentNullException">Thrown when the input sequence is null.</exception>
 </member>
+<member name="M:Microsoft.FSharp.Collections.SeqModule.TryExactlyOne``1(System.Collections.Generic.IEnumerable{``0})">
+ <summary>Returns the only element of the sequence or <c>None</c> if sequence is empty or contains more than one element.</summary>
+
+ <param name="source">The input sequence.</param>
+
+ <returns>The only element of the sequence or None.</returns>
+
+ <exception cref="System.ArgumentNullException">Thrown when the input sequence is null.</exception>
+</member>
 <member name="M:Microsoft.FSharp.Collections.SeqModule.ExactlyOne``1(System.Collections.Generic.IEnumerable{``0})">
  <summary>Returns the only element of the sequence.</summary>
 
@@ -1597,7 +1622,7 @@
  null.</exception>
 </member>
 <member name="M:Microsoft.FSharp.Collections.SeqModule.AllPairs``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
- <summary>Returns a new sequence that contains the cartesian product of the two input sequences.</summary>
+ <summary>Returns a new sequence that contains all pairings of elements from the first and second sequences.</summary>
  <param name="source1">The first sequence.</param>
  <param name="source2">The second sequence.</param>
  <returns>The result sequence.</returns>
@@ -1706,6 +1731,13 @@
  <param name="count">The maximum number of items to return.</param>
  <param name="array">The input list.</param>
  <returns>The result list.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Collections.ListModule.Transpose``1(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Collections.FSharpList{``0}})">
+ <summary>Returns the transpose of the given sequence of lists.</summary>
+ <param name="lists">The input sequence of list.</param>
+ <returns>The transposed list.</returns>
+ <exception cref="System.ArgumentNullException">Thrown when the input sequence is null.</exception>
+ <exception cref="System.ArgumentException">Thrown when the input lists differ in length.</exception>
 </member>
 <member name="M:Microsoft.FSharp.Collections.ListModule.TryHead``1(Microsoft.FSharp.Collections.FSharpList{``0})">
  <summary>Returns the first element of the list, or
@@ -2245,6 +2277,13 @@
  <param name="list">The input list.</param>
  <returns>True if any element satisfies the predicate.</returns>
 </member>
+<member name="M:Microsoft.FSharp.Collections.ListModule.TryExactlyOne``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+ <summary>Returns the only element of the list or <c>None</c> if it is empty or contains more than one element.</summary>
+
+ <param name="list">The input list.</param>
+
+ <returns>The only element of the list or None.</returns>
+</member>
 <member name="M:Microsoft.FSharp.Collections.ListModule.ExactlyOne``1(Microsoft.FSharp.Collections.FSharpList{``0})">
  <summary>Returns the only element of the list.</summary>
 
@@ -2376,7 +2415,7 @@
  <returns>The resulting list.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Collections.ListModule.AllPairs``2(Microsoft.FSharp.Collections.FSharpList{``0},Microsoft.FSharp.Collections.FSharpList{``1})">
- <summary>Returns a new list that contains the cartesian product of the two input lists.</summary>
+ <summary>Returns a new list that contains all pairings of elements from the first and second lists.</summary>
  <param name="list1">The first input list.</param>
  <param name="list2">The second input list.</param>
  <returns>The resulting list of pairs.</returns>
@@ -2487,6 +2526,13 @@
  <param name="array">The input array.</param>
  <returns>The result array.</returns>
  <exception cref="System.ArgumentNullException">Thrown when the input array is null.</exception>
+</member>
+<member name="M:Microsoft.FSharp.Collections.ArrayModule.Transpose``1(System.Collections.Generic.IEnumerable{``0[]})">
+ <summary>Returns the transpose of the given sequence of arrays.</summary>
+ <param name="arrays">The input sequence of arrays.</param>
+ <returns>The transposed array.</returns>
+ <exception cref="System.ArgumentNullException">Thrown when the input sequence is null.</exception>
+ <exception cref="System.ArgumentException">Thrown when the input arrays differ in length.</exception>
 </member>
 <member name="M:Microsoft.FSharp.Collections.ArrayModule.ToSeq``1(``0[])">
  <summary>Views the given array as a sequence.</summary>
@@ -3150,6 +3196,15 @@
 
  <exception cref="System.ArgumentNullException">Thrown when either itemsToExclude or array is null.</exception>
 </member>
+<member name="M:Microsoft.FSharp.Collections.ArrayModule.TryExactlyOne``1(``0[])">
+ <summary>Returns the only element of the array or <c>None</c> if array is empty or contains more than one element.</summary>
+
+ <param name="array">The input array.</param>
+
+ <returns>The only element of the array or None.</returns>
+
+ <exception cref="System.ArgumentNullException">Thrown when the input array is null.</exception>
+</member>
 <member name="M:Microsoft.FSharp.Collections.ArrayModule.ExactlyOne``1(``0[])">
  <summary>Returns the only element of the array.</summary>
 
@@ -3344,7 +3399,7 @@
  <exception cref="System.ArgumentNullException">Thrown when either of the input arrays is null.</exception>
 </member>
 <member name="M:Microsoft.FSharp.Collections.ArrayModule.AllPairs``2(``0[],``1[])">
- <summary>Builds a new array that contains the cartesian product of the two input arrays.</summary>
+ <summary>Returns a new array that contains all pairings of elements from the first and second arrays.</summary>
  <param name="array1">The first input array.</param>
  <param name="array2">The second input array.</param>
  <exception cref="System.ArgumentNullException">Thrown when either of the input arrays is null.</exception>
@@ -3441,7 +3496,7 @@
 <member name="T:Microsoft.FSharp.Collections.ArrayModule">
  <summary>Basic operations on arrays.</summary>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array4DModule.Set``1(``0[0:,0:,0:,0:],System.Int32,System.Int32,System.Int32,System.Int32,``0)">
+<member name="M:Microsoft.FSharp.Collections.Array4DModule.Set``1(``0[0:, 0:, 0:, 0:],System.Int32,System.Int32,System.Int32,System.Int32,``0)">
  <summary>Sets the value of an element in an array. You can also 
  use the syntax 'array.[index1,index2,index3,index4] &lt;- value'.</summary>
  <param name="array">The input array.</param>
@@ -3451,7 +3506,7 @@
  <param name="index4">The index along the fourth dimension.</param>
  <param name="value">The value to set.</param>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array4DModule.Get``1(``0[0:,0:,0:,0:],System.Int32,System.Int32,System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Collections.Array4DModule.Get``1(``0[0:, 0:, 0:, 0:],System.Int32,System.Int32,System.Int32,System.Int32)">
  <summary>Fetches an element from a 4D array. You can also use the syntax 'array.[index1,index2,index3,index4]'</summary>
  <param name="array">The input array.</param>
  <param name="index1">The index along the first dimension.</param>
@@ -3468,22 +3523,22 @@
  <param name="length4">The length of the fourth dimension.</param>
  <returns>The created array.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length4``1(``0[0:,0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length4``1(``0[0:, 0:, 0:, 0:])">
  <summary>Returns the length of an array in the fourth dimension.</summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the fourth dimension.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length3``1(``0[0:,0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length3``1(``0[0:, 0:, 0:, 0:])">
  <summary>Returns the length of an array in the third dimension.</summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the third dimension.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length2``1(``0[0:,0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length2``1(``0[0:, 0:, 0:, 0:])">
  <summary>Returns the length of an array in the second dimension.</summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the second dimension.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length1``1(``0[0:,0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array4DModule.Length1``1(``0[0:, 0:, 0:, 0:])">
  <summary>Returns the length of an array in the first dimension  </summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the first dimension.</returns>
@@ -3516,7 +3571,7 @@
  <param name="length3">The length of the third dimension.</param>
  <returns>The created array.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Set``1(``0[0:,0:,0:],System.Int32,System.Int32,System.Int32,``0)">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Set``1(``0[0:, 0:, 0:],System.Int32,System.Int32,System.Int32,``0)">
  <summary>Sets the value of an element in an array. You can also 
  use the syntax 'array.[index1,index2,index3] &lt;- value'.</summary>
  <param name="array">The input array.</param>
@@ -3525,7 +3580,7 @@
  <param name="index3">The index along the third dimension.</param>
  <param name="value">The value to set at the given index.</param>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.MapIndexed``2(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,``1}}}},``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.MapIndexed``2(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,``1}}}},``0[0:, 0:, 0:])">
  <summary>Builds a new array whose elements are the results of applying the given function
  to each of the elements of the array. The integer indices passed to the
  function indicates the element being transformed.</summary>
@@ -3536,7 +3591,7 @@
  <param name="array">The input array.</param>
  <returns>The array created from the transformed elements.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},``0[0:, 0:, 0:])">
  <summary>Builds a new array whose elements are the results of applying the given function
  to each of the elements of the array.</summary>
 
@@ -3546,33 +3601,33 @@
  <param name="array">The input array.</param>
  <returns>The array created from the transformed elements.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Length3``1(``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Length3``1(``0[0:, 0:, 0:])">
  <summary>Returns the length of an array in the third dimension.</summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the third dimension.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Length2``1(``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Length2``1(``0[0:, 0:, 0:])">
  <summary>Returns the length of an array in the second dimension.</summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the second dimension.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Length1``1(``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Length1``1(``0[0:, 0:, 0:])">
  <summary>Returns the length of an array in the first dimension  </summary>
  <param name="array">The input array.</param>
  <returns>The length of the array in the first dimension.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.IterateIndexed``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit}}}},``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.IterateIndexed``1(Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{System.Int32,Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit}}}},``0[0:, 0:, 0:])">
  <summary>Applies the given function to each element of the array. The integer indices passed to the
  function indicates the index of element.</summary>
  <param name="action">The function to apply to each element of the array.</param>
  <param name="array">The input array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Iterate``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Iterate``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},``0[0:, 0:, 0:])">
  <summary>Applies the given function to each element of the array.</summary>
  <param name="action">The function to apply to each element of the array.</param>
  <param name="array">The input array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Collections.Array3DModule.Get``1(``0[0:,0:,0:],System.Int32,System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Collections.Array3DModule.Get``1(``0[0:, 0:, 0:],System.Int32,System.Int32,System.Int32)">
  <summary>Fetches an element from a 3D array. You can also use the syntax 'array.[index1,index2,index3]'</summary>
  <param name="array">The input array.</param>
  <param name="index1">The index along the first dimension.</param>
@@ -4471,7 +4526,7 @@
  &lt;example&gt;
  From F# Interactive the default settings can be adjusted using, for example, 
  &lt;pre&gt;
-   open Microsoft.FSharp.Compiler.Interactive.Settings;;
+   open FSharp.Compiler.Interactive.Settings;;
    setPrintWidth 120;;
  &lt;/pre&gt;
  &lt;/example&gt;
@@ -5378,6 +5433,11 @@
 <member name="T:Microsoft.FSharp.Quotations.PatternsModule">
  <summary>Contains a set of primitive F# active patterns to analyze F# expression objects</summary>
 </member>
+<member name="M:Microsoft.FSharp.NativeInterop.NativePtrModule.ToByRefInlined``1(``0*)">
+ <summary>Converts a given typed native pointer to a managed pointer.</summary>
+ <param name="address">The input pointer.</param>
+ <returns>The managed pointer.</returns>
+</member>
 <member name="M:Microsoft.FSharp.NativeInterop.NativePtrModule.StackAllocate``1(System.Int32)">
  <summary>Allocates a region of memory on the stack.</summary>
  <param name="count">The number of objects of type T to allocate.</param>
@@ -5418,6 +5478,16 @@
  <summary>Returns a machine address for a given typed native pointer.</summary>
  <param name="address">The input pointer.</param>
  <returns>The machine address.</returns>
+</member>
+<member name="M:Microsoft.FSharp.NativeInterop.NativePtrModule.OfVoidPtrInlined``1(Microsoft.FSharp.Core.voidptr)">
+ <summary>Returns a typed native pointer for a untyped native pointer.</summary>
+ <param name="address">The untyped pointer.</param>
+ <returns>A typed pointer.</returns>
+</member>
+<member name="M:Microsoft.FSharp.NativeInterop.NativePtrModule.ToVoidPtrInlined``1(``0*)">
+ <summary>Returns an untyped native pointer for a given typed pointer.</summary>
+ <param name="address">The pointer address.</param>
+ <returns>A typed pointer.</returns>
 </member>
 <member name="M:Microsoft.FSharp.NativeInterop.NativePtrModule.OfNativeIntInlined``1(System.IntPtr)">
  <summary>Returns a typed native pointer for a given machine address.</summary>
@@ -5507,166 +5577,6 @@
 <member name="T:Microsoft.FSharp.Control.FSharpDelegateEvent`1">
  <summary>Event implementations for an arbitrary type of delegate.</summary>
 </member>
-<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.DefaultTimeout(System.Int32)">
- <summary>Raises a timeout exception if a message not received in this amount of time. By default
- no timeout is used.</summary>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.remove_Error(Microsoft.FSharp.Control.FSharpHandler{System.Exception})">
- <summary>Occurs when the execution of the agent results in an exception.</summary>
-</member>
-<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Error">
- <summary>Occurs when the execution of the agent results in an exception.</summary>
-</member>
-<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.DefaultTimeout">
- <summary>Raises a timeout exception if a message not received in this amount of time. By default
- no timeout is used.</summary>
-</member>
-<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.CurrentQueueLength">
- <summary>Returns the number of unprocessed messages in the message queue of the agent.</summary>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.add_Error(Microsoft.FSharp.Control.FSharpHandler{System.Exception})">
- <summary>Occurs when the execution of the agent results in an exception.</summary>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.TryScan``1(Microsoft.FSharp.Core.FSharpFunc{`0,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Control.FSharpAsync{``0}}},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Scans for a message by looking through messages in arrival order until <c>scanner</c> 
- returns a Some value. Other messages remain in the queue.</summary>
-
- <remarks>This method is for use within the body of the agent. For each agent, at most 
- one concurrent reader may be active, so no more than one concurrent call to 
- Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
- <param name="scanner">The function to return None if the message is to be skipped
- or Some if the message is to be processed and removed from the queue.</param>
- <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which corresponds
- to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>An asynchronous computation that <c>scanner</c> built off the read message.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.TryReceive(Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Waits for a message. This will consume the first message in arrival order.</summary> 
-
- <remarks>This method is for use within the body of the agent. 
-
- Returns None if a timeout is given and the timeout is exceeded.
-
- This method is for use within the body of the agent. For each agent, at most 
- one concurrent reader may be active, so no more than one concurrent call to 
- Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
- <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which
- corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>An asynchronous computation that returns the received message or
- None if the timeout is exceeded.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.TryPostAndReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Like PostAndReply, but returns None if no reply within the timeout period.</summary>
- <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
- the message to be sent.</param>
- <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
- Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>The reply from the agent or None if the timeout expires.</returns> 
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Start">
- <summary>Starts the agent.</summary>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Start(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpMailboxProcessor{`0},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
- <summary>Creates and starts an agent. The <c>body</c> function is used to generate the asynchronous 
- computation executed by the agent.</summary>
- <param name="body">The function to produce an asynchronous computation that will be executed
- as the read loop for the MailboxProcessor when Start is called.</param>
- <param name="cancellationToken">An optional cancellation token for the <c>body</c>.
- Defaults to <c>Async.DefaultCancellationToken</c>.</param>
- <returns>The created MailboxProcessor.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Scan``1(Microsoft.FSharp.Core.FSharpFunc{`0,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Control.FSharpAsync{``0}}},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Scans for a message by looking through messages in arrival order until <c>scanner</c> 
- returns a Some value. Other messages remain in the queue.</summary>
-
- <remarks>Returns None if a timeout is given and the timeout is exceeded.
-
- This method is for use within the body of the agent. For each agent, at most 
- one concurrent reader may be active, so no more than one concurrent call to 
- Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
- <param name="scanner">The function to return None if the message is to be skipped
- or Some if the message is to be processed and removed from the queue.</param>
- <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which corresponds
- to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>An asynchronous computation that <c>scanner</c> built off the read message.</returns>
- <exception cref="System.TimeoutException">Thrown when the timeout is exceeded.</exception>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Receive(Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Waits for a message. This will consume the first message in arrival order.</summary> 
-
- <remarks>This method is for use within the body of the agent. 
-
- This method is for use within the body of the agent. For each agent, at most 
- one concurrent reader may be active, so no more than one concurrent call to 
- Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
- <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which corresponds
- to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>An asynchronous computation that returns the received message.</returns>
- <exception cref="System.TimeoutException">Thrown when the timeout is exceeded.</exception>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.PostAndTryAsyncReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Like AsyncPostAndReply, but returns None if no reply within the timeout period.</summary>
- <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
- the message to be sent.</param>
- <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
- Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>An asynchronous computation that will return the reply or None if the timeout expires.</returns> 
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.PostAndReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Posts a message to an agent and await a reply on the channel, synchronously.</summary>
-
- <remarks>The message is generated by applying <c>buildMessage</c> to a new reply channel 
- to be incorporated into the message. The receiving agent must process this 
- message and invoke the Reply method on this reply channel precisely once.</remarks>
- <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
- the message to be sent.</param>
- <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
- Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>The reply from the agent.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.PostAndAsyncReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Posts a message to an agent and await a reply on the channel, asynchronously.</summary> 
-
- <remarks>The message is generated by applying <c>buildMessage</c> to a new reply channel 
- to be incorporated into the message. The receiving agent must process this 
- message and invoke the Reply method on this reply channel precisely once.</remarks>
- <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
- the message to be sent.</param>
- <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
- Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
- <returns>An asynchronous computation that will wait for the reply from the agent.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Post(`0)">
- <summary>Posts a message to the message queue of the MailboxProcessor, asynchronously.</summary>
- <param name="message">The message to post.</param>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.#ctor(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpMailboxProcessor{`0},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
- <summary>Creates an agent. The <c>body</c> function is used to generate the asynchronous 
- computation executed by the agent. This function is not executed until 
- <c>Start</c> is called.</summary>
- <param name="body">The function to produce an asynchronous computation that will be executed
- as the read loop for the MailboxProcessor when Start is called.</param>
- <param name="cancellationToken">An optional cancellation token for the <c>body</c>.
- Defaults to <c>Async.DefaultCancellationToken</c>.</param>
- <returns>The created MailboxProcessor.</returns>
-</member>
-<member name="T:Microsoft.FSharp.Control.FSharpMailboxProcessor`1">
- <summary>A message-processing agent which executes an asynchronous computation.</summary>
-
- <remarks>The agent encapsulates a message queue that supports multiple-writers and 
- a single reader agent. Writers send messages to the agent by using the Post 
- method and its variations.
-
- The agent may wait for messages using the Receive or TryReceive methods or
- scan through all available messages using the Scan or TryScan method.</remarks>
-</member>
-<member name="M:Microsoft.FSharp.Control.FSharpAsyncReplyChannel`1.Reply(`0)">
- <summary>Sends a reply to a PostAndReply message.</summary>
- <param name="value">The value to send.</param>
-</member>
-<member name="T:Microsoft.FSharp.Control.FSharpAsyncReplyChannel`1">
- <summary>A handle to a capability to reply to a PostAndReply message.</summary>
-</member>
 <member name="M:Microsoft.FSharp.Control.FSharpAsyncBuilder.Zero">
  <summary>Creates an asynchronous computation that just returns <c>()</c>.</summary>
 
@@ -5711,6 +5621,7 @@
 
  The existence of this method permits the use of <c>try/with</c> in the 
  <c>async { ... }</c> computation expression syntax.</remarks>
+
  <param name="computation">The input computation.</param>
  <param name="catchHandler">The function to run when <c>computation</c> throws an exception.</param>
  <returns>An asynchronous computation that executes <c>computation</c> and calls <c>catchHandler</c> if an
@@ -5806,6 +5717,40 @@
 <member name="T:Microsoft.FSharp.Control.FSharpAsyncBuilder">
  <summary>The type of the <c>async</c> operator, used to build workflows for asynchronous computations.</summary>
 </member>
+<member name="P:Microsoft.FSharp.Control.AsyncActivation`1.IsCancellationRequested">
+ <summary>The F# compiler emits calls to this function to implement F# async expressions.</summary>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncActivation`1.QueueContinuationWithTrampoline(`0)">
+<summary>
+ Used by MailboxProcessor
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncActivation`1.OnSuccess(`0)">
+ <summary>The F# compiler emits calls to this function to implement F# async expressions.</summary>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncActivation`1.OnExceptionRaised">
+ <summary>The F# compiler emits calls to this function to implement F# async expressions.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncActivation`1.OnCancellation">
+ <summary>The F# compiler emits calls to this function to implement F# async expressions.</summary>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncActivation`1.CallContinuation(`0)">
+<summary>
+ Used by MailboxProcessor
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Control.AsyncActivation`1">
+ <summary>The F# compiler emits references to this type to implement F# async expressions.</summary>
+</member>
+<member name="T:Microsoft.FSharp.Control.AsyncReturn">
+ <summary>The F# compiler emits references to this type to implement F# async expressions.</summary>
+</member>
 <member name="P:Microsoft.FSharp.Control.FSharpAsync.DefaultCancellationToken">
  <summary>Gets the default cancellation token for executing asynchronous computations.</summary>
  <returns>The default CancellationToken.</returns>
@@ -5855,6 +5800,20 @@
  <param name="cancellationContinuation">The function called on cancellation.</param>
  <param name="cancellationToken">The <c>CancellationToken</c> to associate with the computation.
  The default is used if this parameter is not provided.</param>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpAsync.StartImmediateAsTask``1(Microsoft.FSharp.Control.FSharpAsync{``0},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
+ <summary>Runs an asynchronous computation, starting immediately on the current operating system, 
+ but also returns the execution as <c>System.Threading.Tasks.Task</c> 
+ </summary>
+ <remarks>If no cancellation token is provided then the default cancellation token is used.
+ You may prefer using this method if you want to achive a similar behviour to async await in C# as 
+ async computation starts on the current thread with an ability to return a result.
+ </remarks>
+ <param name="computation">The asynchronous computation to execute.</param>
+ <param name="cancellationToken">The <c>CancellationToken</c> to associate with the computation.
+ The default is used if this parameter is not provided.</param>
+ <returns>A <c>System.Threading.Tasks.Task</c> that will be completed
+ in the corresponding state once the computation terminates (produces the result, throws exception or gets canceled)</returns>
 </member>
 <member name="M:Microsoft.FSharp.Control.FSharpAsync.StartImmediate(Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
  <summary>Runs an asynchronous computation, starting immediately on the current operating system
@@ -5914,6 +5873,20 @@
  <exception cref="System.ArgumentOutOfRangeException">Thrown when the due time is negative
  and not infinite.</exception>
 </member>
+<member name="M:Microsoft.FSharp.Control.FSharpAsync.Sequential``1(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Control.FSharpAsync{``0}})">
+ <summary>Creates an asynchronous computation that executes all the given asynchronous computations sequentially.</summary>
+
+ <remarks>If all child computations succeed, an array of results is passed to the success continuation.
+
+ If any child computation raises an exception, then the overall computation will trigger an
+ exception, and cancel the others.
+
+ The overall computation will respond to cancellation while executing the child computations.
+ If cancelled, the computation will cancel any remaining child computations but will still wait
+ for the other child computations to complete.</remarks>
+ <param name="computations">A sequence of distinct computations to be run in sequence.</param>
+ <returns>A computation that returns an array of values from the sequence of input computations.</returns>
+</member>
 <member name="M:Microsoft.FSharp.Control.FSharpAsync.RunSynchronously``1(Microsoft.FSharp.Control.FSharpAsync{``0},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
  <summary>Runs the asynchronous computation and await its result.</summary>
 
@@ -5927,10 +5900,26 @@
  <param name="computation">The computation to run.</param>
  <param name="timeout">The amount of time in milliseconds to wait for the result of the
  computation before raising a <c>System.TimeoutException</c>.  If no value is provided
- for timeout then a default of -1 is used to correspond to System.Threading.Timeout.Infinite.</param>
+ for timeout then a default of -1 is used to correspond to System.Threading.Timeout.Infinite.
+ If a cancellable cancellationToken is provided, timeout parameter will be ignored</param>
  <param name="cancellationToken">The cancellation token to be associated with the computation.
  If one is not supplied, the default cancellation token is used.</param>
  <returns>The result of the computation.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpAsync.Parallel``1(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Control.FSharpAsync{``0}},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Creates an asynchronous computation that executes all the given asynchronous computations,
+ initially queueing each as work items and using a fork/join pattern.</summary>
+
+ <remarks>If all child computations succeed, an array of results is passed to the success continuation.
+
+ If any child computation raises an exception, then the overall computation will trigger an
+ exception, and cancel the others.
+
+ The overall computation will respond to cancellation while executing the child computations.
+ If cancelled, the computation will cancel any remaining child computations but will still wait
+ for the other child computations to complete.</remarks>
+ <param name="computations">A sequence of distinct computations to be parallelized.</param>
+ <returns>A computation that returns an array of values from the sequence of input computations.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Control.FSharpAsync.Parallel``1(System.Collections.Generic.IEnumerable{Microsoft.FSharp.Control.FSharpAsync{``0}})">
  <summary>Creates an asynchronous computation that executes all the given asynchronous computations, 
@@ -6190,6 +6179,166 @@
  computation expressions can check the cancellation condition regularly. Synchronous 
  computations within an asynchronous computation do not automatically check this condition.</remarks> 
 </member>
+<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.DefaultTimeout(System.Int32)">
+ <summary>Raises a timeout exception if a message not received in this amount of time. By default
+ no timeout is used.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.remove_Error(Microsoft.FSharp.Control.FSharpHandler{System.Exception})">
+ <summary>Occurs when the execution of the agent results in an exception.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Error">
+ <summary>Occurs when the execution of the agent results in an exception.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.DefaultTimeout">
+ <summary>Raises a timeout exception if a message not received in this amount of time. By default
+ no timeout is used.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.CurrentQueueLength">
+ <summary>Returns the number of unprocessed messages in the message queue of the agent.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.add_Error(Microsoft.FSharp.Control.FSharpHandler{System.Exception})">
+ <summary>Occurs when the execution of the agent results in an exception.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.TryScan``1(Microsoft.FSharp.Core.FSharpFunc{`0,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Control.FSharpAsync{``0}}},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Scans for a message by looking through messages in arrival order until <c>scanner</c> 
+ returns a Some value. Other messages remain in the queue.</summary>
+
+ <remarks>This method is for use within the body of the agent. For each agent, at most 
+ one concurrent reader may be active, so no more than one concurrent call to 
+ Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
+ <param name="scanner">The function to return None if the message is to be skipped
+ or Some if the message is to be processed and removed from the queue.</param>
+ <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which corresponds
+ to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>An asynchronous computation that <c>scanner</c> built off the read message.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.TryReceive(Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Waits for a message. This will consume the first message in arrival order.</summary> 
+
+ <remarks>This method is for use within the body of the agent. 
+
+ Returns None if a timeout is given and the timeout is exceeded.
+
+ This method is for use within the body of the agent. For each agent, at most 
+ one concurrent reader may be active, so no more than one concurrent call to 
+ Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
+ <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which
+ corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>An asynchronous computation that returns the received message or
+ None if the timeout is exceeded.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.TryPostAndReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Like PostAndReply, but returns None if no reply within the timeout period.</summary>
+ <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
+ the message to be sent.</param>
+ <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
+ Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>The reply from the agent or None if the timeout expires.</returns> 
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Start">
+ <summary>Starts the agent.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Start(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpMailboxProcessor{`0},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
+ <summary>Creates and starts an agent. The <c>body</c> function is used to generate the asynchronous 
+ computation executed by the agent.</summary>
+ <param name="body">The function to produce an asynchronous computation that will be executed
+ as the read loop for the MailboxProcessor when Start is called.</param>
+ <param name="cancellationToken">An optional cancellation token for the <c>body</c>.
+ Defaults to <c>Async.DefaultCancellationToken</c>.</param>
+ <returns>The created MailboxProcessor.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Scan``1(Microsoft.FSharp.Core.FSharpFunc{`0,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Control.FSharpAsync{``0}}},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Scans for a message by looking through messages in arrival order until <c>scanner</c> 
+ returns a Some value. Other messages remain in the queue.</summary>
+
+ <remarks>Returns None if a timeout is given and the timeout is exceeded.
+
+ This method is for use within the body of the agent. For each agent, at most 
+ one concurrent reader may be active, so no more than one concurrent call to 
+ Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
+ <param name="scanner">The function to return None if the message is to be skipped
+ or Some if the message is to be processed and removed from the queue.</param>
+ <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which corresponds
+ to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>An asynchronous computation that <c>scanner</c> built off the read message.</returns>
+ <exception cref="System.TimeoutException">Thrown when the timeout is exceeded.</exception>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Receive(Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Waits for a message. This will consume the first message in arrival order.</summary> 
+
+ <remarks>This method is for use within the body of the agent. 
+
+ This method is for use within the body of the agent. For each agent, at most 
+ one concurrent reader may be active, so no more than one concurrent call to 
+ Receive, TryReceive, Scan and/or TryScan may be active.</remarks>
+ <param name="timeout">An optional timeout in milliseconds. Defaults to -1 which corresponds
+ to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>An asynchronous computation that returns the received message.</returns>
+ <exception cref="System.TimeoutException">Thrown when the timeout is exceeded.</exception>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.PostAndTryAsyncReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Like AsyncPostAndReply, but returns None if no reply within the timeout period.</summary>
+ <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
+ the message to be sent.</param>
+ <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
+ Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>An asynchronous computation that will return the reply or None if the timeout expires.</returns> 
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.PostAndReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Posts a message to an agent and await a reply on the channel, synchronously.</summary>
+
+ <remarks>The message is generated by applying <c>buildMessage</c> to a new reply channel 
+ to be incorporated into the message. The receiving agent must process this 
+ message and invoke the Reply method on this reply channel precisely once.</remarks>
+ <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
+ the message to be sent.</param>
+ <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
+ Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>The reply from the agent.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.PostAndAsyncReply``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpAsyncReplyChannel{``0},`0},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Posts a message to an agent and await a reply on the channel, asynchronously.</summary> 
+
+ <remarks>The message is generated by applying <c>buildMessage</c> to a new reply channel 
+ to be incorporated into the message. The receiving agent must process this 
+ message and invoke the Reply method on this reply channel precisely once.</remarks>
+ <param name="buildMessage">The function to incorporate the AsyncReplyChannel into
+ the message to be sent.</param>
+ <param name="timeout">An optional timeout parameter (in milliseconds) to wait for a reply message.
+ Defaults to -1 which corresponds to <c>System.Threading.Timeout.Infinite</c>.</param>
+ <returns>An asynchronous computation that will wait for the reply from the agent.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.Post(`0)">
+ <summary>Posts a message to the message queue of the MailboxProcessor, asynchronously.</summary>
+ <param name="message">The message to post.</param>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpMailboxProcessor`1.#ctor(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.FSharpMailboxProcessor{`0},Microsoft.FSharp.Control.FSharpAsync{Microsoft.FSharp.Core.Unit}},Microsoft.FSharp.Core.FSharpOption{System.Threading.CancellationToken})">
+ <summary>Creates an agent. The <c>body</c> function is used to generate the asynchronous 
+ computation executed by the agent. This function is not executed until 
+ <c>Start</c> is called.</summary>
+ <param name="body">The function to produce an asynchronous computation that will be executed
+ as the read loop for the MailboxProcessor when Start is called.</param>
+ <param name="cancellationToken">An optional cancellation token for the <c>body</c>.
+ Defaults to <c>Async.DefaultCancellationToken</c>.</param>
+ <returns>The created MailboxProcessor.</returns>
+</member>
+<member name="T:Microsoft.FSharp.Control.FSharpMailboxProcessor`1">
+ <summary>A message-processing agent which executes an asynchronous computation.</summary>
+
+ <remarks>The agent encapsulates a message queue that supports multiple-writers and 
+ a single reader agent. Writers send messages to the agent by using the Post 
+ method and its variations.
+
+ The agent may wait for messages using the Receive or TryReceive methods or
+ scan through all available messages using the Scan or TryScan method.</remarks>
+</member>
+<member name="M:Microsoft.FSharp.Control.FSharpAsyncReplyChannel`1.Reply(`0)">
+ <summary>Sends a reply to a PostAndReply message.</summary>
+ <param name="value">The value to send.</param>
+</member>
+<member name="T:Microsoft.FSharp.Control.FSharpAsyncReplyChannel`1">
+ <summary>A handle to a capability to reply to a PostAndReply message.</summary>
+</member>
 <member name="M:Microsoft.FSharp.Control.LazyExtensions.Force``1(System.Lazy{``0})">
  <summary>Forces the execution of this value and return its result. Same as Value. Mutual exclusion is used to 
  prevent other threads also computing the value.</summary>
@@ -6207,6 +6356,122 @@
 </member>
 <member name="T:Microsoft.FSharp.Control.LazyExtensions">
  <summary>Extensions related to Lazy values.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncDownloadFile(System.Net.WebClient,System.Uri,System.String)">
+ <summary>Returns an asynchronous computation that, when run, will wait for the download of the given URI to specified file.</summary>
+ <param name="address">The URI to retrieve.</param>
+ <param name="fileName">The filename to save download to.</param>
+ <returns>An asynchronous computation that will wait for the download of the URI to specified file.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncDownloadData(System.Net.WebClient,System.Uri)">
+ <summary>Returns an asynchronous computation that, when run, will wait for the download of the given URI.</summary>
+ <param name="address">The URI to retrieve.</param>
+ <returns>An asynchronous computation that will wait for the download of the URI.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncDownloadString(System.Net.WebClient,System.Uri)">
+ <summary>Returns an asynchronous computation that, when run, will wait for the download of the given URI.</summary>
+ <param name="address">The URI to retrieve.</param>
+ <returns>An asynchronous computation that will wait for the download of the URI.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncGetResponse(System.Net.WebRequest)">
+ <summary>Returns an asynchronous computation that, when run, will wait for a response to the given WebRequest.</summary>
+ <returns>An asynchronous computation that waits for response to the <c>WebRequest</c>.</returns>
+</member>
+<member name="T:Microsoft.FSharp.Control.WebExtensions">
+ <summary>A module of extension members providing asynchronous operations for some basic Web operations.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.CommonExtensions.SubscribeToObservable``1(System.IObservable{``0},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit})">
+ <summary>Connects a listener function to the observable. The listener will
+ be invoked for each observation. The listener can be removed by
+ calling Dispose on the returned IDisposable object.</summary>
+ <param name="callback">The function to be called for each observation.</param>
+ <returns>An object that will remove the listener if disposed.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.CommonExtensions.AddToObservable``1(System.IObservable{``0},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit})">
+ <summary>Permanently connects a listener function to the observable. The listener will
+ be invoked for each observation.</summary>
+ <param name="callback">The function to be called for each observation.</param>
+</member>
+<member name="M:Microsoft.FSharp.Control.CommonExtensions.AsyncWrite(System.IO.Stream,System.Byte[],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Returns an asynchronous computation that will write the given bytes to the stream.</summary>
+ <param name="buffer">The buffer to write from.</param>
+ <param name="offset">An optional offset as a number of bytes in the stream.</param>
+ <param name="count">An optional number of bytes to write to the stream.</param>
+ <returns>An asynchronous computation that will write the given bytes to the stream.</returns>
+ <exception cref="System.ArgumentException">Thrown when the sum of offset and count is longer than
+ the buffer length.</exception>
+ <exception cref="System.ArgumentOutOfRangeException">Thrown when offset or count is negative.</exception>
+</member>
+<member name="M:Microsoft.FSharp.Control.CommonExtensions.AsyncReadBytes(System.IO.Stream,System.Int32)">
+ <summary>Returns an asynchronous computation that will read the given number of bytes from the stream.</summary>
+ <param name="count">The number of bytes to read.</param>
+ <returns>An asynchronous computation that returns the read byte[] when run.</returns> 
+</member>
+<member name="M:Microsoft.FSharp.Control.CommonExtensions.AsyncRead(System.IO.Stream,System.Byte[],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+ <summary>Returns an asynchronous computation that will read from the stream into the given buffer.</summary>
+ <param name="buffer">The buffer to read into.</param>
+ <param name="offset">An optional offset as a number of bytes in the stream.</param>
+ <param name="count">An optional number of bytes to read from the stream.</param>
+ <returns>An asynchronous computation that will read from the stream into the given buffer.</returns>
+ <exception cref="System.ArgumentException">Thrown when the sum of offset and count is longer than
+ the buffer length.</exception>
+ <exception cref="System.ArgumentOutOfRangeException">Thrown when offset or count is negative.</exception>
+</member>
+<member name="T:Microsoft.FSharp.Control.CommonExtensions">
+ <summary>A module of extension members providing asynchronous operations for some basic CLI types related to concurrency and I/O.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncPrimitives.TryWith``1(Microsoft.FSharp.Control.AsyncActivation{``0},Microsoft.FSharp.Control.FSharpAsync{``0},Microsoft.FSharp.Core.FSharpFunc{System.Exception,Microsoft.FSharp.Core.FSharpOption{Microsoft.FSharp.Control.FSharpAsync{``0}}})">
+ <summary>The F# compiler emits calls to this function to implement the <c>try/with</c> construct for F# async expressions.</summary>
+
+ <param name="ctxt">The async activation.</param>
+ <param name="computation">The computation to protect.</param>
+ <param name="catchFunction">The exception filter.</param>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncPrimitives.TryFinally``1(Microsoft.FSharp.Control.AsyncActivation{``0},Microsoft.FSharp.Control.FSharpAsync{``0},Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+ <summary>The F# compiler emits calls to this function to implement the <c>try/finally</c> construct for F# async expressions.</summary>
+
+ <param name="ctxt">The async activation.</param>
+ <param name="computation">The computation to protect.</param>
+ <param name="finallyFunction">The finally code.</param>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncPrimitives.Bind``2(Microsoft.FSharp.Control.AsyncActivation{``0},Microsoft.FSharp.Control.FSharpAsync{``1},Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Control.FSharpAsync{``0}})">
+ <summary>The F# compiler emits calls to this function to implement the <c>let!</c> construct for F# async expressions.</summary>
+
+ <param name="ctxt">The async activation.</param>
+ <param name="part2">A function returning the second part of the computation.</param>
+
+ <returns>An async activation suitable for running part1 of the asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncPrimitives.CallThenInvoke``2(Microsoft.FSharp.Control.AsyncActivation{``0},``1,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Control.FSharpAsync{``0}})">
+ <summary>The F# compiler emits calls to this function to implement constructs for F# async expressions.</summary>
+
+ <param name="ctxt">The async activation.</param>
+ <param name="result">The result of the first part of the computation.</param>
+ <param name="part2">A function returning the second part of the computation.</param>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncPrimitives.Invoke``1(Microsoft.FSharp.Control.FSharpAsync{``0},Microsoft.FSharp.Control.AsyncActivation{``0})">
+ <summary>The F# compiler emits calls to this function to implement constructs for F# async expressions.</summary>
+
+ <param name="computation">The async computation.</param>
+ <param name="ctxt">The async activation.</param>
+
+ <returns>A value indicating asynchronous execution.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Control.AsyncPrimitives.MakeAsync``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Control.AsyncActivation{``0},Microsoft.FSharp.Control.AsyncReturn})">
+ <summary>The F# compiler emits calls to this function to implement F# async expressions.</summary>
+
+ <param name="body">The body of the async computation.</param>
+
+ <returns>The async computation.</returns>
+</member>
+<member name="T:Microsoft.FSharp.Control.AsyncPrimitives">
+ <summary>Entry points for generated code</summary>
 </member>
 <member name="M:Microsoft.FSharp.Control.EventModule.Pairwise``2(Microsoft.FSharp.Control.IEvent{``0,``1})">
  <summary>Returns a new event that triggers on the second and subsequent triggerings of the input event.
@@ -6388,69 +6653,6 @@
 </member>
 <member name="T:Microsoft.FSharp.Control.ObservableModule">
  <summary>Basic operations on first class event and other observable objects.</summary>
-</member>
-<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncDownloadFile(System.Net.WebClient,System.Uri,System.String)">
- <summary>Returns an asynchronous computation that, when run, will wait for the download of the given URI to specified file.</summary>
- <param name="address">The URI to retrieve.</param>
- <param name="fileName">The filename to save download to.</param>
- <returns>An asynchronous computation that will wait for the download of the URI to specified file.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncDownloadData(System.Net.WebClient,System.Uri)">
- <summary>Returns an asynchronous computation that, when run, will wait for the download of the given URI.</summary>
- <param name="address">The URI to retrieve.</param>
- <returns>An asynchronous computation that will wait for the download of the URI.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncDownloadString(System.Net.WebClient,System.Uri)">
- <summary>Returns an asynchronous computation that, when run, will wait for the download of the given URI.</summary>
- <param name="address">The URI to retrieve.</param>
- <returns>An asynchronous computation that will wait for the download of the URI.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.WebExtensions.AsyncGetResponse(System.Net.WebRequest)">
- <summary>Returns an asynchronous computation that, when run, will wait for a response to the given WebRequest.</summary>
- <returns>An asynchronous computation that waits for response to the <c>WebRequest</c>.</returns>
-</member>
-<member name="T:Microsoft.FSharp.Control.WebExtensions">
- <summary>A module of extension members providing asynchronous operations for some basic Web operations.</summary>
-</member>
-<member name="M:Microsoft.FSharp.Control.CommonExtensions.SubscribeToObservable``1(System.IObservable{``0},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit})">
- <summary>Connects a listener function to the observable. The listener will
- be invoked for each observation. The listener can be removed by
- calling Dispose on the returned IDisposable object.</summary>
- <param name="callback">The function to be called for each observation.</param>
- <returns>An object that will remove the listener if disposed.</returns>
-</member>
-<member name="M:Microsoft.FSharp.Control.CommonExtensions.AddToObservable``1(System.IObservable{``0},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit})">
- <summary>Permanently connects a listener function to the observable. The listener will
- be invoked for each observation.</summary>
- <param name="callback">The function to be called for each observation.</param>
-</member>
-<member name="M:Microsoft.FSharp.Control.CommonExtensions.AsyncWrite(System.IO.Stream,System.Byte[],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Returns an asynchronous computation that will write the given bytes to the stream.</summary>
- <param name="buffer">The buffer to write from.</param>
- <param name="offset">An optional offset as a number of bytes in the stream.</param>
- <param name="count">An optional number of bytes to write to the stream.</param>
- <returns>An asynchronous computation that will write the given bytes to the stream.</returns>
- <exception cref="System.ArgumentException">Thrown when the sum of offset and count is longer than
- the buffer length.</exception>
- <exception cref="System.ArgumentOutOfRangeException">Thrown when offset or count is negative.</exception>
-</member>
-<member name="M:Microsoft.FSharp.Control.CommonExtensions.AsyncReadBytes(System.IO.Stream,System.Int32)">
- <summary>Returns an asynchronous computation that will read the given number of bytes from the stream.</summary>
- <param name="count">The number of bytes to read.</param>
- <returns>An asynchronous computation that returns the read byte[] when run.</returns> 
-</member>
-<member name="M:Microsoft.FSharp.Control.CommonExtensions.AsyncRead(System.IO.Stream,System.Byte[],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
- <summary>Returns an asynchronous computation that will read from the stream into the given buffer.</summary>
- <param name="buffer">The buffer to read into.</param>
- <param name="offset">An optional offset as a number of bytes in the stream.</param>
- <param name="count">An optional number of bytes to read from the stream.</param>
- <returns>An asynchronous computation that will read from the stream into the given buffer.</returns>
- <exception cref="System.ArgumentException">Thrown when the sum of offset and count is longer than
- the buffer length.</exception>
- <exception cref="System.ArgumentOutOfRangeException">Thrown when offset or count is negative.</exception>
-</member>
-<member name="T:Microsoft.FSharp.Control.CommonExtensions">
- <summary>A module of extension members providing asynchronous operations for some basic CLI types related to concurrency and I/O.</summary>
 </member>
 <member name="M:Microsoft.FSharp.Linq.QueryBuilder.Zero``2">
  <summary>
@@ -7427,6 +7629,15 @@
 <member name="T:Microsoft.FSharp.Core.ilsigptr`1">
  <summary>This type is for internal use by the F# code generator.</summary>
 </member>
+<member name="T:Microsoft.FSharp.Core.voidptr">
+ <summary>Represents an untyped unmanaged pointer in F# code.</summary>
+
+ <remarks>This type should only be used when writing F# code that interoperates
+ with native code.  Use of this type in F# code may result in
+ unverifiable code being generated.  Conversions to and from the 
+ <c>nativeint</c> type may be required. Values of this type can be generated
+ by the functions in the <c>NativeInterop.NativePtr</c> module.</remarks>
+</member>
 <member name="T:Microsoft.FSharp.Core.nativeptr`1">
  <summary>Represents an unmanaged pointer in F# code.</summary>
 
@@ -7435,9 +7646,6 @@
  unverifiable code being generated.  Conversions to and from the 
  <c>nativeint</c> type may be required. Values of this type can be generated
  by the functions in the <c>NativeInterop.NativePtr</c> module.</remarks>
-</member>
-<member name="T:Microsoft.FSharp.Core.byref`1">
- <summary>Represents a managed pointer in F# code.</summary>
 </member>
 <member name="T:Microsoft.FSharp.Core.array`1">
  <summary>Single dimensional, zero-based arrays, written <c>int[]</c>, <c>string[]</c> etc.</summary>
@@ -7671,6 +7879,45 @@
 <member name="T:Microsoft.FSharp.Core.FSharpResult`2">
  <summary>Helper type for error handling without exceptions.</summary>
 </member>
+<member name="T:Microsoft.FSharp.Core.voption`1">
+ <summary>The type of optional values, represented as structs.</summary>
+
+ <remarks>Use the constructors <c>ValueSome</c> and <c>ValueNone</c> to create values of this type.
+ Use the values in the <c>ValueOption</c> module to manipulate values of this type,
+ or pattern match against the values directly.</remarks>
+</member>
+<member name="T:Microsoft.FSharp.Core.FSharpValueOption`1.ValueSome">
+ <summary>The representation of "Value of type 'T"</summary>
+ <param name="Value">The input value.</param>
+ <returns>An option representing the value.</returns>
+</member>
+<member name="T:Microsoft.FSharp.Core.FSharpValueOption`1.ValueNone">
+ <summary>The representation of "No value"</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.FSharpValueOption`1.Value">
+ <summary>Get the value of a 'ValueSome' option. An InvalidOperationException is raised if the option is 'ValueNone'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.FSharpValueOption`1.None">
+ <summary>Create a value option value that is a 'ValueNone' value.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.FSharpValueOption`1.IsSome">
+ <summary>Return 'true' if the value option is a 'ValueSome' value.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.FSharpValueOption`1.IsNone">
+ <summary>Return 'true' if the value option is a 'ValueNone' value.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.FSharpValueOption`1.Some(`0)">
+ <summary>Create a value option value that is a 'Some' value.</summary>
+ <param name="value">The input value</param>
+ <returns>A value option representing the value.</returns>
+</member>
+<member name="T:Microsoft.FSharp.Core.FSharpValueOption`1">
+ <summary>The type of optional values, represented as structs.</summary>
+
+ <remarks>Use the constructors <c>ValueSome</c> and <c>ValueNone</c> to create values of this type.
+ Use the values in the <c>ValueOption</c> module to manipulate values of this type,
+ or pattern match against the values directly.</remarks>
+</member>
 <member name="T:Microsoft.FSharp.Core.option`1">
  <summary>The type of optional values. When used from other CLI languages the
  empty option is the <c>null</c> value. </summary>
@@ -7726,7 +7973,7 @@
  due to the use of <c>null</c> as a value representation.</remarks>
 </member>
 <member name="T:Microsoft.FSharp.Core.ref`1">
- <summary>The type of mutable references. Use the functions [:=] and [!] to get and
+ <summary>The type of mutable references. Use the functions [!] and [:=] to get and
  set values of this type.</summary>
 </member>
 <member name="P:Microsoft.FSharp.Core.FSharpRef`1.contents">
@@ -7741,17 +7988,17 @@
  <summary>The current value of the reference cell</summary>
 </member>
 <member name="T:Microsoft.FSharp.Core.FSharpRef`1">
- <summary>The type of mutable references. Use the functions [:=] and [!] to get and
+ <summary>The type of mutable references. Use the functions [!] and [:=] to get and
  set values of this type.</summary>
 </member>
 <member name="M:Microsoft.FSharp.Core.FuncConvert.ToFSharpFunc``2(System.Converter{``0,``1})">
  <summary>Convert the given Converter delegate object to an F# function value</summary>
- <param name="converter">The input Converter.</param>
+ <param name="converter">The input Converter delegate.</param>
  <returns>The F# function.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Core.FuncConvert.ToFSharpFunc``1(System.Action{``0})">
  <summary>Convert the given Action delegate object to an F# function value</summary>
- <param name="action">The input action.</param>
+ <param name="action">The input Action delegate.</param>
  <returns>The F# function.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Core.FuncConvert.FuncFromTupled``6(Microsoft.FSharp.Core.FSharpFunc{System.Tuple{``0,``1,``2,``3,``4},``5})">
@@ -7773,6 +8020,66 @@
  <summary>A utility function to convert function values from tupled to curried form</summary>
  <param name="func">The input tupled function.</param>
  <returns>The output curried function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromFunc``6(System.Func{``0,``1,``2,``3,``4,``5})">
+ <summary>Convert the given Func delegate object to an F# function value</summary>
+ <param name="func">The input Func delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromFunc``5(System.Func{``0,``1,``2,``3,``4})">
+ <summary>Convert the given Func delegate object to an F# function value</summary>
+ <param name="func">The input Func delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromFunc``4(System.Func{``0,``1,``2,``3})">
+ <summary>Convert the given Func delegate object to an F# function value</summary>
+ <param name="func">The input Func delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromFunc``3(System.Func{``0,``1,``2})">
+ <summary>Convert the given Func delegate object to an F# function value</summary>
+ <param name="func">The input Func delegate.</param>
+ <returns>The F#funcfunction.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromFunc``2(System.Func{``0,``1})">
+ <summary>Convert the given Func delegate object to an F# function value</summary>
+ <param name="func">The input Func delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromFunc``1(System.Func{``0})">
+ <summary>Convert the given Func delegate object to an F# function value</summary>
+ <param name="func">The input Func delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromAction``5(System.Action{``0,``1,``2,``3,``4})">
+ <summary>Convert the given Action delegate object to an F# function value</summary>
+ <param name="func">The input Action delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromAction``4(System.Action{``0,``1,``2,``3})">
+ <summary>Convert the given Action delegate object to an F# function value</summary>
+ <param name="func">The input Action delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromAction``3(System.Action{``0,``1,``2})">
+ <summary>Convert the given Action delegate object to an F# function value</summary>
+ <param name="func">The input Action delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromAction``2(System.Action{``0,``1})">
+ <summary>Convert the given Action delegate object to an F# function value</summary>
+ <param name="func">The input Action delegate.</param>
+ <returns>The F#funcfunction.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromAction``1(System.Action{``0})">
+ <summary>Convert the given Action delegate object to an F# function value</summary>
+ <param name="func">The input Action delegate.</param>
+ <returns>The F# function.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.FuncConvert.FromAction(System.Action)">
+ <summary>Convert the given Action delegate object to an F# function value</summary>
+ <param name="func">The input Action delegate.</param>
+ <returns>The F# function.</returns>
 </member>
 <member name="T:Microsoft.FSharp.Core.FuncConvert">
  <summary>Helper functions for converting F# first class function values to and from CLI representations
@@ -7842,8 +8149,8 @@
  <returns>An F# function of the same type.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Core.FSharpFunc`2.#ctor">
- <summary>Construct an instance of an F# first class function value </summary>
- <returns>The created F# function.</returns>
+ <summary>Construct an instance of an F# first class function value </summary> 
+ <returns>The created F# function.</returns> 
 </member>
 <member name="T:Microsoft.FSharp.Core.FSharpFunc`2">
  <summary>The CLI type used to represent F# function values. This type is not
@@ -7959,6 +8266,18 @@
 </member>
 <member name="T:Microsoft.FSharp.Core.FSharpChoice`2">
  <summary>Helper types for active patterns with 2 choices.</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.outref`1">
+ <summary>Represents a out-argument managed pointer in F# code. This type should only be used with F# 4.5+.</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.inref`1">
+ <summary>Represents a in-argument or readonly managed pointer in F# code. This type should only be used with F# 4.5+.</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.byref`1">
+ <summary>Represents a managed pointer in F# code. For F# 4.5+ this is considered equivalent to <c>byref&lt;'T, ByRefKinds.InOut&gt;</c></summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.byref`2">
+ <summary>Represents a managed pointer in F# code.</summary>
 </member>
 <member name="T:Microsoft.FSharp.Core.int64`1">
  <summary>The type of 64-bit signed integer numbers, annotated with a unit of measure. The unit
@@ -8691,6 +9010,432 @@
 <member name="T:Microsoft.FSharp.Core.MatchFailureException">
  <summary>Non-exhaustive match failures will raise the MatchFailureException exception</summary>
 </member>
+<member name="P:Microsoft.FSharp.Core.SR.maxDegreeOfParallelismNotPositive">
+ <summary>maxDegreeOfParallelism must be positive, was {0}</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.unsupportedQueryConstructKind">
+ <summary>This is not a valid query expression. The construct '{0}' was used in a query but is not recognized by the F#-to-LINQ query translator. Check the specification of permitted queries and consider moving some of the operations out of the query expression.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.unsupportedQueryProperty">
+ <summary>This is not a valid query expression. The property '{0}' was used in a query but is not recognized by the F#-to-LINQ query translator. Check the specification of permitted queries and consider moving some of the operations out of the query expression.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.unsupportedQueryCall">
+ <summary>This is not a valid query expression. The method '{0}' was used in a query but is not recognized by the F#-to-LINQ query translator. Check the specification of permitted queries and consider moving some of the operations out of the query expression</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.unsupportedQueryConstruct">
+ <summary>This is not a valid query expression. The following construct was used in a query but is not recognized by the F#-to-LINQ query translator:\n{0}\nCheck the specification of permitted queries and consider moving some of the operations out of the query expression.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.unsupportedIfThenElse">
+ <summary>An if/then/else conditional or pattern matching expression with multiple branches is not permitted in a query. An if/then/else conditional may be used.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.failDueToUnsupportedInputTypeInSumByOrAverageBy">
+ <summary>Unrecognized use of a 'sumBy' or 'averageBy' operator in a query. In queries whose original data is of static type IQueryable, these operators may only be used with result type int32, int64, single, double or decimal</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.thenByError">
+ <summary>'thenBy' and 'thenByDescending' may only be used with an ordered input</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.inputSequenceTooLong">
+ <summary>The input sequence contains more than one element.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.invalidTupleTypeConstructorNotDefined">
+ <summary>The tuple type '{0}' is invalid. Required constructor is not defined.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.invalidRecordTypeConstructorNotDefined">
+ <summary>The record type '{0}' is invalid. Required constructor is not defined.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.controlContinuationInvokedMultipleTimes">
+ <summary>A continuation provided by Async.FromContinuations was invoked multiple times</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.optionValueWasNone">
+ <summary>The option value was None</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.thisValueCannotBeMutated">
+ <summary>This value cannot be mutated</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtypeArgumentOutOfRange">
+ <summary>type argument out of range</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QillFormedAppOrLet">
+ <summary>ill formed expression: AppOp or LetOp</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QfailedToBindAssembly">
+ <summary>Failed to bind assembly '{0}' while processing quotation data</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QcannotTakeAddress">
+ <summary>Cannot take the address of this quotation</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QcannotBindToMethod">
+ <summary>Could not bind to method</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QcannotBindProperty">
+ <summary>Could not bind property {0} in type {1}</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QcannotBindFunction">
+ <summary>Could not bind function {0} in type {1}</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfWidthSpecifierIllegal">
+ <summary>Bad format specifier (width)</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfSpecifierAfterIllegal">
+ <summary>Bad format specifier (after {0})</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfPrecisonSpecifierIllegal">
+ <summary>Bad format specifier (precision)</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfNotAFunType">
+ <summary>Not a function type</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfMissingFormatSpecifier">
+ <summary>Missing format specifier</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfHashFormatSpecifierIllegal">
+ <summary>The # formatting modifier is invalid in F#</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfExpectedWidth">
+ <summary>Expected a width argument</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfExpectedPrecision">
+ <summary>Expected a precision argument</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfBadIntegerForDynamicFomatter">
+ <summary>Bad integer supplied to dynamic formatter</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfBadFormatSpecifier">
+ <summary>Bad format specifier:{0}</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.printfBadFloatValue">
+ <summary>Bad float value</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.multipleCompilationMappings">
+ <summary>Multiple CompilationMappingAttributes, expected at most one</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.moveNextNotCalledOrFinished">
+ <summary>MoveNext not called, or finished</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.firstClassUsesOfSplice">
+ <summary>first class uses of '%' or '%%' are not permitted</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.constructorForUnionCaseNotFound">
+ <summary>The constructor method '{0}' for the union case could not be found</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.keyNotFoundAlt">
+ <summary>An index satisfying the predicate was not found in the collection.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QwrongNumOfTypeArgs">
+ <summary>The method '{0}' expects {1} type arguments but {2} were provided</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QwritingGetOnly">
+ <summary>Writing a get-only property</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QunionNeedsDiffNumArgs">
+ <summary>F# union type requires different number of arguments</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtupleLengthsDiffer">
+ <summary>The tuple lengths are different</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtupleAccessOutOfRange">
+ <summary>Tuple access out of range</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmRaw">
+ <summary>Type mismatch when splicing expression into quotation literal. The type of the expression tree being inserted doesn't match the type expected by the splicing operation. Expected '{0}', but received type '{1}'. Consider type-annotating with the expected expression type, e.g., (%% x : {0}) or (%x : {0}).</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmFunTypeNotMatchDelegate">
+ <summary>Type mismatch when building '{0}': function type doesn't match delegate type. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmExprHasWrongType">
+ <summary>Type mismatch when building '{0}': the expression has the wrong type. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QstaticWithReceiverObject">
+ <summary>Receiver object was unexpected, as member is static</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QreadingSetOnly">
+ <summary>Reading a set-only property</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QparentCannotBeNull">
+ <summary>Parent type cannot be null</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QnonStaticNoReceiverObject">
+ <summary>The member is non-static (instance), but no receiver object was supplied</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QinvalidFuncType">
+ <summary>Invalid function type</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QincorrectType">
+ <summary>Incorrect type</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QincorrectNumArgs">
+ <summary>Incorrect number of arguments</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QincorrectInstanceType">
+ <summary>Incorrect instance type</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QincompatibleRecordLength">
+ <summary>Incompatible record length</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QfailedToBindTypeInAssembly">
+ <summary>Failed to bind type '{0}' in assembly '{1}'</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QfailedToBindProperty">
+ <summary>Failed to bind property '{0}'</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QfailedToBindField">
+ <summary>Failed to bind field '{0}'</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QfailedToBindConstructor">
+ <summary>Failed to bind constructor</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.tupleIndexOutOfRange">
+ <summary>The tuple index '{1}' was out of range for tuple type '{0}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.syncContextNull">
+ <summary>The System.Threading.SynchronizationContext.Current of the calling thread is null.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.stepCannotBeZero">
+ <summary>The step of a range cannot be zero.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.stepCannotBeNaN">
+ <summary>The step of a range cannot be NaN.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.startCannotBeNaN">
+ <summary>The start of a range cannot be NaN.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.resetNotSupported">
+ <summary>Reset is not supported on this enumerator.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QunrecognizedMethodCall">
+ <summary>The parameter is not a recognized method name.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QunexpectedHole">
+ <summary>Unexpected quotation hole in expression.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmVarTypeNotMatchRHS">
+ <summary>Type mismatch when building '{0}': the variable type doesn't match the type of the right-hand-side of a let binding. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmTuple">
+ <summary>Type mismatch when building '{0}': mismatched type of argument and tuple element. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmTrueAndFalseMustMatch">
+ <summary>Type mismatch when building '{0}': types of true and false branches differ. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmLowerUpperBoundMustBeInt">
+ <summary>Type mismatch when building '{0}': lower and upper bounds must be integers. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmLoopBodyMustBeLambdaTakingInteger">
+ <summary>Type mismatch when building '{0}': body of the for loop must be lambda taking integer as an argument. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmInvalidParam">
+ <summary>Type mismatch when building '{0}': invalid parameter for a method or indexer property. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmInitArray">
+ <summary>Type mismatch when building '{0}': initializer doesn't match array type. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmIncorrectArgForUnion">
+ <summary>Type mismatch when building '{0}': incorrect argument type for an F# union. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmIncorrectArgForRecord">
+ <summary>Type mismatch when building '{0}': incorrect argument type for an F# record. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmGuardMustBeBool">
+ <summary>Type mismatch when building '{0}': guard must return boolean. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmFunctionArgTypeMismatch">
+ <summary>Type mismatch when building '{0}': function argument type doesn't match. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmExprTypeMismatch">
+ <summary>Type mismatch when building '{0}': types of expression does not match. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmExprNotMatchTuple">
+ <summary>Type mismatch when building '{0}': expression doesn't match the tuple type. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmExpectedFunction">
+ <summary>Type mismatch when building '{0}': expected function type in function application or let binding. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmCondMustBeBool">
+ <summary>Type mismatch when building '{0}': condition expression must be of type bool. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmBodyMustBeUnit">
+ <summary>Type mismatch when building '{0}': body must return unit. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QtmmBadFieldType">
+ <summary>Type mismatch when building '{0}': the type of the field was incorrect. Expected '{1}', but received type '{2}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QmissingUnionCase">
+ <summary>Type '{0}' did not have an F# union case named '{1}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QmissingRecordField">
+ <summary>Type '{0}' did not have an F# record field named '{1}'.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QinvalidCaseIndex">
+ <summary>Not a valid F# union case index.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QexpectedTwoTypes">
+ <summary>Expected exactly two type arguments.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.QexpectedOneType">
+ <summary>Expected exactly one type argument.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.privateUnionType">
+ <summary>The type '{0}' is an F# union type but its representation is private. You must specify BindingFlags.NonPublic to access private type representations.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.privateRecordType">
+ <summary>The type '{0}' is an F# record type but its representation is private. You must specify BindingFlags.NonPublic to access private type representations.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.privateExceptionType">
+ <summary>The type '{0}' is the representation of an F# exception declaration but its representation is private. You must specify BindingFlags.NonPublic to access private type representations.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.outOfRange">
+ <summary>The index is outside the legal range.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.objIsNullAndNoType">
+ <summary>The object is null and no type was given.  Either pass a non-null object or a non-null type parameter.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.objIsNotARecord">
+ <summary>The object is not an F# record value.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.nullsNotAllowedInArray">
+ <summary>One of the elements in the array is null.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notUsedForHashing">
+ <summary>This object is for recursive equality calls and cannot be used for hashing.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notEnoughElements">
+ <summary>The input sequence has an insufficient number of elements.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notComparable">
+ <summary>The two objects have different types and are not comparable.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notAUnionType">
+ <summary>Type '{0}' is not an F# union type.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notATupleType">
+ <summary>Type '{0}' is not a tuple type.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notARecordType">
+ <summary>Type '{0}' is not an F# record type.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notAPermutation">
+ <summary>The function did not compute a permutation.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notAnExceptionType">
+ <summary>Type '{0}' is not the representation of an F# exception declaration.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.notAFunctionType">
+ <summary>Type '{0}' is not a function type.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.nonZeroBasedDisallowed">
+ <summary>Arrays with non-zero base cannot be created on this platform.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.checkStaticInit">
+ <summary>The static initialization of a file or type resulted in static data being accessed recursively before it was fully initialized.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.checkInit">
+ <summary>The initialization of an object or value resulted in an object or value being accessed recursively before it was fully initialized.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.noNegateMinValue">
+ <summary>Negating the minimum value of a twos complement number is invalid.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mismatchIAREnd">
+ <summary>The IAsyncResult object provided does not match this 'End' operation.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mismatchIARCancel">
+ <summary>The IAsyncResult object provided does not match this 'Cancel' operation.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mapCannotBeMutated">
+ <summary>Map values cannot be mutated.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mailboxScanTimedOut">
+ <summary>Mailbox.Scan timed out.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mailboxReceiveTimedOut">
+ <summary>Mailbox.Receive timed out.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mailboxProcessorPostAndReplyTimedOut">
+ <summary>MailboxProcessor.PostAndReply timed out.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mailboxProcessorPostAndAsyncReplyTimedOut">
+ <summary>MailboxProcessor.PostAndAsyncReply timed out.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.mailboxProcessorAlreadyStarted">
+ <summary>The MailboxProcessor has already been started.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.listsHadDifferentLengths">
+ <summary>The lists had different lengths.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.keyNotFound">
+ <summary>The item, key, or index was not found in the collection.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.invalidTupleTypes">
+ <summary>This is not a valid tuple type for the F# reflection library.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.inputSequenceEmpty">
+ <summary>The input sequence was empty.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.inputMustBePositive">
+ <summary>The input must be positive.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.inputMustBeNonNegative">
+ <summary>The input must be non-negative.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.inputListWasEmpty">
+ <summary>The input list was empty.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.indexOutOfBounds">
+ <summary>The index was outside the range of elements in the list.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.genericCompareFail1">
+ <summary>Failure during generic comparison: the type '{0}' does not implement the System.IComparable interface. This error may be arise from the use of a function such as 'compare', 'max' or 'min' or a data structure such as 'Set' or 'Map' whose keys contain instances of this type.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.failedReadEnoughBytes">
+ <summary>Failed to read enough bytes from the stream.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.enumerationPastIntMaxValue">
+ <summary>Enumeration based on System.Int32 exceeded System.Int32.MaxValue.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.setContainsNoElements">
+ <summary>Set contains no elements.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.enumerationNotStarted">
+ <summary>Enumeration has not started. Call MoveNext.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.enumerationAlreadyFinished">
+ <summary>Enumeration already finished.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.endCannotBeNaN">
+ <summary>The end of a range cannot be NaN.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.dyInvOpMultOverload">
+ <summary>Dynamic invocation of op_Multiply involving overloading is not supported.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.dyInvOpMultCoerce">
+ <summary>Dynamic invocation of op_Multiply involving coercions is not supported.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.dyInvOpAddOverload">
+ <summary>Dynamic invocation of op_Addition involving overloading is not supported.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.dyInvOpAddCoerce">
+ <summary>Dynamic invocation of op_Addition involving coercions is not supported.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.dyInvDivByIntCoerce">
+ <summary>Dynamic invocation of DivideByInt involving coercions is not supported.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.delegateExpected">
+ <summary>Expecting delegate type.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.badFormatString">
+ <summary>Input string was not in a correct format.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.arrayWasEmpty">
+ <summary>The input array was empty.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.arraysHadDifferentLengths">
+ <summary>The arrays have different lengths.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.addressOpNotFirstClass">
+ <summary>First class uses of address-of operators are not permitted.</summary>
+</member>
+<member name="P:Microsoft.FSharp.Core.SR.matchCasesIncomplete">
+ <summary>The match cases were incomplete</summary>
+</member>
 <member name="M:Microsoft.FSharp.Core.Operators.KeyValuePattern``2(System.Collections.Generic.KeyValuePair{``0,``1})">
  <summary>An active pattern to match values of type <c>System.Collections.Generic.KeyValuePair</c></summary>
  <param name="keyValuePair">The input key/value pair.</param>
@@ -8970,6 +9715,9 @@
  <summary>An internal, library-only compiler intrinsic for compile-time 
  generation of a RuntimeMethodHandle.</summary>
 </member>
+<member name="M:Microsoft.FSharp.Core.Operators.NameOf``1(``0)">
+ <summary>Returns the name of the given symbol.</summary>        
+</member>
 <member name="M:Microsoft.FSharp.Core.Operators.TypeOf``1">
  <summary>Generate a System.Type runtime representation of a static type.</summary>
 </member>
@@ -9175,6 +9923,12 @@
 </member>
 <member name="M:Microsoft.FSharp.Core.Operators.op_Concatenate(System.String,System.String)">
  <summary>Concatenate two strings. The operator '+' may also be used.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.Operators.DefaultValueArg``1(Microsoft.FSharp.Core.FSharpValueOption{``0},``0)">
+ <summary>Used to specify a default value for an optional argument in the implementation of a function</summary>
+ <param name="arg">A value option representing the argument.</param>
+ <param name="defaultValue">The default value of the argument.</param>
+ <returns>The argument value. If it is None, the defaultValue is returned.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Core.Operators.DefaultArg``1(Microsoft.FSharp.Core.FSharpOption{``0},``0)">
  <summary>Used to specify a default value for an optional argument in the implementation of a function</summary>
@@ -9715,7 +10469,7 @@
  <param name="finish">The index of the last character of the slice.</param>
  <returns>The substring from the given indices.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice4D``1(``0[0:,0:,0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[0:,0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice4D``1(``0[0:, 0:, 0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[0:, 0:, 0:, 0:])">
  <summary>Sets a slice of an array</summary>
  <param name="target">The target array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9728,7 +10482,7 @@
  <param name="finish4">The end index of the fourth dimension.</param>
  <param name="source">The source array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice4D``1(``0[0:,0:,0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice4D``1(``0[0:, 0:, 0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
  <summary>Gets a slice of an array</summary>
  <param name="source">The source array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9741,7 +10495,7 @@
  <param name="finish4">The end index of the fourth dimension.</param>
  <returns>The four dimensional sub array from the given indices.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice3D``1(``0[0:,0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[0:,0:,0:])">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice3D``1(``0[0:, 0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[0:, 0:, 0:])">
  <summary>Sets a slice of an array</summary>
  <param name="target">The target array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9752,7 +10506,7 @@
  <param name="finish3">The end index of the third dimension.</param>
  <param name="source">The source array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice3D``1(``0[0:,0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice3D``1(``0[0:, 0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
  <summary>Gets a slice of an array</summary>
  <param name="source">The source array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9763,7 +10517,7 @@
  <param name="finish3">The end index of the third dimension.</param>
  <returns>The three dimensional sub array from the given indices.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice2DFixed2``1(``0[0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},System.Int32,``0[])">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice2DFixed2``1(``0[0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},System.Int32,``0[])">
  <summary>Sets a vector slice of a 2D array. The index of the second dimension is fixed.</summary>
  <param name="target">The target array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9771,7 +10525,7 @@
  <param name="index2">The index of the second dimension.</param>
  <param name="source">The source array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice2DFixed1``1(``0[0:,0:],System.Int32,Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[])">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice2DFixed1``1(``0[0:, 0:],System.Int32,Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[])">
  <summary>Sets a vector slice of a 2D array. The index of the first dimension is fixed.</summary>
  <param name="target">The target array.</param>
  <param name="index1">The index of the first dimension.</param>
@@ -9779,7 +10533,7 @@
  <param name="finish2">The end index of the second dimension.</param>
  <param name="source">The source array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice2D``1(``0[0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[0:,0:])">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.SetArraySlice2D``1(``0[0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},``0[0:, 0:])">
  <summary>Sets a region slice of an array</summary>
  <param name="target">The target array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9788,7 +10542,7 @@
  <param name="finish2">The end index of the second dimension.</param>
  <param name="source">The source array.</param>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice2DFixed2``1(``0[0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},System.Int32)">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice2DFixed2``1(``0[0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},System.Int32)">
  <summary>Gets a vector slice of a 2D array. The index of the second dimension is fixed.</summary>
  <param name="source">The source array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -9796,7 +10550,7 @@
  <param name="index2">The fixed index of the second dimension.</param>
  <returns>The sub array from the input indices.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice2DFixed1``1(``0[0:,0:],System.Int32,Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice2DFixed1``1(``0[0:, 0:],System.Int32,Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
  <summary>Gets a vector slice of a 2D array. The index of the first dimension is fixed.</summary>
  <param name="source">The source array.</param>
  <param name="index1">The index of the first dimension.</param>
@@ -9804,7 +10558,7 @@
  <param name="finish2">The end index of the second dimension.</param>
  <returns>The sub array from the input indices.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice2D``1(``0[0:,0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
+<member name="M:Microsoft.FSharp.Core.Operators.OperatorIntrinsics.GetArraySlice2D``1(``0[0:, 0:],Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.Int32})">
  <summary>Gets a region slice of an array</summary>
  <param name="source">The source array.</param>
  <param name="start1">The start index of the first dimension.</param>
@@ -10250,27 +11004,27 @@
 <member name="T:Microsoft.FSharp.Core.LanguagePrimitives.HashCompare">
  <summary>The F# compiler emits calls to some of the functions in this module as part of the compiled form of some language constructs</summary>
 </member>
-<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray4D``1(``0[0:,0:,0:,0:],System.Int32,System.Int32,System.Int32,System.Int32,``0)">
+<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray4D``1(``0[0:, 0:, 0:, 0:],System.Int32,System.Int32,System.Int32,System.Int32,``0)">
 <summary>
  The standard overloaded associative (4-indexed) mutation operator
 </summary>
 </member>
-<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray3D``1(``0[0:,0:,0:],System.Int32,System.Int32,System.Int32,``0)">
+<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray3D``1(``0[0:, 0:, 0:],System.Int32,System.Int32,System.Int32,``0)">
  <summary>The standard overloaded associative (3-indexed) mutation operator</summary>
 </member>
-<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray2D``1(``0[0:,0:],System.Int32,System.Int32,``0)">
+<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray2D``1(``0[0:, 0:],System.Int32,System.Int32,``0)">
  <summary>The standard overloaded associative (2-indexed) mutation operator</summary>
 </member>
 <member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.SetArray``1(``0[],System.Int32,``0)">
  <summary>The standard overloaded associative (indexed) mutation operator</summary>
 </member>
-<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray4D``1(``0[0:,0:,0:,0:],System.Int32,System.Int32,System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray4D``1(``0[0:, 0:, 0:, 0:],System.Int32,System.Int32,System.Int32,System.Int32)">
  <summary>The standard overloaded associative (4-indexed) lookup operator</summary>
 </member>
-<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray3D``1(``0[0:,0:,0:],System.Int32,System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray3D``1(``0[0:, 0:, 0:],System.Int32,System.Int32,System.Int32)">
  <summary>The standard overloaded associative (3-indexed) lookup operator</summary>
 </member>
-<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray2D``1(``0[0:,0:],System.Int32,System.Int32)">
+<member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray2D``1(``0[0:, 0:],System.Int32,System.Int32)">
  <summary>The standard overloaded associative (2-indexed) lookup operator</summary>
 </member>
 <member name="M:Microsoft.FSharp.Core.LanguagePrimitives.IntrinsicFunctions.GetArray``1(``0[],System.Int32)">
@@ -10349,6 +11103,190 @@
 </member>
 <member name="T:Microsoft.FSharp.Core.LanguagePrimitives">
  <summary>Language primitives associated with the F# language</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.ByRefKinds.InOut">
+<summary>
+ Represents a byref that can be both read and written
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.ByRefKinds.In">
+<summary>
+ Represents a byref that can be read
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.ByRefKinds.Out">
+<summary>
+ Represents a byref that can be written
+</summary>
+</member>
+<member name="T:Microsoft.FSharp.Core.ByRefKinds">
+<summary>
+ Represents the types of byrefs in F# 4.5+
+</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.ToObj``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Convert an option to a potentially null value.</summary>
+ <param name="value">The input value.</param>
+ <returns>The result value, which is null if the input was ValueNone.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.OfObj``1(``0)">
+ <summary>Convert a potentially null value to a value option.</summary>
+ <param name="value">The input value.</param>
+ <returns>The result value option.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.OfNullable``1(System.Nullable{``0})">
+ <summary>Convert a Nullable value to a value option.</summary>
+ <param name="value">The input nullable value.</param>
+ <returns>The result value option.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.ToNullable``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Convert the value option to a Nullable value.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>The result value.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.ToList``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Convert the value option to a list of length 0 or 1.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>The result list.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.ToArray``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Convert the value option to an array of length 0 or 1.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>The result array.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Filter``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>filter f inp</c> evaluates to <c>match inp with ValueNone -> ValueNone | ValueSome x -> if f x then ValueSome x else ValueNone</c>.</summary>
+ <param name="predicate">A function that evaluates whether the value contained in the value option should remain, or be filtered out.</param>
+ <param name="voption">The input value option.</param>
+ <returns>The input if the predicate evaluates to true; otherwise, ValueNone.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Flatten``1(Microsoft.FSharp.Core.FSharpValueOption{Microsoft.FSharp.Core.FSharpValueOption{``0}})">
+ <summary><c>flatten inp</c> evaluates to <c>match inp with ValueNone -> ValueNone | ValueSome x -> x</c></summary>
+ <param name="voption">The input value option.</param>
+ <returns>A value option of the output type of the binder.</returns>
+ <remarks><c>flatten</c> is equivalent to <c>bind id</c>.</remarks>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Bind``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpValueOption{``1}},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>bind f inp</c> evaluates to <c>match inp with ValueNone -> ValueNone | ValueSome x -> f x</c></summary>
+ <param name="binder">A function that takes the value of type T from a value option and transforms it into
+ a value option containing a value of type U.</param>
+ <param name="voption">The input value option.</param>
+ <returns>An option of the output type of the binder.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Map3``4(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpFunc{``2,``3}}},Microsoft.FSharp.Core.FSharpValueOption{``0},Microsoft.FSharp.Core.FSharpValueOption{``1},Microsoft.FSharp.Core.FSharpValueOption{``2})">
+ <summary><c>map f voption1 voption2 voption3</c> evaluates to <c>match voption1, voption2, voption3 with ValueSome x, ValueSome y, ValueSome z -> ValueSome (f x y z) | _ -> ValueNone</c>.</summary>
+ <param name="mapping">A function to apply to the value option values.</param>
+ <param name="voption1">The first value option.</param>
+ <param name="voption2">The second value option.</param>
+ <param name="voption3">The third value option.</param>
+ <returns>A value option of the input values after applying the mapping function, or ValueNone if any input is ValueNone.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Map2``3(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``2}},Microsoft.FSharp.Core.FSharpValueOption{``0},Microsoft.FSharp.Core.FSharpValueOption{``1})">
+ <summary><c>map f voption1 voption2</c> evaluates to <c>match voption1, voption2 with ValueSome x, ValueSome y -> ValueSome (f x y) | _ -> ValueNone</c>.</summary>
+ <param name="mapping">A function to apply to the voption values.</param>
+ <param name="voption1">The first value option.</param>
+ <param name="voption2">The second value option.</param>
+ <returns>A value option of the input values after applying the mapping function, or ValueNone if either input is ValueNone.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Map``2(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>map f inp</c> evaluates to <c>match inp with ValueNone -> ValueNone | ValueSome x -> ValueSome (f x)</c>.</summary>
+ <param name="mapping">A function to apply to the voption value.</param>
+ <param name="voption">The input value option.</param>
+ <returns>A value option of the input value after applying the mapping function, or ValueNone if the input is ValueNone.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Iterate``1(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>iter f inp</c> executes <c>match inp with ValueNone -> () | ValueSome x -> f x</c>.</summary>
+ <param name="action">A function to apply to the voption value.</param>
+ <param name="voption">The input value option.</param>
+ <returns>Unit if the option is ValueNone, otherwise it returns the result of applying the predicate
+ to the voption value.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Contains``1(``0,Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Evaluates to true if <paramref name="voption"/> is <c>ValueSome</c> and its value is equal to <paramref name="value"/>.</summary>
+ <param name="value">The value to test for equality.</param>
+ <param name="voption">The input value option.</param>
+ <returns>True if the option is <c>ValueSome</c> and contains a value equal to <paramref name="value"/>, otherwise false.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.ForAll``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>forall p inp</c> evaluates to <c>match inp with ValueNone -> true | ValueSome x -> p x</c>.</summary>
+ <param name="predicate">A function that evaluates to a boolean when given a value from the value option type.</param>
+ <param name="voption">The input value option.</param>
+ <returns>True if the option is None, otherwise it returns the result of applying the predicate
+ to the option value.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Exists``1(Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>exists p inp</c> evaluates to <c>match inp with ValueNone -> false | ValueSome x -> p x</c>.</summary>
+ <param name="predicate">A function that evaluates to a boolean when given a value from the option type.</param>
+ <param name="voption">The input value option.</param>
+ <returns>False if the option is ValueNone, otherwise it returns the result of applying the predicate
+ to the option value.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.FoldBack``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.FSharpFunc{``1,``1}},Microsoft.FSharp.Core.FSharpValueOption{``0},``1)">
+ <summary><c>fold f inp s</c> evaluates to <c>match inp with ValueNone -> s | ValueSome x -> f x s</c>.</summary>
+ <param name="folder">A function to update the state data when given a value from a value option.</param>
+ <param name="voption">The input value option.</param>
+ <param name="state">The initial state.</param>
+ <returns>The original state if the option is ValueNone, otherwise it returns the updated state with the folder
+ and the voption value.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Fold``2(Microsoft.FSharp.Core.FSharpFunc{``1,Microsoft.FSharp.Core.FSharpFunc{``0,``1}},``1,Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>fold f s inp</c> evaluates to <c>match inp with ValueNone -> s | ValueSome x -> f s x</c>.</summary>
+ <param name="folder">A function to update the state data when given a value from a value option.</param>
+ <param name="state">The initial state.</param>
+ <param name="voption">The input value option.</param>
+ <returns>The original state if the option is ValueNone, otherwise it returns the updated state with the folder
+ and the voption value.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.Count``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary><c>count inp</c> evaluates to <c>match inp with ValueNone -> 0 | ValueSome _ -> 1</c>.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>A zero if the option is ValueNone, a one otherwise.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.GetValue``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Gets the value associated with the option.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>The value within the option.</returns>
+ <exception href="System.ArgumentException">Thrown when the option is ValueNone.</exception>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.OrElseWith``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.FSharpValueOption{``0}},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Returns <paramref name="voption"/> if it is <c>Some</c>, otherwise evaluates <paramref name="ifNoneThunk"/> and returns the result.</summary>
+ <param name="ifNoneThunk">A thunk that provides an alternate value option when evaluated.</param>
+ <param name="voption">The input value option.</param>
+ <returns>The voption if the voption is ValueSome, else the result of evaluating <paramref name="ifNoneThunk"/>.</returns>
+ <remarks><paramref name="ifNoneThunk"/> is not evaluated unless <paramref name="voption"/> is <c>ValueNone</c>.</remarks>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.OrElse``1(Microsoft.FSharp.Core.FSharpValueOption{``0},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Returns <paramref name="option"/> if it is <c>Some</c>, otherwise returns <paramref name="ifNone"/>.</summary>
+ <param name="ifNone">The value to use if <paramref name="option"/> is <c>None</c>.</param>
+ <param name="option">The input option.</param>
+ <returns>The option if the option is Some, else the alternate option.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.DefaultWith``1(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0},Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Gets the value of the voption if the voption is <c>ValueSome</c>, otherwise evaluates <paramref name="defThunk"/> and returns the result.</summary>
+ <param name="defThunk">A thunk that provides a default value when evaluated.</param>
+ <param name="voption">The input voption.</param>
+ <returns>The voption if the voption is ValueSome, else the result of evaluating <paramref name="defThunk"/>.</returns>
+ <remarks><paramref name="defThunk"/> is not evaluated unless <paramref name="voption"/> is <c>ValueNone</c>.</remarks>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.DefaultValue``1(``0,Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Gets the value of the value option if the option is <c>ValueSome</c>, otherwise returns the specified default value.</summary>
+ <param name="value">The specified default value.</param>
+ <param name="voption">The input voption.</param>
+ <returns>The voption if the voption is ValueSome, else the default value.</returns>
+ <remarks>Identical to the built-in <see cref="defaultArg"/> operator, except with the arguments swapped.</remarks>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.IsNone``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Returns true if the value option is ValueNone.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>True if the voption is ValueNone.</returns>
+</member>
+<member name="M:Microsoft.FSharp.Core.ValueOption.IsSome``1(Microsoft.FSharp.Core.FSharpValueOption{``0})">
+ <summary>Returns true if the value option is not ValueNone.</summary>
+ <param name="voption">The input value option.</param>
+ <returns>True if the value option is not ValueNone.</returns>
+</member>
+<member name="T:Microsoft.FSharp.Core.ValueOption">
+ <summary>Basic operations on value options.</summary>
 </member>
 <member name="M:Microsoft.FSharp.Core.OptionModule.ToObj``1(Microsoft.FSharp.Core.FSharpOption{``0})">
  <summary>Convert an option to a potentially null value.</summary>
@@ -10523,9 +11461,9 @@
 </member>
 <member name="M:Microsoft.FSharp.Core.ResultModule.MapError``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpResult{``2,``0})">
  <summary><c>map f inp</c> evaluates to <c>match inp with Error x -> Error (f x) | Ok v -> Ok v</c>.</summary>
- <param name="mapping">A function to apply to the OK result value.</param>
+ <param name="mapping">A function to apply to the Error result value.</param>
  <param name="result">The input result.</param>
- <returns>A result of the input value after applying the mapping function, or Error if the input is Error.</returns>
+ <returns>A result of the error value after applying the mapping function, or Ok if the input is Ok.</returns>
 </member>
 <member name="M:Microsoft.FSharp.Core.ResultModule.Map``3(Microsoft.FSharp.Core.FSharpFunc{``0,``1},Microsoft.FSharp.Core.FSharpResult{``0,``2})">
  <summary><c>map f inp</c> evaluates to <c>match inp with Error e -> Error e | Ok x -> Ok (f x)</c>.</summary>
@@ -10870,7 +11808,7 @@
 
  <returns>A new enumerator for the sequence.</returns>
 </member>
-<member name="M:Microsoft.FSharp.Core.CompilerServices.GeneratedSequenceBase`1.GenerateNext(System.Collections.Generic.IEnumerable{`0}@)">
+<member name="M:Microsoft.FSharp.Core.CompilerServices.GeneratedSequenceBase`1.GenerateNext(Microsoft.FSharp.Core.byref{System.Collections.Generic.IEnumerable{`0},Microsoft.FSharp.Core.ByRefKinds.InOut})">
  <summary>The F# compiler emits implementations of this type for compiled sequence expressions.</summary>
 
  <param name="result">A reference to the sequence.</param>
@@ -11188,6 +12126,9 @@
 </member>
 <member name="M:Microsoft.FSharp.Core.ExtraTopLevelOperators.CreateArray2D``2(System.Collections.Generic.IEnumerable{``0})">
  <summary>Builds a 2D array from a sequence of sequences of elements.</summary>
+</member>
+<member name="M:Microsoft.FSharp.Core.ExtraTopLevelOperators.CreateReadOnlyDictionary``2(System.Collections.Generic.IEnumerable{System.Tuple{``0,``1}})">
+ <summary>Builds a read-only lookup table from a sequence of key/value pairs. The key objects are indexed using generic hashing and equality.</summary>
 </member>
 <member name="M:Microsoft.FSharp.Core.ExtraTopLevelOperators.CreateDictionary``2(System.Collections.Generic.IEnumerable{System.Tuple{``0,``1}})">
  <summary>Builds a read-only lookup table from a sequence of key/value pairs. The key objects are indexed using generic hashing and equality.</summary>
