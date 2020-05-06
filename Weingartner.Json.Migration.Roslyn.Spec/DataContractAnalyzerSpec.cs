@@ -5,11 +5,10 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Weingartner.Json.Migration.Roslyn.Spec.Helpers;
 using Xunit;
-using CodeFixVerifier = Weingartner.Json.Migration.Roslyn.Spec.Helpers.CodeFixVerifier;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec
 {
-    public class DataContractAnalyzerSpec : Helpers.CodeFixVerifier
+    public class DataContractAnalyzerSpec : CodeFixVerifier
     {
         [Fact]
         public void ShouldNotCreateDiagnosticIfTypeIsNotMigratable()

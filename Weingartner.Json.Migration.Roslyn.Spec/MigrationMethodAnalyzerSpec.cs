@@ -3,17 +3,13 @@ using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
 using Weingartner.Json.Migration.Common;
 using Weingartner.Json.Migration.Roslyn.Spec.Helpers;
 using Xunit;
-using CodeFixVerifier = Weingartner.Json.Migration.Roslyn.Spec.Helpers.CodeFixVerifier;
-using System.ComponentModel;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec
 {
-    public class MigrationMethodAnalyzerSpec : Helpers.CodeFixVerifier
+    public class MigrationMethodAnalyzerSpec : CodeFixVerifier
     {
         [Fact]
         public void ShouldNotCreateDiagnosticIfTypeIsNotMigratable()

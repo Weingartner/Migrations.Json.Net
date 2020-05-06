@@ -14,7 +14,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
 using Xunit;
 using Document = Microsoft.CodeAnalysis.Document;
-using System.ComponentModel;
 
 namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
 {
@@ -25,7 +24,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
     public abstract class DiagnosticVerifier
     {
         private static readonly MetadataReference CorlibReference = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-        private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(typeof(System.Uri).Assembly.Location);
+        private static readonly MetadataReference SystemReference = MetadataReference.CreateFromFile(typeof(Uri).Assembly.Location);
         private static readonly MetadataReference SystemCoreReference = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
         private static readonly MetadataReference CSharpSymbolsReference = MetadataReference.CreateFromFile(typeof(CSharpCompilation).Assembly.Location);
         private static readonly MetadataReference CodeAnalysisReference = MetadataReference.CreateFromFile(typeof(Compilation).Assembly.Location);
