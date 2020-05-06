@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Roslyn_Vsix.Vsix", "Weingartner.Json.Migration.Roslyn.Vsix\Weingartner.Json.Migration.Roslyn_Vsix.Vsix.csproj", "{CD62CCCF-6F3C-43BF-BAEC-226012EA651E}"
 EndProject
@@ -18,12 +18,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration.Roslyn.Spec", "Weingartner.Json.Migration.Roslyn.Spec\Weingartner.Json.Migration.Roslyn.Spec.csproj", "{34BF0AB4-8C34-4876-A2E3-20FAA72BD74A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Weingartner.Json.Migration.Spec", "Weingartner.Json.Migration.Spec\Weingartner.Json.Migration.Spec.csproj", "{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration.Spec", "Weingartner.Json.Migration.Spec\Weingartner.Json.Migration.Spec.csproj", "{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Weingartner.Migration.Common.Shared", "Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.shproj", "{D1EBB04A-A30B-43A6-A1A7-945BCFDF8EF0}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{567ecd20-eb97-4a30-a5b2-0889d1609491}*SharedItemsImports = 5
+		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{630bac68-a278-4bce-abf1-6c864b141aa0}*SharedItemsImports = 5
 		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{d1ebb04a-a30b-43a6-a1a7-945bcfdf8ef0}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
