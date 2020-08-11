@@ -46,6 +46,9 @@ Oh noes! It's not backwards compatible. Well, with this library, you simply have
  
  But that's all! If you want, you can stop reading.
  
+ Understanding the basics
+================================
+
  Let's explain a bit what happens here.
  
       [Migratable("")]
