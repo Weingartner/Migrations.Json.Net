@@ -53,7 +53,7 @@ Oh noes! It's not backwards compatible. Well, with this library, you simply have
  
       [Migratable("")]
 
-This attribute marks the MyData class wrt. the migration system, so that it knows it needs to search for a migration method inside. The migration system does not parse classes that do not have this attribute.
+This attribute marks the MyData class wrt. the migration system, so that it knows it needs to search for a migration method. The migration system does not parse classes that do not have this attribute.
 
       private static JObject Migrate_1(JObject data, JsonSerializer serializer)
 
@@ -85,3 +85,60 @@ NB: If you paid attention, you may have realized that the code above actually pr
 	}
 
 Indeed, we are not removing the existing "firstName" and "lastName" fields from the data object. But it doesn't matter! Because by default, Json.NET simply ignores json fields that do not appear in the deserialized class. If you are deserializing with a setting that makes Json.NET treat this as an error, you will want to remove those from the data object in the migration method.
+
+ Versioning
+================================
+
+Each class has its own version field that is used by the migration library to know when to invoke which migration method. If a class doesn't define such a version field, the migration system will consider the class to be of version 0 - so it will invoke all the migration methods in order.
+
+It means that in most cases, you will want to add this version field to your serialized classes. It takes the following form:
+
+	class MyData
+	{
+		int Version = 1;
+	}
+
+So an integer-typed member variable whose name is "Version". 
+
+The migration system will automatically increment the version field when deserializing. Let's take our initial example, but now adding the Version field:
+
+      [Migratable("")]
+      class MyData
+      {
+		int Version = 1;
+		string name = "John Doe";
+            
+		private static JObject Migrate_1(JObject data, JsonSerializer serializer)
+		{
+			data["name"] = data["firstName"] + " " + data["lastName"];
+			return data;
+		}
+      }
+
+If this class is used to deserialize the following data:
+
+	{
+		"firstName": "John",
+		"lastName": "Doe"
+	}
+
+then the result would be this:
+
+	{
+		"Version": 1
+		"name": "John Doe",
+		"firstName": "John",
+		"lastName": "Doe"
+	}
+
+But it would be the same result if the loaded data had a Version field of value 0, e.g.:
+
+	{
+		"Version": 0,
+		"firstName": "John",
+		"lastName": "Doe"
+	}
+
+Because the migration method Migrate_1 would have parsed the Version field and incremented it to 1.
+
+It follows that the Version field should be incremented each time your class is modified with changes that are backwards incompatible (otherwise you need to know what you're doing). Basically whenever you have the need to add a migration method, also remember to increment the Version field to the highest suffix of the migration methods. For instance, if you have the following migration methods: Migrate_1, Migrate_2, Migrate_3, then the Version field should have 3 as its default value, so that new instances of that class have the correct version number and do not invoke incorrect migration methods upon deserialization.
