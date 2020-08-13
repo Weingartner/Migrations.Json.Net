@@ -175,4 +175,22 @@ This library supports nested classes as well, out of the box. Simply remember to
 		}
       }
 
+You can also define a custom migrator class for a given class, which lets you define the migration methods in a separate place. Example:
+
+	[Migratable(""), CustomMigrator(typeof(MyDataMigrator))]
+	class MyData
+	{
+		int Version = 1;
+		string name = "John Doe";
+	}
+      
+	class MyDataMigrator 
+	{
+      		private static JObject Migrate_1(JObject data, JsonSerializer serializer)
+		{
+			data["name"] = data["firstName"] + " " + data["lastName"];
+			return data;
+		}
+	}
+
 The automatic tests in this repository demonstrate various use cases, it can be an additional source of inspiration if this readme is not explicit enough. 
