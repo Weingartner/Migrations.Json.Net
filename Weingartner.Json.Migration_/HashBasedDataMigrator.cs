@@ -45,7 +45,7 @@ namespace Weingartner.Json.Migration
                 throw new DataVersionTooHighException($"Trying to load data type '{unserializedDataType.FullName}' from json data " +
                                                       $"at version {version}." +
                                                       $" However current software only supports version {maxSupportedVersion}." +
-                                                      " Please update your installation with a newwer version.");
+                                                      " Please update your installation with a newer version.");
             }
 
             var migrationMethods = allMigrationMethods
@@ -57,7 +57,7 @@ namespace Weingartner.Json.Migration
             try
             {
                 serializedData = migrationMethods
-                    .Select(m => unserializedDataType.GetTypeInfo().GetDeclaredMethod(m.Name))
+                    .Select(m => GetMethod(unserializedDataType, m))
                     .Aggregate(serializedData,
                         (data, method) => ExecuteMigration(method, data, serializer));
             }
@@ -78,6 +78,20 @@ namespace Weingartner.Json.Migration
             _VersionExtractor.SetVersion(serializedData, maxSupportedVersion);
 
             return Tuple.Create(serializedData, migrated);
+        }
+
+        private MethodInfo GetMethod(Type unserializedDataType, MigrationMethod migrationMethod)
+		{
+            var method = unserializedDataType.GetTypeInfo().GetDeclaredMethod(migrationMethod.Name);
+            if (method == null)
+			{
+                var customMigrator = unserializedDataType.GetTypeInfo().GetCustomAttribute<CustomMigratorAttribute>();
+                if (customMigrator != null)
+                {
+                    method = customMigrator.MigratorType.GetTypeInfo().GetDeclaredMethod(migrationMethod.Name);
+                }
+			}
+            return method;
         }
 
         protected TSerializedData ExecuteMigration(MethodInfo method, TSerializedData data, JsonSerializer serializer)

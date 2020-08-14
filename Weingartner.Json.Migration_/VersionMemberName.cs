@@ -30,7 +30,14 @@ namespace Weingartner.Json.Migration
 
         public static IEnumerable<MigrationMethod> GetMigrationMethods(Type type)
         {
-            return GetMigrationMethods(type.GetTypeInfo().DeclaredMethods);
+            var methods = type.GetTypeInfo().DeclaredMethods;
+            var customMigrator = type.GetTypeInfo().GetCustomAttribute<CustomMigratorAttribute>();
+            if (customMigrator != null)
+			{
+                var customMigratorMethods = customMigrator.MigratorType.GetTypeInfo().DeclaredMethods;
+                methods = methods.Concat(customMigratorMethods);
+			}
+            return GetMigrationMethods(methods);
         }
 
         private static IReadOnlyList<MigrationMethod> GetMigrationMethods(IEnumerable<MethodInfo> methods)

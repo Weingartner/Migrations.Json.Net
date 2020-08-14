@@ -34,6 +34,21 @@ namespace Weingartner.Json.Migration.Spec
             result.Item1["Name"].Value<string>().Should().Be(expectedName);
         }
 
+        [Theory]
+        [InlineData(0, "Name_A_B_C")]
+        [InlineData(1, "Name_B_C")]
+        [InlineData(2, "Name_C")]
+        public void ShouldApplyChangesMadeByTheMigrationMethodsWithCustomMigrator(int configVersion, string expectedName)
+        {
+            var configData = CreateConfigurationFromObject(new FixtureDataWithCustomMigrator(), configVersion);
+            
+            var sut = CreateMigrator();
+            var result = sut.TryMigrate(configData, typeof(FixtureDataWithCustomMigrator), Serializer);
+
+            result.Item2.Should().BeTrue();
+            result.Item1["Name"].Value<string>().Should().Be(expectedName);
+        }
+
         [Fact]
         public void ShouldBeAbleToReplaceWholeObject()
         {
@@ -277,20 +292,25 @@ namespace Weingartner.Json.Migration.Spec
             }
         }
 
-        [Migratable("")]
+        [Migratable(""), CustomMigrator(typeof(FixtureDataMigrator))]
         public class FixtureDataWithCustomMigrator
         {
             public const int _version = 3;
 
             [DataMember]
             public string Name { get; private set; }
+
+            public FixtureDataWithCustomMigrator()
+			{
+                Name = "Name";
+			}
         }
 
         public class FixtureDataMigrator
         {
             private static JObject Migrate_1(JObject data, JsonSerializer serializer)
             {
-                data["Name"] = "Name_A";
+                data["Name"] += "_A";
                 return data;
             }
 

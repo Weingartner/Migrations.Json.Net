@@ -9,6 +9,7 @@
     <Import_RootNamespace>Weingartner.Migration.Common.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomMigratorAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MethodParameter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MigratableAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MigrationException.cs" />
