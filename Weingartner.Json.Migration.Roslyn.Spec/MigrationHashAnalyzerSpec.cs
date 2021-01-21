@@ -98,9 +98,74 @@ class TypeName
             VerifyCSharpDiagnostic(source);
         }
 
+        [Fact]
+        public void ShouldCreateDiagnosticIfInCorrectHashIsSpecified()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""758832573"")]
+[DataContract]
+class TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+    [DataMember]
+    public double B { get; set; }
+}";
+
+            var expected = new DiagnosticResult
+                           {
+                               Id = MigrationHashAnalyzer.DiagnosticId,
+                               Message = string.Format(MigrationHashAnalyzer.MessageFormat.ToString(CultureInfo.InvariantCulture), "TypeName", "687340935"),
+                               Severity = DiagnosticSeverity.Error,
+                               Locations =
+                                   new[] {
+                                             new DiagnosticResultLocation("Test0.cs", 5, 7)
+                                         }
+                           };
+
+            VerifyCSharpDiagnostic(source, expected);
+        }
+
+        [Fact]
+        public void ShouldFixIfInCorrectIsSpecified()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""758832573"")]
+[DataContract]
+class TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+    [DataMember]
+    public double B { get; set; }
+}";
+            
+            var expected = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""687340935"")]
+[DataContract]
+class TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+    [DataMember]
+    public double B { get; set; }
+}";
+
+            VerifyCSharpFix(source, expected);
+        }
+
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            throw new NotImplementedException();
+            return new MigrationHashAnalyzerCodeFixProvider();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
