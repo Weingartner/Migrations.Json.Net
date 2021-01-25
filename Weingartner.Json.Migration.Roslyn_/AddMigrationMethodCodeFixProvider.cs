@@ -1,4 +1,5 @@
-﻿using System.Composition;
+﻿using System;
+using System.Composition;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
@@ -80,19 +81,28 @@ namespace Weingartner.Json.Migration.Roslyn
 
         private static MethodDeclarationSyntax GetMigrationMethod(int toVersion, string dataArgumentTypeName, CancellationToken ct)
         {
-            var methodDecl =
-                $"private static JToken Migrate_{toVersion}" +
-                $"({dataArgumentTypeName} data, JsonSerializer serializer) {{\r\n" +
-                "throw new System.NotImplementedException();\r\n" +
-                "return data;\r\n" +
-                "}";
-
-            return SyntaxFactory.ParseSyntaxTree(methodDecl, cancellationToken: ct)
-                .GetRoot()
-                .ChildNodes()
-                .OfType<MethodDeclarationSyntax>()
-                .Single()
-                .WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+            return SyntaxFactory.MethodDeclaration
+                ( attributeLists: default
+                , modifiers: SyntaxFactory.TokenList( SyntaxFactory.Token( SyntaxKind.PrivateKeyword )
+                                                    , SyntaxFactory.Token( SyntaxKind.StaticKeyword ) )
+                , returnType: SyntaxFactory.ParseTypeName( "JToken" )
+                , explicitInterfaceSpecifier: default
+                , identifier: SyntaxFactory.Identifier( "Migrate_" + toVersion )
+                , typeParameterList: default
+                , parameterList: SyntaxFactory.ParameterList
+                      ( SyntaxFactory.SeparatedList
+                            ( new[]
+                              {   SyntaxFactory.Parameter( SyntaxFactory.Identifier( "data" ) )
+                                               .WithType( SyntaxFactory.ParseTypeName( $"{dataArgumentTypeName}" ) )
+                                , SyntaxFactory.Parameter( SyntaxFactory.Identifier( "serializer" ) )
+                                               .WithType( SyntaxFactory.ParseTypeName( "JsonSerializer" ) )
+                              } ) )
+                , constraintClauses: default
+                , body: SyntaxFactory.Block( SyntaxFactory.ThrowStatement( SyntaxFactory.ParseExpression( "new System.NotImplementedException()" ) )
+                                           , SyntaxFactory.ReturnStatement( SyntaxFactory.ParseExpression( "data" ) ) )
+                , expressionBody: default
+                , semicolonToken: default)
+               .WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
         }
     }
 }
