@@ -55,7 +55,7 @@ Target "NugetMigration" (fun()->
 
     NuGet (fun p -> 
     {p with
-        Authors = ["Weingartner Machinenbau GMBH"]
+        Authors = ["Weingartner Maschinenbau GmbH"]
         Project = "Weingartner.Json.Migration"
         Description = "Assists in migrating serialized JSON.Net objects"
         OutputPath = "./artifacts"
