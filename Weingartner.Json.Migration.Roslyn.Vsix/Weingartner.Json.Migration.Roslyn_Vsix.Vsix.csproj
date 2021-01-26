@@ -88,7 +88,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn_\Weingartner.Json.Migration.Roslyn.csproj">
+    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.csproj">
       <Project>{630bac68-a278-4bce-abf1-6c864b141aa0}</Project>
       <Name>Weingartner.Json.Migration.Roslyn</Name>
     </ProjectReference>

@@ -29,6 +29,6 @@
     <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn_\Weingartner.Json.Migration.Roslyn.csproj" />
+    <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.csproj" />
   </ItemGroup>
 </Project>

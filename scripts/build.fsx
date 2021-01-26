@@ -51,7 +51,7 @@ let nugetVersion = if buildVersion = "LocalBuild" then ( environVarOrFail "GitVe
 
 Target "NugetMigration" (fun()->
 
-    let buildDir = "Weingartner.Json.Migration_" @@ buildOutputPath
+    let buildDir = "Weingartner.Json.Migration" @@ buildOutputPath
 
     NuGet (fun p -> 
     {p with
@@ -72,7 +72,7 @@ Target "NugetMigration" (fun()->
 
 Target "NugetAnalyzer" (fun()->
 
-    let buildDir = "Weingartner.Json.Migration.Roslyn_" @@ buildOutputPath
+    let buildDir = "Weingartner.Json.Migration.Roslyn" @@ buildOutputPath
 
     NuGet (fun p -> 
     {p with

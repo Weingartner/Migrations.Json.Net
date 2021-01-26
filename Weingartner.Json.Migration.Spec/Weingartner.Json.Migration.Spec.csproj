@@ -28,6 +28,6 @@
     <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Weingartner.Json.Migration_\Weingartner.Json.Migration.csproj" />
+    <ProjectReference Include="..\Weingartner.Json.Migration\Weingartner.Json.Migration.csproj" />
   </ItemGroup>
 </Project>
