@@ -196,3 +196,7 @@ FakesAssemblies/
 
 scripts/lib/FAKE/docs
 /.vs
+
+.fake
+.ionide
+.vscode
