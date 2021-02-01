@@ -1,28 +1,44 @@
-#I @"lib"
-#r @"Fake\tools\FakeLib.dll"
+#r "paket: 
+nuget FSharp.Core 4.7.2
+nuget Fake.Core.Target
+nuget Fake.IO.FileSystem
+nuget Fake.DotNet.Cli
+nuget Fake.DotNet.MSBuild
+nuget Fake.DotNet.NuGet
+nuget Fake.Tools.GitVersion //"
+#load @".\.fake\build.fsx\intellisense.fsx"
 
-open Fake
-open Fake.MSBuildHelper
-open Fake.Testing
-open Fake.DotNetCli
+open System.IO
+open Fake.Core
+open Fake.Core.TargetOperators
+open Fake.DotNet
+open Fake.IO.Globbing.Operators
+open Fake.IO.FileSystemOperators
+open Fake.DotNet.NuGet
 
-let nugetApiKey = getBuildParam "NuGetApiKey"
-let outputPath = @".\artifacts" |> FullName
-let buildOutputPath = @"bin\Release"
+Target.initEnvironment()
 
-Target "Clean" (fun _ ->
-    CleanDir outputPath
-)
+// Properties
+let baseDir = __SOURCE_DIRECTORY__ @@ ".."
+let buildOutputPath = @".\bin\Release"
+let artifactPath = baseDir @@ "artifacts"
+let slnPath = @".\Weingartner.Json.Migration.sln"
+let nugetVersion = if BuildServer.isLocalBuild 
+                    then (
+                        let gitVersion = Fake.Tools.GitVersion.generateProperties (fun paras -> { 
+                            paras with 
+                                ToolPath = Environment.environVarOrFail "ChocolateyInstall" @@ @"lib\GitVersion.Portable\tools\gitversion.exe"
+                            })
+                        gitVersion.SemVer
+                    )
+                    else BuildServer.buildVersion
 
-
-Target "BuildSolution" (fun () ->
-
-    //RestoreMSSolutionPackages (fun p->p) "Weingartner.Json.Migration.sln"
-
-    let slnPath = @".\Weingartner.Json.Migration.sln"
-    let setParams defaults = {
+let msbuild target = (
+    let setParams (defaults:MSBuildParams) = {
         defaults with
-            Targets = [ "Rebuild" ]
+            Verbosity = Some(MSBuildVerbosity.Minimal)
+            ToolsVersion = (Some "Current")
+            Targets = [ target ]
             Properties =
                 [
                     "Optimize", "True"
@@ -33,78 +49,91 @@ Target "BuildSolution" (fun () ->
                     "DebugSymbols", "True"
                     "OutputPath", buildOutputPath
                 ]
-            Verbosity = Some(MSBuildVerbosity.Normal)
             NodeReuse = false
     }
-    build setParams slnPath
+    MSBuild.build setParams slnPath
 )
 
-Target "RunTests" (fun () ->
-    
-    let projects = !! @"**\*.Spec.csproj"
-    for project in projects do
-        let setParams (p: TestParams) = { p with Project = project }
-        (DotNetCli.Test setParams)
+// Targets
+Target.create "Clean" (fun _ ->
+    Trace.trace "########################################### clean outputdir ###########################################"
+    Fake.IO.Shell.cleanDir buildOutputPath
+    Fake.IO.Shell.cleanDir artifactPath
 )
 
-let nugetVersion = if buildVersion = "LocalBuild" then ( environVarOrFail "GitVersion_SemVer" ) else buildVersion
+Target.create "BuildSolution" (fun _ ->
+    Trace.trace "########################################### msbuild restore ###########################################"
+    msbuild "restore"
+    Trace.trace "########################################### msbuild rebuild ###########################################"
+    msbuild "rebuild"
+)
 
-Target "NugetMigration" (fun()->
+let dotnet cmd workingDir = 
+    let result = DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
+    if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
-    let buildDir = "Weingartner.Json.Migration" @@ buildOutputPath
+Target.create "RunTests" (fun _ ->
+    Trace.trace "########################################### run tests ###########################################"
+    !! @"**\*.Spec.csproj"
+    |> Seq.map Fake.IO.Path.getDirectory
+    |> Seq.iter (fun dir -> dotnet "test" dir)
+)
 
-    NuGet (fun p -> 
-    {p with
-        Authors = ["Weingartner Maschinenbau GmbH"]
-        Project = "Weingartner.Json.Migration"
-        Description = "Assists in migrating serialized JSON.Net objects"
-        OutputPath = "./artifacts"
-        Dependencies = 
-            [ "Newtonsoft.Json", "12.0.3"]
-        Files = [ ("Weingartner*.dll", Some "lib/netstandard2.0", None )]
-        Summary = "Assists in migrating serialized JSON.Net objects"
-        Version = nugetVersion 
-        WorkingDir = buildDir
-        AccessKey = nugetApiKey
-        Publish = false }) 
+Target.create "PackNugetMigration" (fun _ ->
+
+    let workingDir = @".\Weingartner.Json.Migration" @@ buildOutputPath
+    NuGet.NuGetPack (fun p -> {
+        p with
+            Authors = ["Weingartner Maschinenbau GmbH"]
+            Project = "Weingartner.Json.Migration"
+            Description = "Assists in migrating serialized JSON.Net objects"
+            OutputPath = artifactPath
+            Dependencies = [ "Newtonsoft.Json", "12.0.3" ]
+            Files = [ ("Weingartner*.dll", Some("lib/netstandard2.0"), None )]
+            Summary = "Assists in migrating serialized JSON.Net objects"
+            Version = nugetVersion 
+            WorkingDir = workingDir
+            Publish = false
+        }) 
         "./base.nuspec"
 )
 
-Target "NugetAnalyzer" (fun()->
+Target.create "PackNugetAnalyzer" (fun _ ->
 
-    let buildDir = "Weingartner.Json.Migration.Roslyn" @@ buildOutputPath
+    let workingDir = @".\Weingartner.Json.Migration.Roslyn" @@ buildOutputPath
 
-    NuGet (fun p -> 
+    NuGet.NuGetPack (fun p -> 
     {p with
         Authors = ["Weingartner Maschinenbau GMBH"]
         Project = "Weingartner.Json.Migration.Analyzer"
         Description = "Assists in migrating serialized JSON.Net objects"
-        OutputPath = "./artifacts"
+        OutputPath = artifactPath
         Dependencies = 
             [ "Weingartner.Json.Migration", nugetVersion
               "Newtonsoft.Json", "12.0.3"
             ]
         Summary = "Assists in migrating serialized JSON.Net objects"
         Version = nugetVersion
-        AccessKey = nugetApiKey
-        WorkingDir = buildDir
+        WorkingDir = workingDir
         Files = [ ( "Weingartner.Json.Migration.Roslyn.dll", Some "analyzers/dotnet/cs", Some "**/Microsoft.*;**/System.*") 
                   ( "tools/**/*.*", None, None)
                 ]
-        Publish = false }) 
+        Publish = false 
+        }) 
         "./base.nuspec"
 )
 
-Target "NugetPack" DoNothing
-Target "Default" DoNothing
-
-"NugetMigration" <== [ "BuildSolution" ]
-"NugetAnalyzer" <== [ "BuildSolution" ]
-"NugetPack" <== [ "NugetMigration"; "NugetAnalyzer" ] 
-"NugetPack" <== [ "BuildSolution" ]
-"RunTests" <== [ "BuildSolution" ]
-
-"Default" <== [ "Clean"; "NugetPack"; "RunTests" ]
+Target.create "Default" (fun _ ->
+    Trace.trace "Finished"
+)
 
 
-RunTargetOrDefault "Default"
+// Dependencies
+"Clean"
+    ==> "BuildSolution"
+    ==> "RunTests"
+    ==> "PackNugetMigration"
+    ==> "PackNugetAnalyzer"
+    ==> "Default"
+
+Target.runOrDefault "Default"
