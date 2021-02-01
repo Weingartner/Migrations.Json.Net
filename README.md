@@ -6,6 +6,7 @@ A simple framework for data migrations using Newtonsoft Json.Net.
 Quickstart
 ================================
 
+
 Suppose you have the following class that gets serialized in your project:
 
       class MyData
