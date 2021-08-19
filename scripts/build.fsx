@@ -88,7 +88,7 @@ Target.create "PackNugetMigration" (fun _ ->
             Project = "Weingartner.Json.Migration"
             Description = "Assists in migrating serialized JSON.Net objects"
             OutputPath = artifactPath
-            Dependencies = [ "Newtonsoft.Json", "12.0.3" ]
+            Dependencies = [ "Newtonsoft.Json", "13.0.1" ]
             Files = [ ("Weingartner*.dll", Some("lib/netstandard2.0"), None )]
             Summary = "Assists in migrating serialized JSON.Net objects"
             Version = nugetVersion 
@@ -110,7 +110,7 @@ Target.create "PackNugetAnalyzer" (fun _ ->
         OutputPath = artifactPath
         Dependencies = 
             [ "Weingartner.Json.Migration", nugetVersion
-              "Newtonsoft.Json", "12.0.3"
+              "Newtonsoft.Json", "13.0.1"
             ]
         Summary = "Assists in migrating serialized JSON.Net objects"
         Version = nugetVersion
