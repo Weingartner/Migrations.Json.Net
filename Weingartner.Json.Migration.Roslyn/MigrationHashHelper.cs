@@ -112,8 +112,10 @@ namespace Weingartner.Json.Migration.Roslyn
                             return new MethodParameter(parameterType);
                         })
                         .ToList();
-                    var returnType = new SimpleType(m.ReturnType.ToString(),
-                        new AssemblyName(m.ReturnType.ContainingAssembly.ToString()));
+                    var returnTypeAssemblyName = m.ReturnType.Kind == SymbolKind.ArrayType
+                        ? ((IArrayTypeSymbol)m.ReturnType).ElementType.ContainingAssembly.ToString()
+                        : m.ReturnType.ContainingAssembly.ToString();
+                    var returnType = new SimpleType(m.ReturnType.ToString(), new AssemblyName(returnTypeAssemblyName));
                     return MigrationMethod.TryParse(declaringType, parameters, returnType, m.Name);
                 })
                 .Where(m => m != null)

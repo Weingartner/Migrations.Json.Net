@@ -26,31 +26,37 @@ namespace Weingartner.Json.Migration.Roslyn.Spec
             var smallFailingDoc = @"using Weingartner.Json.Migration;
 using System.Runtime.Serialization;
 
-[Migratable(""1234"")]
-[DataContract]
-class TypeName
+namespace NameSpaceName
 {
-    [DataMember]
-    public int A { get; set; }
-    [DataMember]
-    public int B { get; set; }
+    [Migratable(""1234"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+    }
 }";
             var expected = @"using Weingartner.Json.Migration;
 using System.Runtime.Serialization;
 
-[Migratable(""327430167"")]
-[DataContract]
-class TypeName
+namespace NameSpaceName
 {
-    [DataMember]
-    public int A { get; set; }
-    [DataMember]
-    public int B { get; set; }
-
-    private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+    [Migratable(""327430167"")]
+    [DataContract]
+    class TypeName
     {
-        throw new System.NotImplementedException();
-        return data;
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            throw new System.NotImplementedException();
+            return data;
+        }
     }
 }";
 
@@ -65,21 +71,24 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-[Migratable(""327430167"")]
-[DataContract]
-class TypeName
+namespace NameSpaceName
 {
-    [DataMember]
-    public int A { get; set; }
-    [DataMember]
-    public int B { get; set; }
-    [DataMember]
-    public int C { get; set; }
-
-    private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+    [Migratable(""327430167"")]
+    [DataContract]
+    class TypeName
     {
-        data[""B""] = 0;
-        return data;
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+        [DataMember]
+        public int C { get; set; }
+
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            data[""B""] = 0;
+            return data;
+        }
     }
 }";
             var expected = @"using Weingartner.Json.Migration;
@@ -87,27 +96,30 @@ using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-[Migratable(""-1225206030"")]
-[DataContract]
-class TypeName
+namespace NameSpaceName
 {
-    [DataMember]
-    public int A { get; set; }
-    [DataMember]
-    public int B { get; set; }
-    [DataMember]
-    public int C { get; set; }
-
-    private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+    [Migratable(""-1225206030"")]
+    [DataContract]
+    class TypeName
     {
-        data[""B""] = 0;
-        return data;
-    }
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+        [DataMember]
+        public int C { get; set; }
 
-    private static JToken Migrate_2(JToken data, JsonSerializer serializer)
-    {
-        throw new System.NotImplementedException();
-        return data;
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            data[""B""] = 0;
+            return data;
+        }
+
+        private static JToken Migrate_2(JToken data, JsonSerializer serializer)
+        {
+            throw new System.NotImplementedException();
+            return data;
+        }
     }
 }";
 
@@ -120,31 +132,90 @@ class TypeName
             var smallFailingDoc = @"using Weingartner.Json.Migration;
 using System.Runtime.Serialization;
 
-[Migratable(""1234"")]
-[DataContract]
-struct TypeName
+namespace NameSpaceName
 {
-    [DataMember]
-    public int A { get; set; }
-    [DataMember]
-    public int B { get; set; }
+    [Migratable(""1234"")]
+    [DataContract]
+    struct TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+    }
 }";
             var expected = @"using Weingartner.Json.Migration;
 using System.Runtime.Serialization;
 
-[Migratable(""327430167"")]
-[DataContract]
-struct TypeName
+namespace NameSpaceName
 {
-    [DataMember]
-    public int A { get; set; }
-    [DataMember]
-    public int B { get; set; }
-
-    private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+    [Migratable(""327430167"")]
+    [DataContract]
+    struct TypeName
     {
-        throw new System.NotImplementedException();
-        return data;
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            throw new System.NotImplementedException();
+            return data;
+        }
+    }
+}";
+
+            VerifyCSharpFix(smallFailingDoc, expected, null, true);
+        }
+
+        [Fact]
+        public void ShouldNotFailIfAMethodHasArrayReturnType()
+        {
+            var smallFailingDoc = @"using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+namespace NameSpaceName
+{
+    [Migratable(""1234"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        public int[] SomeMethod()
+        {
+            return new[] { 1, 2, 3 };
+        }
+    }
+}";
+            var expected = @"using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+namespace NameSpaceName
+{
+    [Migratable(""327430167"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        public int[] SomeMethod()
+        {
+            return new[] { 1, 2, 3 };
+        }
+
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            throw new System.NotImplementedException();
+            return data;
+        }
     }
 }";
 
