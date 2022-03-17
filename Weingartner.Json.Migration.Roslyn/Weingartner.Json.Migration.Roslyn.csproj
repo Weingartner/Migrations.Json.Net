@@ -10,6 +10,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
     <Content Include="$(OutputPath)\Weingartner.Json.Migration.Roslyn.dll" PackagePath="$(ContentTargetFolders)" />
   </ItemGroup>
   <Import Project="..\Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems" Label="Shared" />
