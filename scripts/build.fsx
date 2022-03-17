@@ -19,19 +19,12 @@ open Fake.DotNet.NuGet
 Target.initEnvironment()
 
 // Properties
-let baseDir = __SOURCE_DIRECTORY__ @@ ".."
+let baseDir = (__SOURCE_DIRECTORY__ @@ "..") |> Path.GetFullPath
 let buildOutputPath = @".\bin\Release"
 let artifactPath = baseDir @@ "artifacts"
-let slnPath = @".\Weingartner.Json.Migration.sln"
-let nugetVersion = if BuildServer.isLocalBuild 
-                    then (
-                        let gitVersion = Fake.Tools.GitVersion.generateProperties (fun paras -> { 
-                            paras with 
-                                ToolPath = Environment.environVarOrFail "ChocolateyInstall" @@ @"lib\GitVersion.Portable\tools\gitversion.exe"
-                            })
-                        gitVersion.SemVer
-                    )
-                    else BuildServer.buildVersion
+let slnPath = baseDir @@ "Weingartner.Json.Migration.sln"
+
+let gitVersion = Fake.Tools.GitVersion.generateProperties(id)
 
 let msbuild target = (
     let setParams (defaults:MSBuildParams) = {
@@ -48,6 +41,7 @@ let msbuild target = (
                     "BuildProjectReferences", "True"
                     "DebugSymbols", "True"
                     "OutputPath", buildOutputPath
+                    "Version", gitVersion.AssemblySemVer
                 ]
             NodeReuse = false
     }
@@ -88,10 +82,15 @@ Target.create "PackNugetMigration" (fun _ ->
             Project = "Weingartner.Json.Migration"
             Description = "Assists in migrating serialized JSON.Net objects"
             OutputPath = artifactPath
-            Dependencies = [ "Newtonsoft.Json", "13.0.1" ]
+            DependenciesByFramework = [
+                { FrameworkVersion = "netstandard2.0"
+                  Dependencies = [
+                        "Newtonsoft.Json", "13.0.1" 
+                        ]}
+            ]
             Files = [ ("Weingartner*.dll", Some("lib/netstandard2.0"), None )]
             Summary = "Assists in migrating serialized JSON.Net objects"
-            Version = nugetVersion 
+            Version = gitVersion.SemVer 
             WorkingDir = workingDir
             Publish = false
         }) 
@@ -102,23 +101,27 @@ Target.create "PackNugetAnalyzer" (fun _ ->
 
     let workingDir = @".\Weingartner.Json.Migration.Roslyn" @@ buildOutputPath
 
-    NuGet.NuGetPack (fun p -> 
-    {p with
-        Authors = ["Weingartner Maschinenbau GMBH"]
-        Project = "Weingartner.Json.Migration.Analyzer"
-        Description = "Assists in migrating serialized JSON.Net objects"
-        OutputPath = artifactPath
-        Dependencies = 
-            [ "Weingartner.Json.Migration", nugetVersion
-              "Newtonsoft.Json", "13.0.1"
+    NuGet.NuGetPack (fun p -> {
+        p with
+            Authors = ["Weingartner Maschinenbau GMBH"]
+            Project = "Weingartner.Json.Migration.Analyzer"
+            Description = "Assists in migrating serialized JSON.Net objects"
+            OutputPath = artifactPath
+            DependenciesByFramework = [
+                { FrameworkVersion = "netstandard2.0"
+                  Dependencies = [
+                        "Weingartner.Json.Migration", gitVersion.SemVer
+                        "Newtonsoft.Json", "13.0.1" 
+                        ]}
             ]
-        Summary = "Assists in migrating serialized JSON.Net objects"
-        Version = nugetVersion
-        WorkingDir = workingDir
-        Files = [ ( "Weingartner.Json.Migration.Roslyn.dll", Some "analyzers/dotnet/cs", Some "**/Microsoft.*;**/System.*") 
-                  ( "tools/**/*.*", None, None)
+            Summary = "Assists in migrating serialized JSON.Net objects"
+            Version = gitVersion.SemVer
+            WorkingDir = workingDir
+            Files = [ 
+                ( "Weingartner.Json.Migration.Roslyn.dll", Some "analyzers/dotnet/cs", Some "**/Microsoft.*;**/System.*") 
+                ( "tools/**/*.*", None, None)
                 ]
-        Publish = false 
+            Publish = false 
         }) 
         "./base.nuspec"
 )
