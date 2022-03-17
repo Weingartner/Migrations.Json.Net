@@ -4,7 +4,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Weingartner.Json.Migration</RootNamespace>
     <AssemblyName>Weingartner.Json.Migration</AssemblyName>
-    <PackageId>Weingartner.Json.Migration</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,5 +11,12 @@
   </ItemGroup>
 
   <Import Project="..\Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems" Label="Shared" />
+
+  <PropertyGroup>
+    <PackageId>Weingartner.Json.Migration</PackageId>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
 
 </Project>

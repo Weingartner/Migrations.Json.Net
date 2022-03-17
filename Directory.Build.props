@@ -1,0 +1,16 @@
+<Project>
+  <PropertyGroup>
+    <Version>$(Version)</Version>
+
+    <Authors>Weingartner Maschinenbau GmbH</Authors>
+    <PackageProjectUrl>https://github.com/Weingartner/Migrations.Json.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Weingartner/Migrations.Json.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>Assists in migrating serialized JSON.Net objects</Description>
+    <Copyright>Weingartner Maschinenbau GmbH</Copyright>
+    <PackageTags>json migration</PackageTags>
+
+  </PropertyGroup>
+</Project>

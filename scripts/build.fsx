@@ -20,9 +20,11 @@ Target.initEnvironment()
 
 // Properties
 let baseDir = (__SOURCE_DIRECTORY__ @@ "..") |> Path.GetFullPath
-let buildOutputPath = @".\bin\Release"
+let buildOutputs = !! @"**\bin"
 let artifactPath = baseDir @@ "artifacts"
 let slnPath = baseDir @@ "Weingartner.Json.Migration.sln"
+let migrationProject = baseDir @@ "Weingartner.Json.Migration" @@ "Weingartner.Json.Migration.csproj"
+let analyzerProject = baseDir @@ "Weingartner.Json.Migration.Roslyn" @@ "Weingartner.Json.Migration.Roslyn.csproj"
 
 let gitVersion = Fake.Tools.GitVersion.generateProperties(id)
 
@@ -40,7 +42,6 @@ let msbuild target = (
                     "BuildParallel", "True"
                     "BuildProjectReferences", "True"
                     "DebugSymbols", "True"
-                    "OutputPath", buildOutputPath
                     "Version", gitVersion.AssemblySemVer
                 ]
             NodeReuse = false
@@ -51,7 +52,8 @@ let msbuild target = (
 // Targets
 Target.create "Clean" (fun _ ->
     Trace.trace "########################################### clean outputdir ###########################################"
-    Fake.IO.Shell.cleanDir buildOutputPath
+    buildOutputs |> Seq.iter Trace.trace
+    Fake.IO.Shell.cleanDirs buildOutputs
     Fake.IO.Shell.cleanDir artifactPath
 )
 
@@ -73,63 +75,42 @@ Target.create "RunTests" (fun _ ->
     |> Seq.iter (fun dir -> dotnet "test" dir)
 )
 
-Target.create "PackNugetMigration" (fun _ ->
+let packMSBuildParams = {
+    MSBuild.CliArguments.Create() with
+                        ToolsVersion = (Some "Current")
+                        Properties =
+                            [
+                                "Configuration", "Release"                                
+                                "Version", gitVersion.SemVer
+                            ]
+                        NodeReuse = false
+}
 
-    let workingDir = @".\Weingartner.Json.Migration" @@ buildOutputPath
-    NuGet.NuGetPack (fun p -> {
-        p with
-            Authors = ["Weingartner Maschinenbau GmbH"]
-            Project = "Weingartner.Json.Migration"
-            Description = "Assists in migrating serialized JSON.Net objects"
-            OutputPath = artifactPath
-            DependenciesByFramework = [
-                { FrameworkVersion = "netstandard2.0"
-                  Dependencies = [
-                        "Newtonsoft.Json", "13.0.1" 
-                        ]}
-            ]
-            Files = [ ("Weingartner*.dll", Some("lib/netstandard2.0"), None )]
-            Summary = "Assists in migrating serialized JSON.Net objects"
-            Version = gitVersion.SemVer 
-            WorkingDir = workingDir
-            Publish = false
-        }) 
-        "./base.nuspec"
+Target.create "PackNugetMigration" (fun _ ->
+    DotNet.pack (fun defaults -> {
+        defaults with
+            OutputPath = Some artifactPath
+            MSBuildParams = packMSBuildParams
+            NoRestore = true
+            NoBuild = true
+        })
+        migrationProject
 )
 
 Target.create "PackNugetAnalyzer" (fun _ ->
-
-    let workingDir = @".\Weingartner.Json.Migration.Roslyn" @@ buildOutputPath
-
-    NuGet.NuGetPack (fun p -> {
-        p with
-            Authors = ["Weingartner Maschinenbau GMBH"]
-            Project = "Weingartner.Json.Migration.Analyzer"
-            Description = "Assists in migrating serialized JSON.Net objects"
-            OutputPath = artifactPath
-            DependenciesByFramework = [
-                { FrameworkVersion = "netstandard2.0"
-                  Dependencies = [
-                        "Weingartner.Json.Migration", gitVersion.SemVer
-                        "Newtonsoft.Json", "13.0.1" 
-                        ]}
-            ]
-            Summary = "Assists in migrating serialized JSON.Net objects"
-            Version = gitVersion.SemVer
-            WorkingDir = workingDir
-            Files = [ 
-                ( "Weingartner.Json.Migration.Roslyn.dll", Some "analyzers/dotnet/cs", Some "**/Microsoft.*;**/System.*") 
-                ( "tools/**/*.*", None, None)
-                ]
-            Publish = false 
-        }) 
-        "./base.nuspec"
+    DotNet.pack (fun defaults -> {
+        defaults with
+            OutputPath = Some artifactPath
+            MSBuildParams = packMSBuildParams
+            NoRestore = true
+            NoBuild = true
+        })
+        analyzerProject
 )
 
 Target.create "Default" (fun _ ->
     Trace.trace "Finished"
 )
-
 
 // Dependencies
 "Clean"
