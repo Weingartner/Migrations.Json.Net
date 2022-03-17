@@ -27,7 +27,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <!--<PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.3.1" />-->
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Weingartner.Json.Migration.Roslyn\Weingartner.Json.Migration.Roslyn.csproj" />

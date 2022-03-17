@@ -13,6 +13,4 @@
 
   <Import Project="..\Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems" Label="Shared" />
 
-
-  <Import Project="nuget.targets" />
 </Project>
