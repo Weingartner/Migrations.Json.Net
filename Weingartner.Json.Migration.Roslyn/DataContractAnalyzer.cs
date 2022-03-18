@@ -12,7 +12,7 @@ namespace Weingartner.Json.Migration.Roslyn
     {
         public const string DiagnosticId = "DataContractAnalyzer";
         private static readonly LocalizableString Title = "Migratable type should have `DataContract` and `DataMember` attributes";
-        public static readonly LocalizableString MessageFormat = "Type '{0}' is migratable but is missing either `DataContract` or `DataMember` attributes.";
+        public static readonly LocalizableString MessageFormat = "Type '{0}' is migratable but is missing either `DataContract` or `DataMember` attributes";
         private const string Category = "DataMigration";
 
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, true);
@@ -21,6 +21,8 @@ namespace Weingartner.Json.Migration.Roslyn
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.RegisterCompilationStartAction(OnCompilationStart);
         }
 

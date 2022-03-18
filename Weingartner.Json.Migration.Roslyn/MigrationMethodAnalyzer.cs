@@ -25,8 +25,11 @@ namespace Weingartner.Json.Migration.Roslyn
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.RegisterCompilationStartAction(OnCompilationStart);
         }
+
         private static void OnCompilationStart(CompilationStartAnalysisContext context)
         {
             var migratableAttributeType = context.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
@@ -73,7 +76,7 @@ namespace Weingartner.Json.Migration.Roslyn
 
                 var t1 = context.SemanticModel.Compilation.GetTypeByMetadataName(srcType.FullName);
                 var t2 = context.SemanticModel.Compilation.GetTypeByMetadataName(targetType.FullName);
-                return getBaseTypesAndSelf(t1).Contains(t2);
+                return getBaseTypesAndSelf(t1).Contains(t2,SymbolEqualityComparer.Default);
             };
         }
     }

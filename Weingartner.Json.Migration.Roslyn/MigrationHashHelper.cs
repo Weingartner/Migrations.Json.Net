@@ -92,7 +92,7 @@ namespace Weingartner.Json.Migration.Roslyn
                 {
                     var ctorSymbol = semanticModel.GetSymbolInfo(a, ct).Symbol;
                     var typeSymbol = ctorSymbol?.ContainingSymbol;
-                    return typeSymbol?.Equals(attributeType) ?? false;
+                    return typeSymbol?.Equals(attributeType, SymbolEqualityComparer.Default) ?? false;
                 });
         }
 

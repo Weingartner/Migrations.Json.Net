@@ -26,7 +26,7 @@ namespace Weingartner.Json.Migration.Roslyn
     {
         public const string DiagnosticId = "MigrationHashAnalyzer";
         private static readonly LocalizableString Title = "Should have correct migration hash";
-        public static readonly LocalizableString MessageFormat = "Expected migration hash of type '{0}' to be '{1}'.";
+        public static readonly LocalizableString MessageFormat = "Expected migration hash of type '{0}' to be '{1}'";
 
         private static readonly LocalizableString Description = "An incorrect migration hash is a hint that you may have forgotten to add a migration. " +
                                                                 "The hash is calculated from all properties with a `DataMember` attribute " +
@@ -40,6 +40,8 @@ namespace Weingartner.Json.Migration.Roslyn
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.RegisterCompilationStartAction(OnCompilationStart);
         }
 
