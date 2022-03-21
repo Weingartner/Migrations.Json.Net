@@ -17,7 +17,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1">
+      <GeneratePathProperty>True</GeneratePathProperty>
+    </PackageReference>
   </ItemGroup>
   
   <PropertyGroup>
@@ -38,6 +40,7 @@
 
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
+      <TfmSpecificPackageFile Include="$(PkgNewtonsoft_Json)\lib\$(TargetFramework)\Newtonsoft.Json.dll" PackagePath="$(ContentTargetFolders)" />
       <TfmSpecificPackageFile Include="$(OutputPath)\Weingartner.Json.Migration.Roslyn.dll" PackagePath="$(ContentTargetFolders)" />
     </ItemGroup>
   </Target>
