@@ -5,7 +5,10 @@ nuget Fake.IO.FileSystem
 nuget Fake.DotNet.Cli
 nuget Fake.DotNet.MSBuild
 nuget Fake.DotNet.NuGet
-nuget Fake.Tools.GitVersion //"
+nuget Fake.DotNet.Testing.XUnit2
+nuget Fake.Testing.Common
+nuget Fake.Tools.GitVersion
+nuget xunit.runner.console //"
 #load @".\.fake\build.fsx\intellisense.fsx"
 
 open System.IO
@@ -14,7 +17,7 @@ open Fake.Core.TargetOperators
 open Fake.DotNet
 open Fake.IO.Globbing.Operators
 open Fake.IO.FileSystemOperators
-open Fake.DotNet.NuGet
+open Fake.DotNet.Testing
 
 Target.initEnvironment()
 
@@ -28,12 +31,22 @@ let analyzerProject = baseDir @@ "Weingartner.Json.Migration.Roslyn" @@ "Weingar
 
 let gitVersion = Fake.Tools.GitVersion.generateProperties(id)
 
-let msbuild target = (
+
+// Targets
+Target.create "Clean" (fun _ ->
+    Trace.trace "########################################### clean outputdir ###########################################"
+    buildOutputs |> Seq.iter Trace.trace
+    Fake.IO.Shell.cleanDirs buildOutputs
+    Fake.IO.Shell.cleanDir artifactPath
+)
+
+// build
+let msbuild target =
     let setParams (defaults:MSBuildParams) = {
         defaults with
             Verbosity = Some(MSBuildVerbosity.Minimal)
             ToolsVersion = (Some "Current")
-            Targets = [ target ]
+            Targets = target
             Properties =
                 [
                     "Optimize", "True"
@@ -47,34 +60,30 @@ let msbuild target = (
             NodeReuse = false
     }
     MSBuild.build setParams slnPath
-)
-
-// Targets
-Target.create "Clean" (fun _ ->
-    Trace.trace "########################################### clean outputdir ###########################################"
-    buildOutputs |> Seq.iter Trace.trace
-    Fake.IO.Shell.cleanDirs buildOutputs
-    Fake.IO.Shell.cleanDir artifactPath
-)
 
 Target.create "BuildSolution" (fun _ ->
     Trace.trace "########################################### msbuild restore ###########################################"
-    msbuild "restore"
     Trace.trace "########################################### msbuild rebuild ###########################################"
-    msbuild "rebuild"
+    msbuild [ "restore"; "rebuild" ]
 )
 
-let dotnet cmd workingDir = 
-    let result = DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
-    if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
-
+// testing
+let dotnetTest proj =
+    DotNet.test (fun defaults -> {
+        defaults with
+            Configuration = DotNet.BuildConfiguration.Release
+            NoRestore = true
+            NoBuild = true
+    }) proj
+    
 Target.create "RunTests" (fun _ ->
     Trace.trace "########################################### run tests ###########################################"
     !! @"**\*.Spec.csproj"
-    |> Seq.map Fake.IO.Path.getDirectory
-    |> Seq.iter (fun dir -> dotnet "test" dir)
+    |> Seq.iter dotnetTest
+    
 )
 
+// nuget packaging
 let packMSBuildParams = {
     MSBuild.CliArguments.Create() with
                         ToolsVersion = (Some "Current")
