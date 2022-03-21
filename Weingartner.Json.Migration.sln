@@ -24,6 +24,7 @@ EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{567ecd20-eb97-4a30-a5b2-0889d1609491}*SharedItemsImports = 5
+		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{630bac68-a278-4bce-abf1-6c864b141aa0}*SharedItemsImports = 5
 		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{d1ebb04a-a30b-43a6-a1a7-945bcfdf8ef0}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
