@@ -107,8 +107,11 @@ namespace Weingartner.Json.Migration.Roslyn
                     var parameters = m.Parameters
                         .Select(p =>
                         {
+                            var parameterTypeAssemblyName = p.Type.Kind == SymbolKind.ArrayType 
+                                ? ((IArrayTypeSymbol)p.Type).ElementType.ContainingAssembly.ToString()
+                                : p.Type.ContainingAssembly.ToString();
                             var parameterType = new SimpleType(p.Type.ToString(),
-                                new AssemblyName(p.Type.ContainingAssembly.ToString()));
+                                new AssemblyName(parameterTypeAssemblyName));
                             return new MethodParameter(parameterType);
                         })
                         .ToList();

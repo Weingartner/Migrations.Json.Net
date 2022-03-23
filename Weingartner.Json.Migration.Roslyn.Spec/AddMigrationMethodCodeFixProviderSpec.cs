@@ -222,6 +222,112 @@ namespace NameSpaceName
             VerifyCSharpFix(smallFailingDoc, expected, null, true);
         }
 
+        [Fact]
+        public void ShouldNotFailIfAMethodHasArrayParameters()
+        {
+            var smallFailingDoc = @"using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+namespace NameSpaceName
+{
+    [Migratable(""1234"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        public int SomeMethod(double[] para)
+        {
+            return 0;
+        }
+    }
+}";
+            var expected = @"using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+namespace NameSpaceName
+{
+    [Migratable(""327430167"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        public int SomeMethod(double[] para)
+        {
+            return 0;
+        }
+
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            throw new System.NotImplementedException();
+            return data;
+        }
+    }
+}";
+
+            VerifyCSharpFix(smallFailingDoc, expected, null, true);
+        }
+
+        [Fact]
+        public void ShouldNotFailWithArrays()
+        {
+            var smallFailingDoc = @"using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+namespace NameSpaceName
+{
+    [Migratable(""1234"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        public int[] SomeMethod(double[] para)
+        {
+            return new[] { 1, 2, 3 };
+        }
+    }
+}";
+            var expected = @"using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+namespace NameSpaceName
+{
+    [Migratable(""327430167"")]
+    [DataContract]
+    class TypeName
+    {
+        [DataMember]
+        public int A { get; set; }
+        [DataMember]
+        public int B { get; set; }
+
+        public int[] SomeMethod(double[] para)
+        {
+            return new[] { 1, 2, 3 };
+        }
+
+        private static JToken Migrate_1(JToken data, JsonSerializer serializer)
+        {
+            throw new System.NotImplementedException();
+            return data;
+        }
+    }
+}";
+
+            VerifyCSharpFix(smallFailingDoc, expected, null, true);
+        }
+
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
             return new AddMigrationMethodCodeFixProvider();
