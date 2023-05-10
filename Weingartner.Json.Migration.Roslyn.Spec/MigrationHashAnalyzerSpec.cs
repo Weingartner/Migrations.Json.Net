@@ -163,6 +163,41 @@ class TypeName
             VerifyCSharpFix(source, expected);
         }
 
+        [Fact]
+        public void ShouldFixRecordIfInCorrectIsSpecified()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""758832573"")]
+[DataContract]
+record TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+    [DataMember]
+    public double B { get; set; }
+}";
+            
+            var expected = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""687340935"")]
+[DataContract]
+record TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+    [DataMember]
+    public double B { get; set; }
+}";
+
+            VerifyCSharpFix(source, expected);
+        }
+
+
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
             return new MigrationHashAnalyzerCodeFixProvider();

@@ -10,6 +10,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec
 {
     public class DataContractAnalyzerSpec : CodeFixVerifier
     {
+
         [Fact]
         public void ShouldNotCreateDiagnosticIfTypeIsNotMigratable()
         {
@@ -116,6 +117,33 @@ class TypeName
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
             return new DataContractAnalyzer();
+        }
+
+        [Fact]
+        public void ShouldCreateDiagnosticIfRecord()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable("""")]
+record TypeName
+{
+    [DataMember]
+    public int A { get; set; }
+}";
+            var expected = new DiagnosticResult
+            {
+                Id = DataContractAnalyzer.DiagnosticId,
+                Message = string.Format(DataContractAnalyzer.MessageFormat.ToString(CultureInfo.InvariantCulture), "TypeName"),
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                    new[] {
+                            new DiagnosticResultLocation("Test0.cs", 5, 7)
+                        }
+            };
+
+            VerifyCSharpDiagnostic(source, expected);
         }
     }
 }
