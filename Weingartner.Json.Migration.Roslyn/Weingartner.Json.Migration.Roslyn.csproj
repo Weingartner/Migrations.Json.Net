@@ -17,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.820" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
       <GeneratePathProperty>True</GeneratePathProperty>
     </PackageReference>
