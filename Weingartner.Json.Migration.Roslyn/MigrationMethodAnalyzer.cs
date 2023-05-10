@@ -35,7 +35,7 @@ namespace Weingartner.Json.Migration.Roslyn
             var migratableAttributeType = context.Compilation.GetTypeByMetadataName(Constants.MigratableAttributeMetadataName);
             if (migratableAttributeType != null)
             {
-                context.RegisterSyntaxNodeAction(nodeContext => AnalyzeCall(nodeContext, migratableAttributeType), SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration);
+                context.RegisterSyntaxNodeAction(nodeContext => AnalyzeCall(nodeContext, migratableAttributeType), SyntaxKind.ClassDeclaration, SyntaxKind.StructDeclaration, SyntaxKind.RecordDeclaration);
             }
         }
 
