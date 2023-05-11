@@ -21,12 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Weingartner.Json.Migration.
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Weingartner.Migration.Common.Shared", "Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.shproj", "{D1EBB04A-A30B-43A6-A1A7-945BCFDF8EF0}"
 EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Weingartner.Json.Migration.Build", "Weingartner.Json.Migration.Build\Weingartner.Json.Migration.Build.fsproj", "{61F7AF56-A9E2-4390-B674-C48D2186F0C3}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{567ecd20-eb97-4a30-a5b2-0889d1609491}*SharedItemsImports = 5
-		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{630bac68-a278-4bce-abf1-6c864b141aa0}*SharedItemsImports = 5
-		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{d1ebb04a-a30b-43a6-a1a7-945bcfdf8ef0}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -52,11 +49,20 @@ Global
 		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E3DF5C2-8A38-4A03-86D7-8D463C917E47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61F7AF56-A9E2-4390-B674-C48D2186F0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61F7AF56-A9E2-4390-B674-C48D2186F0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61F7AF56-A9E2-4390-B674-C48D2186F0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61F7AF56-A9E2-4390-B674-C48D2186F0C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F17857EC-72DD-4007-8A57-3740BF6160FE}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{567ecd20-eb97-4a30-a5b2-0889d1609491}*SharedItemsImports = 5
+		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{630bac68-a278-4bce-abf1-6c864b141aa0}*SharedItemsImports = 5
+		Weingartner.Migration.Common.Shared\Weingartner.Migration.Common.Shared.projitems*{d1ebb04a-a30b-43a6-a1a7-945bcfdf8ef0}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
