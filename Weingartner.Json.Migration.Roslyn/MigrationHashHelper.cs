@@ -62,8 +62,19 @@ namespace Weingartner.Json.Migration.Roslyn
                     .Select(v => new DataMember(p.Declaration.Type.ToString(), v.Identifier.ToString()))
                 );
 
+            // primary constructor in records using targeted attributes
+            var primary = typeDeclaration is RecordDeclarationSyntax recordDeclaration
+                ? recordDeclaration.ParameterList != null
+                    ? recordDeclaration.ParameterList
+                        .Parameters
+                        .Where( p => isDataMember( p.AttributeLists ) )
+                        .Select( p => new DataMember( p.Type.ToString(), p.Identifier.ToString() ) )
+                    : Enumerable.Empty<DataMember>()
+                : Enumerable.Empty<DataMember>();
+
             return properties
                 .Concat(fields)
+                .Concat(primary)
                 .OrderBy(p => p.Type)
                 .ThenBy(p => p.Identifier)
                 .ToImmutableList();
