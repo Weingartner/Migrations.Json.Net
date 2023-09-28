@@ -197,6 +197,32 @@ record TypeName
             VerifyCSharpFix(source, expected);
         }
 
+        [Fact]
+        public void ShouldFixRecordWithPrimaryCtorIfInCorrectIsSpecified()
+        {
+            var source = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""758832573"")]
+[DataContract]
+record TypeName([property: DataMember] int A, [property: DataMember] double B)
+{
+}";
+            
+            var expected = @"
+using Weingartner.Json.Migration;
+using System.Runtime.Serialization;
+
+[Migratable(""687340935"")]
+[DataContract]
+record TypeName([property: DataMember] int A, [property: DataMember] double B)
+{
+}";
+
+            VerifyCSharpFix(source, expected);
+        }
+
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
