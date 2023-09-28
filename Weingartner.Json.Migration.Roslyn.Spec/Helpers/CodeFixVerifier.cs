@@ -176,7 +176,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
                     document = document.WithSyntaxRoot(Formatter.Format(document.GetSyntaxRootAsync().Result, Formatter.Annotation, document.Project.Solution.Workspace));
                     newCompilerDiagnostics = GetNewDiagnostics(compilerDiagnostics, GetCompilerDiagnostics(document));
 
-                    Assert.True(false,
+                    Assert.Fail(
                         string.Format("Fix introduced new compiler diagnostics:\r\n{0}\r\n\r\nNew document:\r\n{1}\r\n",
                             string.Join("\r\n", newCompilerDiagnostics.Select(d => d.ToString())),
                             document.GetSyntaxRootAsync().Result.ToFullString()));

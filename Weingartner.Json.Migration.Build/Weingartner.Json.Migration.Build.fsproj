@@ -13,7 +13,7 @@
     <PackageReference Include="Fake.Core.Target" Version="6.0.0" />
     <PackageReference Include="Fake.Tools.Git" Version="6.0.0" />
     <PackageReference Include="Fake.Tools.GitVersion" Version="6.0.0" />
-    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.820" />
+    <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.858" />
   </ItemGroup>
 
 </Project>

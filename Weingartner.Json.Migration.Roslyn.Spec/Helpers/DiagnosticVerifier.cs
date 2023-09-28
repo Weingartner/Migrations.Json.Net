@@ -307,7 +307,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
             {
                 string diagnosticsOutput = actualResults.Any() ? FormatDiagnostics(analyzer, actualResults.ToArray()) : "    NONE.";
 
-                Assert.True(false,
+                Assert.Fail(
                     string.Format("Mismatch between number of diagnostics returned, expected \"{0}\" actual \"{1}\"\r\n\r\nDiagnostics:\r\n{2}\r\n", expectedCount, actualCount, diagnosticsOutput));
             }
 
@@ -320,7 +320,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
                 {
                     if (actual.Location != Location.None)
                     {
-                        Assert.True(false,
+                        Assert.Fail(
                             string.Format("Expected:\nA project diagnostic with No location\nActual:\n{0}",
                             FormatDiagnostics(analyzer, actual)));
                     }
@@ -332,7 +332,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
 
                     if (additionalLocations.Length != expected.Locations.Length - 1)
                     {
-                        Assert.True(false,
+                        Assert.Fail(
                             string.Format("Expected {0} additional locations but got {1} for Diagnostic:\r\n    {2}\r\n",
                                 expected.Locations.Length - 1, additionalLocations.Length,
                                 FormatDiagnostics(analyzer, actual)));
@@ -346,21 +346,21 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
 
                 if (actual.Id != expected.Id)
                 {
-                    Assert.True(false,
+                    Assert.Fail(
                         string.Format("Expected diagnostic id to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Id, actual.Id, FormatDiagnostics(analyzer, actual)));
                 }
 
                 if (actual.Severity != expected.Severity)
                 {
-                    Assert.True(false,
+                    Assert.Fail(
                         string.Format("Expected diagnostic severity to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Severity, actual.Severity, FormatDiagnostics(analyzer, actual)));
                 }
 
                 if (actual.GetMessage() != expected.Message)
                 {
-                    Assert.True(false,
+                    Assert.Fail(
                         string.Format("Expected diagnostic message to be \"{0}\" was \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Message, actual.GetMessage(), FormatDiagnostics(analyzer, actual)));
                 }
@@ -389,7 +389,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
             {
                 if (actualLinePosition.Line + 1 != expected.Line)
                 {
-                    Assert.True(false,
+                    Assert.Fail(
                         string.Format("Expected diagnostic to be on line \"{0}\" was actually on line \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Line, actualLinePosition.Line + 1, FormatDiagnostics(analyzer, diagnostic)));
                 }
@@ -400,7 +400,7 @@ namespace Weingartner.Json.Migration.Roslyn.Spec.Helpers
             {
                 if (actualLinePosition.Character + 1 != expected.Column)
                 {
-                    Assert.True(false,
+                    Assert.Fail(
                         string.Format("Expected diagnostic to start at column \"{0}\" was actually at column \"{1}\"\r\n\r\nDiagnostic:\r\n    {2}\r\n",
                             expected.Column, actualLinePosition.Character + 1, FormatDiagnostics(analyzer, diagnostic)));
                 }
